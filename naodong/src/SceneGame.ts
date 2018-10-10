@@ -250,7 +250,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		to({scaleX:1,scaleY:1},100);
 		if(LevelDataManager.getInstance().isShare== true)
 		{
-			console.log("开分享，分享开启Scene");
+			console.log("开分享，分享开启Scene" );
 			// platform.updateShareMenu();
 			// platform.showVideoAD();
 			platform.shareAppMessage();//无差别分享
@@ -258,7 +258,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		else if(LevelDataManager.getInstance().isShare == false)
 		{
 		  console.log("看视频，分享关闭Scene");
-		  platform.showVideoAD();
+		   platform.showVideoAD();
 		}
 		
 		

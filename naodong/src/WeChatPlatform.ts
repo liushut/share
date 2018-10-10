@@ -21,6 +21,15 @@ class WeChatPlatform implements Platform {
         return new Promise(async function (resolve, reject) {
             AV.Cloud.run('conf').then(function (data) {
                 //成功逻辑
+                let myshare:any;
+                for (var key in data) {
+                   console.log(key +  "      aaaaaaaaaaaaaaaaaaaaa")
+                   if(key == "share")
+                   {
+                       myshare = key;
+                       console.log("myshare --------" + myshare);
+                   }
+                }
                 if (data.share == true) {
                     LevelDataManager.getInstance().isShare = true;
                     console.log("开关开启，分享开启" + data.share + "           LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);  
@@ -32,8 +41,8 @@ class WeChatPlatform implements Platform {
                 resolve(data.share);
             }, function (err) {
                 //回调函数调用失败逻辑
-                console.log("函数调用失败");
                  LevelDataManager.getInstance().isShare = true;
+                 console.log("函数调用失败" +  LevelDataManager.getInstance().isShare );
             });
         })
     }
