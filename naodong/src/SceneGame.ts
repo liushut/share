@@ -212,26 +212,26 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	private onpaihang()
 	{
 			console.log("点击排行");
-			  let platform: any = window.platform;
-			        //主要示例代码开始
-            this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
-            this.addChild(this.bitmap);
-            //主域向子域发送自定义消息
-            platform.openDataContext.postMessage({
-                text: 'hello',
-                year: (new Date()).getFullYear(),
-                command: "open",
-                type:"opendata"
-            });
-            //主要示例代码结束            
-            // this.isdisplay = true;
-			// let openDataContext = (wx as any).getOpenDataContext();
-			// this.bitmap = openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+			//   let platform: any = window.platform;
+			//         //主要示例代码开始
+            // this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
             // this.addChild(this.bitmap);
-			// openDataContext.postMessage({
-			// 	command: "open",
-			// 	type:"friend"
-			// });
+            // //主域向子域发送自定义消息
+            // platform.openDataContext.postMessage({
+            //     text: 'hello',
+            //     year: (new Date()).getFullYear(),
+            //     command: "open",
+            //     type:"opendata"
+            // });
+            // 主要示例代码结束            
+            // this.isdisplay = true;
+			let openDataContext = (wx as any).getOpenDataContext();
+			this.bitmap = platform.openDataContext.createDisplayObject(null,this.stage.stageWidth, this.stage.stageHeight);
+            this.addChild(this.bitmap);
+			openDataContext.postMessage({
+				command: "open",
+				type:"friend"
+			});
 			console.log("点击了排行榜");
 
 	}
@@ -248,26 +248,17 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	{
 		egret.Tween.get(event.currentTarget).to({scaleX:1.2,scaleY:1.2},100).
 		to({scaleX:1,scaleY:1},100);
-		if(LevelDataManager.isShare == true)
+		if(LevelDataManager.getInstance().isShare== true)
 		{
-			console.log("开关开启，分享开启Scene");
-			platform.updateShareMenu();
+			console.log("开分享，分享开启Scene");
+			// platform.updateShareMenu();
 			// platform.showVideoAD();
+			platform.shareAppMessage();//无差别分享
 		}
-		else if(LevelDataManager.isShare == false)
+		else if(LevelDataManager.getInstance().isShare == false)
 		{
-		  console.log("开关关闭，分享关闭Scene");
-		  SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-          SoundManager.getInstance().windowSoundChanel.volume = 1;
-          SceneGame.getInstance().bingoLayer.visible = true;
-          SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-          SceneGame.getInstance().bingoLayer.daandi.visible = true;
-          SceneGame.getInstance().hintBg(true);
-          SceneGame.getInstance().bingoLayer.labelresult.text =
-          LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-          SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-          LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
-          console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+		  console.log("看视频，分享关闭Scene");
+		  platform.showVideoAD();
 		}
 		
 		

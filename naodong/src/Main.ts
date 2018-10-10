@@ -59,6 +59,7 @@ class Main extends eui.UILayer {
          (wx as any).updateShareMenu({
         withShareTicket: true
       });
+       (wx as any).createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });//初始化广告
         try{
             if(wx.getUpdateManager())
             {
@@ -77,7 +78,7 @@ class Main extends eui.UILayer {
         const userInfo = await (platform as any).getAVUserInfo();
         console.log("游戏初始化");
         console.log("用户信息" + userInfo);
-        await (platform as any).shareCloud();//分享开启
+        // await (platform as any).shareCloud();//分享开启
         // await (platform as any).shouAD();//广告
         
         
@@ -121,21 +122,25 @@ class Main extends eui.UILayer {
                 LevelDataManager.getInstance();
                 SceneGame.getInstance();
                 this.addChild(SceneGame.getInstance());
+                
                 let data =  LevelDataManager.getInstance().GetMileStone();
                 LevelDataManager.getInstance().curIcon = data;
                 SceneGame.getInstance().InitLevel(data);
+
+                
+
                 console.log(data);
                 LevelDataManager.getInstance().getAd();//手动拉AD
+                
 
-
-                this.btnOpen = new eui.Button();
-                this.btnOpen.label = "btnClose!";
-                this.btnOpen.x = 50;
-                this.btnOpen.y = 35;
-                this.btnOpen.horizontalCenter = 0;
-                this.addChild(this.btnOpen);
-                this.btnOpen.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
-                console.log("aaaaaa");
+                // this.btnOpen = new eui.Button();
+                // this.btnOpen.label = "btnClose!";
+                // this.btnOpen.x = 50;
+                // this.btnOpen.y = 35;
+                // this.btnOpen.horizontalCenter = 0;
+                // this.addChild(this.btnOpen);
+                // this.btnOpen.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
+                // console.log("aaaaaa");
     }
 
   

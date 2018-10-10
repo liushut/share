@@ -7,12 +7,13 @@ class WeChatPlatform implements Platform {
     public constructor() {
         this._init();
     }
-    
+     //开放数据域
+    openDataContext:any;
     /**
      * 平台初始化
      */
     private _init() : void {
- 
+        
     }
     
    public async shareCloud():Promise<any>
@@ -21,17 +22,18 @@ class WeChatPlatform implements Platform {
             AV.Cloud.run('conf').then(function (data) {
                 //成功逻辑
                 if (data.share == true) {
-                    console.log("开关开启，分享开启" + data.share);  
-                    LevelDataManager.isShare = true;
+                    LevelDataManager.getInstance().isShare = true;
+                    console.log("开关开启，分享开启" + data.share + "           LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);  
                 }
                 else if (data.share == false) {
-                    console.log("开关关闭，分享关闭" + data.share);
-                    LevelDataManager.isShare = false;
+                    LevelDataManager.getInstance().isShare = false;
+                    console.log("开关关闭，分享关闭" + data.share + "            LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);
                 };
                 resolve(data.share);
             }, function (err) {
                 //回调函数调用失败逻辑
                 console.log("函数调用失败");
+                 LevelDataManager.getInstance().isShare = true;
             });
         })
     }
@@ -78,31 +80,31 @@ class WeChatPlatform implements Platform {
             let video = (wx as any).createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });
             video.show().then(()=>{
                 console.log("拉取视频成功")
-                video.onClose(res => {
-                    // 用户点击了【关闭广告】按钮
-                    if (res && res.isEnded || res === undefined) {
-                        // 正常播放结束，可以下发游戏奖励
-                        console.log("正常播放");
-                        SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-                        SoundManager.getInstance().windowSoundChanel.volume = 1;
-                        SceneGame.getInstance().bingoLayer.visible = true;
-                        SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                        SceneGame.getInstance().bingoLayer.daandi.visible = true;
-                        SceneGame.getInstance().hintBg(true);
-                        SceneGame.getInstance().bingoLayer.labelresult.text =
-                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-                        SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
-                        console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-                    }
-                    else {
-                        // 播放中途退出，不下发游戏奖励
-                        console.log("提前关闭");
-                    }
-                })
             }).catch(err=>{
                 console.log("视频拉取失败");
-                 video.load().then(() => video.show())
+                video.load().then(() => video.show())
+            });
+            video.onClose(res => {
+                // 用户点击了【关闭广告】按钮
+                if (res && res.isEnded || res === undefined) {
+                    // 正常播放结束，可以下发游戏奖励
+                    console.log("正常播放");
+                    SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                    SoundManager.getInstance().windowSoundChanel.volume = 1;
+                    SceneGame.getInstance().bingoLayer.visible = true;
+                    SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                    SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                    SceneGame.getInstance().hintBg(true);
+                    SceneGame.getInstance().bingoLayer.labelresult.text =
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                    SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                }
+                else {
+                    // 播放中途退出，不下发游戏奖励
+                    console.log("提前关闭");
+                }
             })
         })
     }
@@ -110,7 +112,8 @@ class WeChatPlatform implements Platform {
     async getAVUserInfo():Promise<any>{
         var self = this;
         return new Promise(async function (resolve, reject) {
-            await self.leancloudInit();
+            await self.leancloudInit();//初始化
+            await self.shareCloud();//分享是否开启
             let date = new Date();
             let hour = date.getHours();
             console.log(hour +"当前小时")
@@ -193,26 +196,46 @@ class WeChatPlatform implements Platform {
             resolve();
         });
     }
+
+   
     async shareAppMessage(){
         (wx as any).shareAppMessage({
         title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-        imageUrl: "resource/assets/common/title11.png",
-        success: function (res) {
-          SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-          SoundManager.getInstance().windowSoundChanel.volume = 1;
-          SceneGame.getInstance().bingoLayer.visible = true;
-          SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-          SceneGame.getInstance().bingoLayer.daandi.visible = true;
-          SceneGame.getInstance().hintBg(true);
-          SceneGame.getInstance().bingoLayer.labelresult.text =
+        imageUrl: "resource/assets/common/title11.png"
+      });
+      if(LevelDataManager.shareNum % 2 == 0)
+      {
+        SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+        SoundManager.getInstance().windowSoundChanel.volume = 1;
+        SceneGame.getInstance().bingoLayer.visible = true;
+        SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+        SceneGame.getInstance().bingoLayer.daandi.visible = true;
+        SceneGame.getInstance().hintBg(true);
+        SceneGame.getInstance().bingoLayer.labelresult.text =
             LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-          SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+        SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
             LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain
             + "   ";
-          console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-            
-        }
-      })
+        console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+      }
+      else if(LevelDataManager.shareNum % 2 == 1)
+      {
+          egret.Tween.get(this).wait(200).call(()=>{
+               (wx as any).showModal({
+              title: "提示",
+              content: "别总骚扰这个群的朋友啦，换个群分享吧~",
+              showCancel: false,//不显示取消按钮
+              success: function (res) {
+                  if (res.confirm == true) {
+                      platform.shareAppMessage();
+                  }
+              }
+          })
+          })
+         
+      }
+      LevelDataManager.shareNum ++;
+     
     }
    
     async updateShareMenu(){
@@ -279,7 +302,7 @@ class WeChatPlatform implements Platform {
                                         success:function(res){
                                             if(res.confirm == true)
                                             {
-                                                platform.updateShareMenu();
+                                                // platform.updateShareMenu();
                                             }
                                         }
                                     })
@@ -324,5 +347,18 @@ class WeChatPlatform implements Platform {
     async wxCloudCallFunc(){}
     async wxGetCloudData(){
         return {data:""}
+    }
+}
+
+//扩展开放域
+class WxOpenDataContext{
+    createDisplayObject(type,width,height)
+    {
+        let shareCanvas = window["shareCanvas"] as any;
+        const bitmap = new egret.BitmapData(shareCanvas);
+        bitmap.$deleteSource = false;
+        const texture = new egret.Texture();
+
+        
     }
 }

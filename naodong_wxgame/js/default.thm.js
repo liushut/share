@@ -1554,6 +1554,7 @@ var egret = window.egret;window.skins={};
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
+		t.visible = false;
 		t.x = 600;
 		t.y = 150;
 		t.skinName = SceneGameSkin$Skin9;

@@ -20,7 +20,7 @@
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
-/******/ 		// Flae the module as loaded
+/******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 
 /******/ 		// Return the exports of the module
@@ -1260,7 +1260,7 @@
                 }, {
                     key: 'getResponseHeader',
                     value: function getResponseHeader(header) {
-                      return _responseHeader.get(this)[header] ? _responseHeader.get(this)[header] : "application/json;charset=utf-8";
+                         return _responseHeader.get(this)[header] ? _responseHeader.get(this)[header] : "application/json;charset=utf-8";
                     }
                 }, {
                     key: 'open',

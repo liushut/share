@@ -6,11 +6,14 @@
  */
 var {Query,User} = AV;
 declare interface Platform {
+ //开放数据域
+    openDataContext:any;
+
     shareCloud():Promise<any>;
     testShare():Promise<any>;
     getAVUserInfo(): Promise<any>;//得到用户信息
     shareAppMessage():Promise<any>;//分享功能
-    updateShareMenu():Promise<any>;//判定群
+    // updateShareMenu():Promise<any>;//判定群
     shouAD():Promise<any>;//看广告
     showVideoAD():Promise<any>;//看视频
 

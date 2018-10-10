@@ -8,12 +8,13 @@ class  LevelDataItem
 
 class LevelDataManager//关卡数据管理 
 {
-    public static oldADs:any;
+    public  static oldADs:any;
     private static levelDataManager:LevelDataManager;
+    public  static shareNum:number = 0;//分享次数
     public   curIcon:number = 1;;//当前关卡
     public   curIndex:number = 0;//当前段位
     public   static tempIndex = 0;//当前页面
-    public   static isShare:boolean = false;
+    public    isShare:boolean = true;
     public   static isLogin:boolean = true;
 
 
@@ -119,19 +120,19 @@ class LevelDataManager//关卡数据管理
                 newad = (wx as any).createBannerAd({
                 adUnitId:"adunit-a57340565a6e2881",
                 style:{
-                    left:0,
+                    left:30,
                     top: winSize.screenHeight - bannerHeight - 15,
-                    width: bannerWidth + 300
+                    width: bannerWidth + 50
                 }});
             }
-               else if(winSize.model == "iPhone 6s Plus")
+               else if(winSize.model == "iPhone 6S Plus")
             {
              newad = (wx as any).createBannerAd({
             adUnitId:"adunit-a57340565a6e2881",
             style:{
-                left:40,
+                left:15,
                 top: winSize.screenHeight - bannerHeight - 20,
-                width: bannerWidth + 400
+                width: bannerWidth + 150
             }});
             }
             else 

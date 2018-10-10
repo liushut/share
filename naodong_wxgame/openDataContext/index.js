@@ -5,11 +5,6 @@
  */
 
 
-
-
-
-
-
 /**
  * 资源加载组，将所需资源地址以及引用名进行注册
  * 之后可通过assets.引用名方式进行获取
@@ -437,22 +432,26 @@ let hasLoadRes;
  * 资源加载
  */
 function preloadAssets() {
-  let preloaded = 0;
-  let count = 0;
-  for (let asset in assetsUrl) {
-    count++;
-    const img = wx.createImage();
-    img.onload = () => {
-      preloaded++;
-      if (preloaded == count) {
-        // console.log("加载完成");
-        hasLoadRes = true;
-      }
 
+  return new Promise((resole, reject) => {
+    let preloaded = 0;
+    let count = 0;
+    for (let asset in assetsUrl) {
+      count++;
+      const img = wx.createImage();
+      img.onload = () => {
+        preloaded++;
+        if (preloaded == count) {
+          // console.log("加载完成");
+          hasLoadRes = true;
+          resole();
+        }
+
+      }
+      img.src = assetsUrl[asset];
+      assets[asset] = img;
     }
-    img.src = assetsUrl[asset];
-    assets[asset] = img;
-  }
+  });
 }
 
 
@@ -461,6 +460,7 @@ function preloadAssets() {
  * 这个函数会在加载完所有资源之后被调用
  */
 function createScene() {
+  console.log("createScene");
   if (sharedCanvas.width && sharedCanvas.height) {
     // console.log('初始化完成')
     stageWidth = sharedCanvas.width;
@@ -484,13 +484,23 @@ let hasCreateScene;
 function addOpenDataContextListener() {
   console.log('增加监听函数')
   wx.onMessage((data) => {
-    console.log(data);
     if (data.command == 'open') {
-      if (!hasCreateScene) {
-        //创建并初始化
-        hasCreateScene = createScene();
-      }
-      requestAnimationFrameID = requestAnimationFrame(loop);
+
+      console.log('command:open');
+      console.log(data);
+
+      preloadAssets().then((res)=>{
+        if (!hasCreateScene) {
+          //创建并初始化
+          hasCreateScene = createScene();
+        }
+        console.log("666666666668888");
+        requestAnimationFrameID = requestAnimationFrame(loop);
+      }).catch((error)=>{
+        console.log("6666");
+      });
+   
+
     } else if (data.command == 'close' && requestAnimationFrameID) {
       cancelAnimationFrame(requestAnimationFrameID);
       requestAnimationFrameID = null
@@ -500,7 +510,7 @@ function addOpenDataContextListener() {
        * 只需要加载一次
        */
       // console.log('加载资源')
-      preloadAssets();
+      // preloadAssets();
     }
   });
 }
