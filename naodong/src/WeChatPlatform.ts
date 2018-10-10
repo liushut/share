@@ -21,19 +21,28 @@ class WeChatPlatform implements Platform {
         return new Promise(async function (resolve, reject) {
             AV.Cloud.run('conf').then(function (data) {
                 console.log(data);
+                  let myshare:any;
+                for (var key in data) {
+                   console.log(key +  "--------------------------")
+                   if(key == "share")
+                   {
+                       myshare = key;
+                       console.log("myshare --------" + myshare);
+                   }
+                }
                 //成功逻辑
                 if (data.share == true) {
-                    LevelDataManager.getInstance().isShare = true;
+                    LevelDataManager.getInstance().SetShare(1);
                     console.log("开关开启，分享开启" + data.share + "           LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);  
                 }
                 else if (data.share == false) {
-                    LevelDataManager.getInstance().isShare = false;
+                    LevelDataManager.getInstance().SetShare(0);
                     console.log("开关关闭，分享关闭" + data.share + "            LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);
                 };
                 resolve(data.share);
             }, function (err) {
                 //回调函数调用失败逻辑
-                console.log("函数调用失败");
+                console.log("函数调用失败 --------------------- ");
                  LevelDataManager.getInstance().isShare = true;
             });
         })
@@ -83,7 +92,8 @@ class WeChatPlatform implements Platform {
                 console.log("拉取视频成功")
             }).catch(err=>{
                 console.log("视频拉取失败");
-                video.load().then(() => video.show())
+                // video.load().then(() => video.show())
+                platform.testShare();
             });
             video.onClose(res => {
                 // 用户点击了【关闭广告】按钮
@@ -202,22 +212,24 @@ class WeChatPlatform implements Platform {
     async shareAppMessage(){
         (wx as any).shareAppMessage({
         title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-        imageUrl: "resource/assets/common/title11.png"
-      });
-      if(LevelDataManager.shareNum % 2 == 0)
+        imageUrl: "resource/assets/common/title11.png",
+        success:function(){
+             if(LevelDataManager.shareNum % 2 == 0)
       {
-        SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-        SoundManager.getInstance().windowSoundChanel.volume = 1;
-        SceneGame.getInstance().bingoLayer.visible = true;
-        SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-        SceneGame.getInstance().bingoLayer.daandi.visible = true;
-        SceneGame.getInstance().hintBg(true);
-        SceneGame.getInstance().bingoLayer.labelresult.text =
+            egret.Tween.get(this).wait(200).call(()=>{
+            SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+            SoundManager.getInstance().windowSoundChanel.volume = 1;
+            SceneGame.getInstance().bingoLayer.visible = true;
+            SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+            SceneGame.getInstance().bingoLayer.daandi.visible = true;
+            SceneGame.getInstance().hintBg(true);
+            SceneGame.getInstance().bingoLayer.labelresult.text =
             LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-        SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain
-            + "   ";
-        console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+            SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+            console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+           });
+           
       }
       else if(LevelDataManager.shareNum % 2 == 1)
       {
@@ -235,8 +247,9 @@ class WeChatPlatform implements Platform {
           })
          
       }
-      LevelDataManager.shareNum ++;
-     
+       LevelDataManager.shareNum ++;
+        }
+      });
     }
    
     async updateShareMenu(){

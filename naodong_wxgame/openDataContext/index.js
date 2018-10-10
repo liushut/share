@@ -4,7 +4,7 @@
  * 并在主域中渲染此 SharedCanvas
  */
 
- 
+
 /**
  * 资源加载组，将所需资源地址以及引用名进行注册
  * 之后可通过assets.引用名方式进行获取
@@ -48,7 +48,97 @@ const totalGroup = [{
     name: "1111111111",
     url: assets.icon,
     scroes: 10000
-  }
+  },
+  {
+    key: 2,
+    name: "2222222222",
+    url: assets.icon,
+    scroes: 9000
+  },
+  {
+    key: 3,
+    name: "3333333",
+    url: assets.icon,
+    scroes: 8000
+  },
+  {
+    key: 4,
+    name: "4444444",
+    url: assets.icon,
+    scroes: 7000
+  },
+  {
+    key: 5,
+    name: "55555555",
+    url: assets.icon,
+    scroes: 6000
+  },
+  {
+    key: 6,
+    name: "6666666",
+    url: assets.icon,
+    scroes: 5000
+  },
+  {
+    key: 7,
+    name: "7777777",
+    url: assets.icon,
+    scroes: 4000
+  },
+  {
+    key: 8,
+    name: "8888888",
+    url: assets.icon,
+    scroes: 3000
+  },
+  {
+    key: 9,
+    name: "9999999",
+    url: assets.icon,
+    scroes: 2000
+  },
+  {
+    key: 10,
+    name: "1010101010",
+    url: assets.icon,
+    scroes: 2000
+  },
+  {
+    key: 11,
+    name: "111111111111",
+    url: assets.icon,
+    scroes: 2000
+  },
+  {
+    key: 12,
+    name: "121212121212",
+    url: assets.icon,
+    scroes: 2000
+  },
+  {
+    key: 13,
+    name: "13131313",
+    url: assets.icon,
+    scroes: 2000
+  },
+  {
+    key: 14,
+    name: "1414141414",
+    url: assets.icon,
+    scroes: 2000
+  },
+  {
+    key: 15,
+    name: "1515151515",
+    url: assets.icon,
+    scroes: 2000
+  },
+  {
+    key: 16,
+    name: "1616161616",
+    url: assets.icon,
+    scroes: 2000
+  },
 ];
 
 /**
@@ -145,8 +235,7 @@ function drawByData(data, i) {
   context.fillText(data.name + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
   x += textMaxSize + intervalX;
   //绘制分数
-  context.fillText(data.scroes + "关", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
-  renderDirty=true;
+  context.fillText(data.scroes + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
 }
 
 /**
@@ -400,15 +489,11 @@ function addOpenDataContextListener() {
       console.log('command:open');
       console.log(data);
 
-      preloadAssets().then((res)=>{//资源加载成功在创建界面
+      preloadAssets().then((res)=>{
         if (!hasCreateScene) {
           //创建并初始化
           hasCreateScene = createScene();
         }
-      if (data.type =="friend")
-      {
-        setFirendList();
-      }
         console.log("666666666668888");
         requestAnimationFrameID = requestAnimationFrame(loop);
       }).catch((error)=>{
@@ -428,50 +513,6 @@ function addOpenDataContextListener() {
       // preloadAssets();
     }
   });
-}
-function setFirendList() {
-  wx.getFriendCloudStorage({
-    keyList: ["score"],
-    success: res => {
-      console.log("getFriendCloudStorage", res);
-      if (!res.data) { return; }
-      console.log("qqq", 1);
-      kvlist2totogroup(res.data);
-    },
-    fail: err => {
-      console.log(err);
-    },
-    complete: () => {
-    }
-  });
-}
-
-//把微信的数据转化成我们的数据
-function kvlist2totogroup(reslist) {
-  let dataList = [];
-  reslist.forEach((data) => {
-    if (data.KVDataList.length > 0) {
-      dataList.push(data);
-    }
-  });
-  if (dataList.length === 0) {
-    return;
-  }
-  dataList.sort((a, b) => {
-      return  a.KVDataList[0].value-b.KVDataList[0].value;
-  });
-  
-  for (var i = 0; i < dataList.length; i++) {
-    var obj = {};
-    obj.key = i;
-    obj.name = dataList[i].nickname;
-    obj.url = dataList[i].avatarUrl;
-    obj.scroes = dataList[i].KVDataList[0].value;
-    totalGroup.push(obj);
-  }
-  
-
-  renderDirty=true;
 }
 
 addOpenDataContextListener();

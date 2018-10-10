@@ -262,16 +262,16 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	{
 		egret.Tween.get(event.currentTarget).to({scaleX:1.2,scaleY:1.2},100).
 		to({scaleX:1,scaleY:1},100);
-		if(LevelDataManager.getInstance().isShare == true)
+		if(LevelDataManager.getInstance().GetShare() == 1)
 		{
-			console.log("开分享，分享开启Scene");
+			console.log("开分享，分享开启Scene GetShare()  " + LevelDataManager.getInstance().GetShare());
 			// platform.updateShareMenu();
 			// platform.showVideoAD();
 			platform.shareAppMessage();//无差别分享
 		}
-		else if(LevelDataManager.getInstance().isShare == false)
+		else if(LevelDataManager.getInstance().GetShare() == 0)
 		{
-		  console.log("看视频，分享关闭Scene");
+		  console.log("看视频，分享关闭Scene   GetShare()" +  LevelDataManager.getInstance().GetShare());
 		  platform.showVideoAD();
 		}
 		

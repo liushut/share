@@ -54,12 +54,19 @@ class Main extends eui.UILayer {
             console.log(e);
         })
     }
-
     private async runGame(){
          (wx as any).updateShareMenu({
         withShareTicket: true
       });
        (wx as any).createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });//初始化广告
+        (wx as any).showShareMenu(); 
+        wx.onShareAppMessage(function () {
+            // 用户点击了“转发”按钮
+            return {
+                 title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                 imageUrl: "resource/assets/common/title11.png"
+            }
+        })
         try{
             if(wx.getUpdateManager())
             {
@@ -125,11 +132,8 @@ class Main extends eui.UILayer {
                 LevelDataManager.getInstance().curIcon = data;
                 SceneGame.getInstance().InitLevel(data);
 
-                
-
                 console.log(data);
                 LevelDataManager.getInstance().getAd();//手动拉AD
-                
 
                 // this.btnOpen = new eui.Button();
                 // this.btnOpen.label = "btnClose!";

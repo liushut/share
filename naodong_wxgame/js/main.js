@@ -95,20 +95,29 @@ var WeChatPlatform = (function () {
                         return __awaiter(this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 AV.Cloud.run('conf').then(function (data) {
+                                    console.log(data);
+                                    var myshare;
+                                    for (var key in data) {
+                                        console.log(key + "--------------------------");
+                                        if (key == "share") {
+                                            myshare = key;
+                                            console.log("myshare --------" + myshare);
+                                        }
+                                    }
                                     //成功逻辑
                                     if (data.share == true) {
-                                        LevelDataManager.getInstance().isShare = true;
+                                        LevelDataManager.getInstance().SetShare(1);
                                         console.log("开关开启，分享开启" + data.share + "           LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);
                                     }
                                     else if (data.share == false) {
-                                        LevelDataManager.getInstance().isShare = false;
+                                        LevelDataManager.getInstance().SetShare(0);
                                         console.log("开关关闭，分享关闭" + data.share + "            LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);
                                     }
                                     ;
                                     resolve(data.share);
                                 }, function (err) {
                                     //回调函数调用失败逻辑
-                                    console.log("函数调用失败");
+                                    console.log("函数调用失败 --------------------- ");
                                     LevelDataManager.getInstance().isShare = true;
                                 });
                                 return [2 /*return*/];
@@ -166,7 +175,8 @@ var WeChatPlatform = (function () {
                             console.log("拉取视频成功");
                         }).catch(function (err) {
                             console.log("视频拉取失败");
-                            video.load().then(function () { return video.show(); });
+                            // video.load().then(() => video.show())
+                            platform.testShare();
                         });
                         video.onClose(function (res) {
                             // 用户点击了【关闭广告】按钮
@@ -318,37 +328,40 @@ var WeChatPlatform = (function () {
             return __generator(this, function (_a) {
                 wx.shareAppMessage({
                     title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                    imageUrl: "resource/assets/common/title11.png"
+                    imageUrl: "resource/assets/common/title11.png",
+                    success: function () {
+                        if (LevelDataManager.shareNum % 2 == 0) {
+                            egret.Tween.get(this).wait(200).call(function () {
+                                SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                                SoundManager.getInstance().windowSoundChanel.volume = 1;
+                                SceneGame.getInstance().bingoLayer.visible = true;
+                                SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                                SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                                SceneGame.getInstance().hintBg(true);
+                                SceneGame.getInstance().bingoLayer.labelresult.text =
+                                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                                SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                                console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                            });
+                        }
+                        else if (LevelDataManager.shareNum % 2 == 1) {
+                            egret.Tween.get(this).wait(200).call(function () {
+                                wx.showModal({
+                                    title: "提示",
+                                    content: "别总骚扰这个群的朋友啦，换个群分享吧~",
+                                    showCancel: false,
+                                    success: function (res) {
+                                        if (res.confirm == true) {
+                                            platform.shareAppMessage();
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                        LevelDataManager.shareNum++;
+                    }
                 });
-                if (LevelDataManager.shareNum % 2 == 0) {
-                    SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-                    SoundManager.getInstance().windowSoundChanel.volume = 1;
-                    SceneGame.getInstance().bingoLayer.visible = true;
-                    SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                    SceneGame.getInstance().bingoLayer.daandi.visible = true;
-                    SceneGame.getInstance().hintBg(true);
-                    SceneGame.getInstance().bingoLayer.labelresult.text =
-                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-                    SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain
-                        + "   ";
-                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-                }
-                else if (LevelDataManager.shareNum % 2 == 1) {
-                    egret.Tween.get(this).wait(200).call(function () {
-                        wx.showModal({
-                            title: "提示",
-                            content: "别总骚扰这个群的朋友啦，换个群分享吧~",
-                            showCancel: false,
-                            success: function (res) {
-                                if (res.confirm == true) {
-                                    platform.shareAppMessage();
-                                }
-                            }
-                        });
-                    });
-                }
-                LevelDataManager.shareNum++;
                 return [2 /*return*/];
             });
         });
@@ -840,7 +853,7 @@ var LevelDataManager = (function () {
     function LevelDataManager() {
         this.curIcon = 1;
         this.curIndex = 0; //当前段位
-        this.isShare = true;
+        this.isShare = false;
         //关卡数据的数据组
         this.levelDataItemList = [];
         //使用RES读取和构建JSON数据。Json数据可以直接解析到目标结构
@@ -852,6 +865,16 @@ var LevelDataManager = (function () {
             LevelDataManager.levelDataManager = new LevelDataManager();
         }
         return LevelDataManager.levelDataManager;
+    };
+    LevelDataManager.prototype.GetShare = function () {
+        var milestone = egret.localStorage.getItem("SHARE");
+        if (milestone == "" || milestone == null) {
+            milestone = "0"; //默认0关闭  1 为开启
+        }
+        return parseInt(milestone);
+    };
+    LevelDataManager.prototype.SetShare = function (share) {
+        egret.localStorage.setItem("SHARE", share.toString());
     };
     //通过关卡号获取数据
     LevelDataManager.prototype.GetLevelData = function (level) {
@@ -1383,6 +1406,14 @@ var Main = (function (_super) {
                             withShareTicket: true
                         });
                         wx.createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" }); //初始化广告
+                        wx.showShareMenu();
+                        wx.onShareAppMessage(function () {
+                            // 用户点击了“转发”按钮
+                            return {
+                                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                                imageUrl: "resource/assets/common/title11.png"
+                            };
+                        });
                         try {
                             if (wx.getUpdateManager()) {
                                 updateManager = wx.getUpdateManager();
@@ -1824,13 +1855,13 @@ var SceneGame = (function (_super) {
     SceneGame.prototype.showResult = function (event) {
         egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
             to({ scaleX: 1, scaleY: 1 }, 100);
-        if (LevelDataManager.getInstance().isShare == true) {
+        if (LevelDataManager.getInstance().GetShare() == 1) {
             console.log("开分享，分享开启Scene");
             // platform.updateShareMenu();
             // platform.showVideoAD();
             platform.shareAppMessage(); //无差别分享
         }
-        else if (LevelDataManager.getInstance().isShare == false) {
+        else if (LevelDataManager.getInstance().GetShare() == 0) {
             console.log("看视频，分享关闭Scene");
             platform.showVideoAD();
         }

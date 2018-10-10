@@ -14,7 +14,7 @@ class LevelDataManager//关卡数据管理
     public   curIcon:number = 1;;//当前关卡
     public   curIndex:number = 0;//当前段位
     public   static tempIndex = 0;//当前页面
-    public   isShare:boolean = true;
+    public   isShare:boolean = false;
     public   static isLogin:boolean = true;
 
 
@@ -41,7 +41,19 @@ class LevelDataManager//关卡数据管理
         this.levelDataItemList = RES.getRes("test_json");
     }
 
-
+    public GetShare()
+    {
+        let milestone = egret.localStorage.getItem("SHARE");
+        if(milestone == "" || milestone == null)
+        {
+            milestone = "0";//默认0关闭  1 为开启
+        }
+        return parseInt(milestone);
+    }
+    public SetShare(share:number)
+    {
+         egret.localStorage.setItem("SHARE",share.toString());
+    }
     //通过关卡号获取数据
     public GetLevelData(level):LevelDataItem
     {
