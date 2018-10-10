@@ -78,8 +78,6 @@ class Main extends eui.UILayer {
         const userInfo = await (platform as any).getAVUserInfo();
         console.log("游戏初始化");
         console.log("用户信息" + userInfo);
-        // await (platform as any).shareCloud();//分享开启
-        // await (platform as any).shouAD();//广告
         
         
     }
