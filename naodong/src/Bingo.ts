@@ -74,21 +74,21 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 		{
 			let level = LevelDataManager.getInstance().curIcon;
 			LevelDataManager.getInstance().SetMileStone(level);//存储
-			// (wx as any).setUserCloudStorage({
-			// 	KVDataList:[{key:"score",value:level.toString()}],
-			// 	success: res => {
-			// 		console.log(res);
-			// 		// 让子域更新当前用户的最高分，因为主域无法得到getUserCloadStorage;
-			// 		let openDataContext = (wx as any).getOpenDataContext();
-			// 		openDataContext.postMessage({
-			// 			command:"open",
-			// 			type: "updateMaxScore"
-			// 		});
-			// 	},
-			// 	fail: res => {
-			// 		console.log(res);
-			// 	}
-			// })
+			(wx as any).setUserCloudStorage({
+				KVDataList:[{key:"score",value:level.toString()}],
+				success: res => {
+					console.log(res);
+					// 让子域更新当前用户的最高分，因为主域无法得到getUserCloadStorage;
+					let openDataContext = (wx as any).getOpenDataContext();
+					openDataContext.postMessage({
+						command:"open",
+						type: "updateMaxScore"
+					});
+				},
+				fail: res => {
+					console.log(res);
+				}
+			})
 		}
 		SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 		this.imageUpdate();

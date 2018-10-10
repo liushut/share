@@ -14,7 +14,7 @@ class LevelDataManager//关卡数据管理
     public   curIcon:number = 1;;//当前关卡
     public   curIndex:number = 0;//当前段位
     public   static tempIndex = 0;//当前页面
-    public    isShare:boolean = true;
+    public   isShare:boolean = true;
     public   static isLogin:boolean = true;
 
 
