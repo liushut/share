@@ -201,7 +201,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		super.partAdded(partName,instance);
 	}
 
-	private bitmap:egret.Bitmap;
+
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
@@ -209,30 +209,44 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onLevel,this);
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onpaihang,this);
 	}
+	private bitmap:egret.Bitmap;
+	private rankingListMask: egret.Shape;
+    
+    private isdisplay = false;
 	private onpaihang()
 	{
+
+			//处理遮罩，避免开放数据域事件影响主域。
+            this.rankingListMask = new egret.Shape();
+            this.rankingListMask.graphics.beginFill(0x000000, 1);
+            this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
+            this.rankingListMask.graphics.endFill();
+            this.rankingListMask.alpha = 0.5;
+            this.rankingListMask.touchEnabled = true;
+            this.addChild(this.rankingListMask);
+			this.rankingListMask.addEventListener(egret.TouchEvent.TOUCH_TAP,()=>{
+			this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
+            this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
+            platform.openDataContext.postMessage({
+                isDisplay: this.isdisplay,
+                command: "close",
+                type:"closedata"
+            });
+			},this);
+
 			console.log("点击排行");
-			//   let platform: any = window.platform;
-			//         //主要示例代码开始
-            // this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
-            // this.addChild(this.bitmap);
-            // //主域向子域发送自定义消息
-            // platform.openDataContext.postMessage({
-            //     text: 'hello',
-            //     year: (new Date()).getFullYear(),
-            //     command: "open",
-            //     type:"opendata"
-            // });
-            // 主要示例代码结束            
-            // this.isdisplay = true;
-			let openDataContext = (wx as any).getOpenDataContext();
-			this.bitmap = platform.openDataContext.createDisplayObject(null,this.stage.stageWidth, this.stage.stageHeight);
+			  let platform: any = window.platform;
+			//主要示例代码开始
+            this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
             this.addChild(this.bitmap);
-			openDataContext.postMessage({
-				command: "open",
-				type:"friend"
-			});
-			console.log("点击了排行榜");
+            //主域向子域发送自定义消息
+            platform.openDataContext.postMessage({
+                command: "open",
+                type:"opendata"
+            });
+			console.log("点击了排行榜");  
+		
+			
 
 	}
 	private onLevel()
@@ -248,7 +262,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	{
 		egret.Tween.get(event.currentTarget).to({scaleX:1.2,scaleY:1.2},100).
 		to({scaleX:1,scaleY:1},100);
-		if(LevelDataManager.getInstance().isShare== true)
+		if(LevelDataManager.getInstance().isShare == true)
 		{
 			console.log("开分享，分享开启Scene");
 			// platform.updateShareMenu();

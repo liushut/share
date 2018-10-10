@@ -86,6 +86,7 @@ var WeChatPlatform = (function () {
      * 平台初始化
      */
     WeChatPlatform.prototype._init = function () {
+        this.openDataContext = new WxOpenDataContext();
     };
     WeChatPlatform.prototype.shareCloud = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -477,10 +478,33 @@ var WxOpenDataContext = (function () {
     function WxOpenDataContext() {
     }
     WxOpenDataContext.prototype.createDisplayObject = function (type, width, height) {
-        var shareCanvas = window["shareCanvas"];
-        var bitmap = new egret.BitmapData(shareCanvas);
-        bitmap.$deleteSource = false;
+        var sharedCanvas = window["sharedCanvas"];
+        var bitmapdata = new egret.BitmapData(sharedCanvas);
+        bitmapdata.$deleteSource = false;
         var texture = new egret.Texture();
+        texture._setBitmapData(bitmapdata);
+        var bitmap = new egret.Bitmap(texture);
+        bitmap.width = width;
+        bitmap.height = height;
+        if (egret.Capabilities.renderMode == "webgl") {
+            var renderContext = egret.wxgame.WebGLRenderContext.getInstance();
+            var context = renderContext.context;
+            ////需要用到最新的微信版本
+            ////调用其接口WebGLRenderingContext.wxBindCanvasTexture(number texture, Canvas canvas)
+            ////如果没有该接口，会进行如下处理，保证画面渲染正确，但会占用内存。
+            if (!context.wxBindCanvasTexture) {
+                egret.startTick(function (timeStarmp) {
+                    egret.WebGLUtils.deleteWebGLTexture(bitmapdata.webGLTexture);
+                    bitmapdata.webGLTexture = null;
+                    return false;
+                }, this);
+            }
+        }
+        return bitmap;
+    };
+    WxOpenDataContext.prototype.postMessage = function (data) {
+        var openDataContext = wx.getOpenDataContext();
+        openDataContext.postMessage(data);
     };
     return WxOpenDataContext;
 }());
@@ -523,21 +547,20 @@ var Bingo = (function (_super) {
         if (LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone()) {
             var level = LevelDataManager.getInstance().curIcon;
             LevelDataManager.getInstance().SetMileStone(level); //存储
-            // (wx as any).setUserCloudStorage({
-            // 	KVDataList:[{key:"score",value:level.toString()}],
-            // 	success: res => {
-            // 		console.log(res);
-            // 		// 让子域更新当前用户的最高分，因为主域无法得到getUserCloadStorage;
-            // 		let openDataContext = (wx as any).getOpenDataContext();
-            // 		openDataContext.postMessage({
-            // 			command:"open",
-            // 			type: "updateMaxScore"
-            // 		});
-            // 	},
-            // 	fail: res => {
-            // 		console.log(res);
-            // 	}
-            // })
+            wx.setUserCloudStorage({
+                KVDataList: [{ key: "score", value: level.toString() }],
+                success: function (res) {
+                    console.log(res);
+                    // 让子域更新当前用户的最高分，因为主域无法得到getUserCloadStorage;
+                    platform.openDataContext.postMessage({
+                        command: "open",
+                        type: "updateMaxScore"
+                    });
+                },
+                fail: function (res) {
+                    console.log(res);
+                }
+            });
         }
         SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
         this.imageUpdate();
@@ -1608,7 +1631,9 @@ __reflect(PlayerData.prototype, "PlayerData");
 var SceneGame = (function (_super) {
     __extends(SceneGame, _super);
     function SceneGame() {
-        return _super.call(this) || this;
+        var _this = _super.call(this) || this;
+        _this.isdisplay = false;
+        return _this;
     }
     // private s:string;
     SceneGame.getInstance = function () {
@@ -1760,26 +1785,33 @@ var SceneGame = (function (_super) {
         this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
     };
     SceneGame.prototype.onpaihang = function () {
+        var _this = this;
+        //处理遮罩，避免开放数据域事件影响主域。
+        this.rankingListMask = new egret.Shape();
+        this.rankingListMask.graphics.beginFill(0x000000, 1);
+        this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
+        this.rankingListMask.graphics.endFill();
+        this.rankingListMask.alpha = 0.5;
+        this.rankingListMask.touchEnabled = true;
+        this.addChild(this.rankingListMask);
+        this.rankingListMask.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            _this.bitmap.parent && _this.bitmap.parent.removeChild(_this.bitmap);
+            _this.rankingListMask.parent && _this.rankingListMask.parent.removeChild(_this.rankingListMask);
+            platform.openDataContext.postMessage({
+                isDisplay: _this.isdisplay,
+                command: "close",
+                type: "closedata"
+            });
+        }, this);
         console.log("点击排行");
-        //   let platform: any = window.platform;
-        //         //主要示例代码开始
-        // this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
-        // this.addChild(this.bitmap);
-        // //主域向子域发送自定义消息
-        // platform.openDataContext.postMessage({
-        //     text: 'hello',
-        //     year: (new Date()).getFullYear(),
-        //     command: "open",
-        //     type:"opendata"
-        // });
-        // 主要示例代码结束            
-        // this.isdisplay = true;
-        var openDataContext = wx.getOpenDataContext();
+        var platform = window.platform;
+        //主要示例代码开始
         this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
         this.addChild(this.bitmap);
-        openDataContext.postMessage({
+        //主域向子域发送自定义消息
+        platform.openDataContext.postMessage({
             command: "open",
-            type: "friend"
+            type: "opendata"
         });
         console.log("点击了排行榜");
     };

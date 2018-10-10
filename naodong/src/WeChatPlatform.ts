@@ -13,13 +13,14 @@ class WeChatPlatform implements Platform {
      * 平台初始化
      */
     private _init() : void {
-        
+        this.openDataContext = new WxOpenDataContext();
     }
     
    public async shareCloud():Promise<any>
     {
         return new Promise(async function (resolve, reject) {
             AV.Cloud.run('conf').then(function (data) {
+                console.log(data);
                 //成功逻辑
                 if (data.share == true) {
                     LevelDataManager.getInstance().isShare = true;
@@ -352,13 +353,35 @@ class WeChatPlatform implements Platform {
 
 //扩展开放域
 class WxOpenDataContext{
-    createDisplayObject(type,width,height)
-    {
-        let shareCanvas = window["shareCanvas"] as any;
-        const bitmap = new egret.BitmapData(shareCanvas);
-        bitmap.$deleteSource = false;
+     createDisplayObject(type, width, height) {
+        let sharedCanvas = window["sharedCanvas"] as any;
+        const bitmapdata = new egret.BitmapData(sharedCanvas);
+        bitmapdata.$deleteSource = false;
         const texture = new egret.Texture();
+        texture._setBitmapData(bitmapdata);
+        const bitmap = new egret.Bitmap(texture);
+        bitmap.width = width;
+        bitmap.height = height;
 
-        
+        if (egret.Capabilities.renderMode == "webgl") {
+            const renderContext = (egret as any).wxgame.WebGLRenderContext.getInstance();
+            const context = renderContext.context;
+            ////需要用到最新的微信版本
+            ////调用其接口WebGLRenderingContext.wxBindCanvasTexture(number texture, Canvas canvas)
+            ////如果没有该接口，会进行如下处理，保证画面渲染正确，但会占用内存。
+            if (!context.wxBindCanvasTexture) {
+                egret.startTick((timeStarmp) => {
+                    egret.WebGLUtils.deleteWebGLTexture(bitmapdata.webGLTexture);
+                    bitmapdata.webGLTexture = null;
+                    return false;
+                }, this);
+            }
+        }
+        return bitmap;
+    }
+   
+    postMessage(data) {
+        const openDataContext = wx.getOpenDataContext();
+        openDataContext.postMessage(data);
     }
 }
