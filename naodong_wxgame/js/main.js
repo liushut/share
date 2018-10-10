@@ -95,6 +95,14 @@ var WeChatPlatform = (function () {
                             return __generator(this, function (_a) {
                                 AV.Cloud.run('conf').then(function (data) {
                                     //成功逻辑
+                                    var myshare;
+                                    for (var key in data) {
+                                        console.log(key + "      aaaaaaaaaaaaaaaaaaaaa");
+                                        if (key == "share") {
+                                            myshare = key;
+                                            console.log("myshare --------" + myshare);
+                                        }
+                                    }
                                     if (data.share == true) {
                                         LevelDataManager.getInstance().isShare = true;
                                         console.log("开关开启，分享开启" + data.share + "           LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);
