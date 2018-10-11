@@ -201,50 +201,107 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		super.partAdded(partName,instance);
 	}
 
-
+	
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
+		
+		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
 		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP,this.showResult,this);
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onLevel,this);
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onpaihang,this);
-	}
-	private bitmap:egret.Bitmap;
-	private rankingListMask: egret.Shape;
-    
-    private isdisplay = false;
-	private onpaihang()
-	{
-
-			//处理遮罩，避免开放数据域事件影响主域。
-            this.rankingListMask = new egret.Shape();
-            this.rankingListMask.graphics.beginFill(0x000000, 1);
-            this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
-            this.rankingListMask.graphics.endFill();
-            this.rankingListMask.alpha = 0.5;
-            this.rankingListMask.touchEnabled = true;
-            this.addChild(this.rankingListMask);
-			this.rankingListMask.addEventListener(egret.TouchEvent.TOUCH_TAP,()=>{
+		this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,()=>{
+			this.openGroup.visible = false;
+			this.closeBtn.visible = false;
 			this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
+			this.myscrollView.parent.removeChild(this.myscrollView);
             this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
+
+			  
+
             platform.openDataContext.postMessage({
                 isDisplay: this.isdisplay,
                 command: "close",
                 type:"closedata"
             });
+		
+		LevelDataManager.getInstance().getAd().show();
 			},this);
+		
+	}
+	private bitmap:egret.Bitmap;
+	private rankingListMask: egret.Shape;
+   
+    private isdisplay = false;
+	private  myscrollView = new egret.ScrollView();
 
-			console.log("点击排行");
-			  let platform: any = window.platform;
-			//主要示例代码开始
-            this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
-            this.addChild(this.bitmap);
-            //主域向子域发送自定义消息
-            platform.openDataContext.postMessage({
-                command: "open",
-                type:"opendata"
-            });
-			console.log("点击了排行榜");  
+
+
+	
+	public openGroup:eui.Group;
+	public imgDibang:eui.Image;
+	public closeBtn:eui.Button;
+	public openScroller:eui.Scroller;
+	public ToOpenGroup:eui.Group;
+	private isFirst:boolean = false;
+
+
+
+	private onpaihang()
+	{
+
+
+
+		//处理遮罩，避免开放数据域事件影响主域。
+		this.rankingListMask = new egret.Shape();
+		this.rankingListMask.graphics.beginFill(0x000000, 1);
+		this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
+		this.rankingListMask.graphics.endFill();
+		this.rankingListMask.alpha = 0.5;
+		this.rankingListMask.touchEnabled = false;
+
+
+
+		console.log("点击排行");
+
+		//主要示例代码开始
+
+		// this.addChild(this.bitmap);
+		//主域向子域发送自定义消息
+		platform.openDataContext.postMessage({
+			command: "open",
+			type: "friend"
+		});
+
+
+
+
+
+		let container = new egret.DisplayObjectContainer();
+
+		this.myscrollView.setContent(container);
+		this.myscrollView.bounces = true;
+		this.myscrollView.x = this.bitmap.x;
+		this.myscrollView.y = this.bitmap.y + 300;
+		this.myscrollView.width = 680;
+		this.myscrollView.height = 720;
+
+
+
+		
+		
+		this.openGroup.visible = true;
+		this.closeBtn.visible = true;
+		this.addChild(this.rankingListMask);
+		container.addChild(this.bitmap);
+		this.addChild(this.openGroup);
+		this.addChild(this.myscrollView);
+		
+		this.addChild(this.closeBtn);
+		console.log("isFirst" + this.isFirst);
+		//隐藏广告
+		LevelDataManager.getInstance().getAd().hide();
+		console.log("点击了排行榜");  
 		
 			
 

@@ -103,7 +103,7 @@ class LevelDataManager//关卡数据管理
     }
 
     //拉取banner广告
-    public getAd()
+    public getAd():any
     {
         if(LevelDataManager.oldADs)
         {
@@ -163,7 +163,9 @@ class LevelDataManager//关卡数据管理
             console.log(winSize.screenHeight  + "winSize.screenHeight");
             newad.show();
             LevelDataManager.oldADs = newad;
+            return LevelDataManager.oldADs;
     }
+    
 }
 
 window["LevelDataItem"] = LevelDataItem;

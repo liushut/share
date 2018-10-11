@@ -1467,9 +1467,49 @@ var egret = window.egret;window.skins={};
 		return SceneGameSkin$Skin9;
 	})(eui.Skin);
 
+	var SceneGameSkin$Skin10 = 	(function (_super) {
+		__extends(SceneGameSkin$Skin10, _super);
+		function SceneGameSkin$Skin10() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = SceneGameSkin$Skin10.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "close_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return SceneGameSkin$Skin10;
+	})(eui.Skin);
+
 	function SceneGameSkin() {
 		_super.call(this);
-		this.skinParts = ["gameBg","btn_Level","btn_result","btn_paihang","group_Help","label_Question","group_Result","group_Chaotic","labelLevel","bingoLayer","levelScene"];
+		this.skinParts = ["gameBg","btn_Level","btn_result","btn_paihang","group_Help","label_Question","group_Result","group_Chaotic","labelLevel","bingoLayer","levelScene","imgDibang","openGroup","closeBtn"];
 		
 		this.height = 1280;
 		this.width = 720;
@@ -1494,7 +1534,7 @@ var egret = window.egret;window.skins={};
 		t.scaleY = 1;
 		t.verticalCenter = 0;
 		t.width = 720;
-		t.elementsContent = [this.gameBg_i(),this.group_Help_i(),this.label_Question_i(),this.group_Result_i(),this.group_Chaotic_i(),this.labelLevel_i(),this.bingoLayer_i(),this.levelScene_i()];
+		t.elementsContent = [this.gameBg_i(),this.group_Help_i(),this.label_Question_i(),this.group_Result_i(),this.group_Chaotic_i(),this.labelLevel_i(),this.bingoLayer_i(),this.levelScene_i(),this.openGroup_i(),this.closeBtn_i()];
 		return t;
 	};
 	_proto.gameBg_i = function () {
@@ -1554,7 +1594,6 @@ var egret = window.egret;window.skins={};
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
-		t.visible = false;
 		t.x = 600;
 		t.y = 150;
 		t.skinName = SceneGameSkin$Skin9;
@@ -1748,6 +1787,44 @@ var egret = window.egret;window.skins={};
 		t.width = 720;
 		t.x = 0;
 		t.y = 0;
+		return t;
+	};
+	_proto.openGroup_i = function () {
+		var t = new eui.Group();
+		this.openGroup = t;
+		t.height = 200;
+		t.horizontalCenter = 0;
+		t.verticalCenter = 0;
+		t.visible = false;
+		t.width = 200;
+		t.elementsContent = [this.imgDibang_i()];
+		return t;
+	};
+	_proto.imgDibang_i = function () {
+		var t = new eui.Image();
+		this.imgDibang = t;
+		t.height = 893;
+		t.horizontalCenter = 0;
+		t.source = "dibang_png";
+		t.verticalCenter = 0;
+		t.width = 648;
+		return t;
+	};
+	_proto.closeBtn_i = function () {
+		var t = new eui.Button();
+		this.closeBtn = t;
+		t.anchorOffsetX = 40;
+		t.anchorOffsetY = 32.5;
+		t.enabled = true;
+		t.height = 75;
+		t.label = "";
+		t.scaleX = 1;
+		t.scaleY = 1;
+		t.visible = false;
+		t.width = 80;
+		t.x = 669;
+		t.y = 243;
+		t.skinName = SceneGameSkin$Skin10;
 		return t;
 	};
 	return SceneGameSkin;

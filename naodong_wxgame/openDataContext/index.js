@@ -9,20 +9,19 @@
  * 资源加载组，将所需资源地址以及引用名进行注册
  * 之后可通过assets.引用名方式进行获取
  */
-const assetsUrl = {
-  icon: "openDataContext/assets/icon.png",
-  box: "openDataContext/assets/box.png",
-  panel: "openDataContext/assets/panel.png",
-  button: "openDataContext/assets/button.png",
-  title: "openDataContext/assets/rankingtitle.png"
+var assets = {
+  icon: "openDataContext/assets/touxiangkuang.png",
+  box: "openDataContext/assets/xuangxiangdi.png",
+  // panel: "openDataContext/assets/dibang.png",
+  // button: "openDataContext/assets/cha.png"
+  // title: "openDataContext/assets/rankingtitle.png"
 };
 
 /**
  * 资源加载组，将所需资源地址以及引用名进行注册
  * 之后可通过assets.引用名方式进行获取
  */
-let assets = {};
-console.log();
+
 /**
  * canvas 大小
  * 这里暂时写死
@@ -43,102 +42,13 @@ context.globalCompositeOperation = "source-over";
  * 包括姓名，头像图片，得分
  * 排位序号i会根据parge*perPageNum+i+1进行计算
  */
-const totalGroup = [{
-    key: 1,
-    name: "1111111111",
-    url: assets.icon,
-    scroes: 10000
-  },
-  {
-    key: 2,
-    name: "2222222222",
-    url: assets.icon,
-    scroes: 9000
-  },
-  {
-    key: 3,
-    name: "3333333",
-    url: assets.icon,
-    scroes: 8000
-  },
-  {
-    key: 4,
-    name: "4444444",
-    url: assets.icon,
-    scroes: 7000
-  },
-  {
-    key: 5,
-    name: "55555555",
-    url: assets.icon,
-    scroes: 6000
-  },
-  {
-    key: 6,
-    name: "6666666",
-    url: assets.icon,
-    scroes: 5000
-  },
-  {
-    key: 7,
-    name: "7777777",
-    url: assets.icon,
-    scroes: 4000
-  },
-  {
-    key: 8,
-    name: "8888888",
-    url: assets.icon,
-    scroes: 3000
-  },
-  {
-    key: 9,
-    name: "9999999",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 10,
-    name: "1010101010",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 11,
-    name: "111111111111",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 12,
-    name: "121212121212",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 13,
-    name: "13131313",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 14,
-    name: "1414141414",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 15,
-    name: "1515151515",
-    url: assets.icon,
-    scroes: 2000
-  },
-  {
-    key: 16,
-    name: "1616161616",
-    url: assets.icon,
-    scroes: 2000
-  },
+var totalGroup = [{
+  key: 1,
+  name: "1111111111",
+  url: assets.icon,
+  // wxicon:assets.icon,
+  scroes: 10000
+}
 ];
 
 /**
@@ -146,17 +56,17 @@ const totalGroup = [{
  */
 function drawRankPanel() {
   //绘制背景
-  context_drawImage(assets.panel, offsetX_rankToBorder, offsetY_rankToBorder, rankWidth, rankHeight);
+  // context.drawImage(assets.panel, offsetX_rankToBorder, offsetY_rankToBorder, rankWidth, rankHeight);
   //绘制标题
-  const title = assets.title;
+  // let title = assets.title;
   //根据title的宽高计算一下位置;
-  const titleX = offsetX_rankToBorder + (rankWidth - title.width) / 2;
-  const titleY = offsetY_rankToBorder + title.height + 40;
-  context_drawImage(title, titleX, titleY);
+  // let titleX = offsetX_rankToBorder + (rankWidth - title.width) / 2;
+  // let titleY = offsetY_rankToBorder + title.height + 40;
+  // context.drawImage(title, titleX, titleY);
   //获取当前要渲染的数据组
 
   //起始id
-  const startID = perPageMaxNum * page;
+  let startID = perPageMaxNum * page;
   currentGroup = totalGroup.slice(startID, startID + perPageMaxNum);
   //创建头像Bar
   drawRankByGroup(currentGroup);
@@ -168,14 +78,14 @@ function drawRankPanel() {
  */
 function init() {
   //排行榜绘制数据初始化,可以在此处进行修改
-  rankWidth = stageWidth * 4 / 5;
-  rankHeight = stageHeight * 4 / 5;
+  rankWidth = stageWidth * 4 / 5 + 50;
+  rankHeight = stageHeight * 4 / 5 - 150;
   barWidth = rankWidth * 4 / 5;
   barHeight = rankWidth / perPageMaxNum;
   offsetX_rankToBorder = (stageWidth - rankWidth) / 2;
   offsetY_rankToBorder = (stageHeight - rankHeight) / 2;
   preOffsetY = (rankHeight - barHeight) / (perPageMaxNum + 1);
-  fontSize = Math.floor(stageWidth / 25);
+  fontSize = Math.floor(stageWidth / 20);
   startX = offsetX_rankToBorder + (rankWidth - barWidth) / 2;
   startY = offsetY_rankToBorder + preOffsetY;
   avatarSize = barHeight - 10;
@@ -185,8 +95,8 @@ function init() {
   indexWidth = context.measureText("99").width;
 
   //按钮绘制数据初始化
-  buttonWidth = barWidth / 3;
-  buttonHeight = barHeight / 2;
+  buttonWidth = 80;
+  buttonHeight = 75;
   buttonOffset = rankWidth / 3;
   lastButtonX = offsetX_rankToBorder + buttonOffset - buttonWidth;
   nextButtonX = offsetX_rankToBorder + 2 * buttonOffset;
@@ -200,8 +110,8 @@ function init() {
  * 创建两个点击按钮
  */
 function drawButton() {
-  context_drawImage(assets.button, nextButtonX, nextButtonY, buttonWidth, buttonHeight);
-  context_drawImage(assets.button, lastButtonX, lastButtonY, buttonWidth, buttonHeight);
+  // context.drawImage(assets.button, nextButtonX, nextButtonY, buttonWidth, buttonHeight);
+  // context_drawImage(assets.button, lastButtonX, lastButtonY, buttonWidth, buttonHeight);
 }
 
 
@@ -216,26 +126,38 @@ function drawRankByGroup(currentGroup) {
 }
 
 /**
- * 根据绘制信息以及当前i绘制元素
+ * 根据绘制信息以及当前i绘制元素 这里做个人信息
  */
 function drawByData(data, i) {
   let x = startX;
   //绘制底框
-  context_drawImage(assets.box, startX, startY + i * preOffsetY, barWidth, barHeight);
+  context_drawImage(assets.box, startX - 20, startY + i * preOffsetY, barWidth + 50, barHeight);
   x += 10;
   //设置字体
   context.font = fontSize + "px Arial";
-  //绘制序号
-  context.fillText(data.key + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
+  context.fillStyle = "red";
+  //绘制序号  排名
+  context.fillText(data.key + 1 + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
   x += indexWidth + intervalX;
   //绘制头像
+  var image = wx.createImage();
+  image.src = data.url;
+  image.onload = function () {
+    renderDirty = true;
+  }
   context_drawImage(assets.icon, x, startY + i * preOffsetY + (barHeight - avatarSize) / 2, avatarSize, avatarSize);
+  context.drawImage(image, x + 5, startY + i * preOffsetY + (barHeight - avatarSize) / 2 + 5, avatarSize - 10, avatarSize - 10);
   x += avatarSize + intervalX;
+
   //绘制名称
-  context.fillText(data.name + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
+  context.fillStyle = "black";
+  context.font = 40 + "px Arial";
+  context.fillText(data.name + "", x, startY + i * preOffsetY + textOffsetY - 40, textMaxSize + 50);
   x += textMaxSize + intervalX;
+  context.fillStyle = "orange";
+  context.font = fontSize + "px Arial";
   //绘制分数
-  context.fillText(data.scroes + "", x, startY + i * preOffsetY + textOffsetY, textMaxSize);
+  context.fillText(data.scroes + "关", x + 100, startY + i * preOffsetY + textOffsetY, textMaxSize);
 }
 
 /**
@@ -313,7 +235,7 @@ let currentGroup = [];
 /**
  * 每页最多显示个数
  */
-let perPageMaxNum = 5;
+let perPageMaxNum = 7;
 /**
  * 当前页数,默认0为第一页
  */
@@ -416,7 +338,7 @@ let indexWidth;
  * 监听点击
  */
 wx.onTouchEnd((event) => {
-  const l = event.changedTouches.length;
+  var l = event.changedTouches.length;
   for (let i = 0; i < l; i++) {
     onTouchEnd(event.changedTouches[i]);
   }
@@ -436,9 +358,9 @@ function preloadAssets() {
   return new Promise((resole, reject) => {
     let preloaded = 0;
     let count = 0;
-    for (let asset in assetsUrl) {
+    for (var asset in assets) {
       count++;
-      const img = wx.createImage();
+      var img = wx.createImage();
       img.onload = () => {
         preloaded++;
         if (preloaded == count) {
@@ -448,7 +370,7 @@ function preloadAssets() {
         }
 
       }
-      img.src = assetsUrl[asset];
+      img.src = assets[asset];
       assets[asset] = img;
     }
   });
@@ -478,6 +400,53 @@ function createScene() {
 let requestAnimationFrameID;
 let hasCreateScene;
 
+
+
+function setFriendList() {
+  wx.getFriendCloudStorage({
+    keyList: ["score"],
+    success: res => {
+      console.log("getFriendCloudStorage", res);
+      if (!res.data) { return; }
+      console.log("qqq", 1);
+      kvlist2totogroup(res.data);
+    },
+    fail: err => {
+      console.log(err);
+    },
+    complete: () => {
+    }
+  });
+}
+//把微信的数据转化成我们的数据
+function kvlist2totogroup(reslist) {
+  let dataList = [];
+  reslist.forEach((data) => {
+    if (data.KVDataList.length > 0) {
+      dataList.push(data);
+    }
+  });
+  if (dataList.length === 0) {
+    return;
+  }
+  dataList.sort((a, b) => {
+    return b.KVDataList[0].value - a.KVDataList[0].value;
+  });
+  totalGroup = [];
+  for (var i = 0; i < dataList.length; i++) {
+    var obj = {};
+    obj.key = i;
+    obj.name = dataList[i].nickname;
+    obj.url = dataList[i].avatarUrl;
+    obj.scroes = dataList[i].KVDataList[0].value;
+    totalGroup.push(obj);
+  }
+
+  console.log("kvlist2totogroup");
+  renderDirty = true;
+}
+
+
 /**
  * 增加来自主域的监听函数
  */
@@ -489,17 +458,26 @@ function addOpenDataContextListener() {
       console.log('command:open');
       console.log(data);
 
-      preloadAssets().then((res)=>{
+      preloadAssets().then((res) => {
         if (!hasCreateScene) {
           //创建并初始化
           hasCreateScene = createScene();
         }
+        totalGroup = [];
+        page = 0;
+        renderDirty = true;
+        if (data.type == "friend") {
+          setFriendList();
+        }
+        else if (data.type == "updateMaxScore") {
+          setFriendList();
+        }
         console.log("666666666668888");
         requestAnimationFrameID = requestAnimationFrame(loop);
-      }).catch((error)=>{
+      }).catch((error) => {
         console.log("6666");
       });
-   
+
 
     } else if (data.command == 'close' && requestAnimationFrameID) {
       cancelAnimationFrame(requestAnimationFrameID);

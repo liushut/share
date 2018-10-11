@@ -293,10 +293,31 @@ var WeChatPlatform = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resole, reject) {
-                        wx.shareAppMessage({
-                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                            imageUrl: "resource/assets/common/title11.png"
-                        });
+                        if (LevelDataManager.getInstance().GetShare() == 1) {
+                            wx.shareAppMessage({
+                                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                                imageUrl: "resource/assets/common/title11.png",
+                                fail: function () {
+                                    console.log("fail函数有效");
+                                    wx.showModal({
+                                        title: "提示",
+                                        content: "可以分享快乐给朋友哦~~~",
+                                        showCancel: false,
+                                        success: function (res) {
+                                            if (res.confirm == true) {
+                                                platform.testShare();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        else if (LevelDataManager.getInstance().GetShare() == 0) {
+                            wx.shareAppMessage({
+                                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                                imageUrl: "resource/assets/common/title11.png"
+                            });
+                        }
                     })];
             });
         });
@@ -328,40 +349,41 @@ var WeChatPlatform = (function () {
             return __generator(this, function (_a) {
                 wx.shareAppMessage({
                     title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                    imageUrl: "resource/assets/common/title11.png",
-                    success: function () {
-                        if (LevelDataManager.shareNum % 2 == 0) {
-                            egret.Tween.get(this).wait(200).call(function () {
-                                SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-                                SoundManager.getInstance().windowSoundChanel.volume = 1;
-                                SceneGame.getInstance().bingoLayer.visible = true;
-                                SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                                SceneGame.getInstance().bingoLayer.daandi.visible = true;
-                                SceneGame.getInstance().hintBg(true);
-                                SceneGame.getInstance().bingoLayer.labelresult.text =
-                                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-                                SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
-                                console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-                            });
-                        }
-                        else if (LevelDataManager.shareNum % 2 == 1) {
-                            egret.Tween.get(this).wait(200).call(function () {
-                                wx.showModal({
-                                    title: "提示",
-                                    content: "别总骚扰这个群的朋友啦，换个群分享吧~",
-                                    showCancel: false,
-                                    success: function (res) {
-                                        if (res.confirm == true) {
-                                            platform.shareAppMessage();
-                                        }
-                                    }
-                                });
-                            });
-                        }
-                        LevelDataManager.shareNum++;
-                    }
+                    imageUrl: "resource/assets/common/title11.png"
                 });
+                if (LevelDataManager.shareNum % 2 == 0) {
+                    egret.Tween.get(this).wait(200).call(function () {
+                        SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                        SoundManager.getInstance().windowSoundChanel.volume = 1;
+                        SceneGame.getInstance().bingoLayer.visible = true;
+                        SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                        SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                        SceneGame.getInstance().hintBg(true);
+                        SceneGame.getInstance().bingoLayer.labelresult.text =
+                            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                        SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                        console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                        LevelDataManager.shareNum++;
+                        console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
+                    });
+                }
+                else if (LevelDataManager.shareNum % 2 == 1) {
+                    egret.Tween.get(this).wait(200).call(function () {
+                        wx.showModal({
+                            title: "提示",
+                            content: "别总骚扰这个群的朋友啦，换个群分享吧~",
+                            showCancel: false,
+                            success: function (res) {
+                                if (res.confirm == true) {
+                                    platform.shareAppMessage();
+                                }
+                            }
+                        });
+                        LevelDataManager.shareNum++;
+                        console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
+                    });
+                }
                 return [2 /*return*/];
             });
         });
@@ -561,18 +583,7 @@ var Bingo = (function (_super) {
             var level = LevelDataManager.getInstance().curIcon;
             LevelDataManager.getInstance().SetMileStone(level); //存储
             wx.setUserCloudStorage({
-                KVDataList: [{ key: "score", value: level.toString() }],
-                success: function (res) {
-                    console.log(res);
-                    // 让子域更新当前用户的最高分，因为主域无法得到getUserCloadStorage;
-                    platform.openDataContext.postMessage({
-                        command: "open",
-                        type: "updateMaxScore"
-                    });
-                },
-                fail: function (res) {
-                    console.log(res);
-                }
+                KVDataList: [{ key: "score", value: level.toString() }]
             });
         }
         SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
@@ -969,6 +980,7 @@ var LevelDataManager = (function () {
         console.log(winSize.screenHeight + "winSize.screenHeight");
         newad.show();
         LevelDataManager.oldADs = newad;
+        return LevelDataManager.oldADs;
     };
     LevelDataManager.shareNum = 0; //分享次数
     LevelDataManager.tempIndex = 0; //当前页面
@@ -1664,6 +1676,8 @@ var SceneGame = (function (_super) {
     function SceneGame() {
         var _this = _super.call(this) || this;
         _this.isdisplay = false;
+        _this.myscrollView = new egret.ScrollView();
+        _this.isFirst = false;
         return _this;
     }
     // private s:string;
@@ -1810,40 +1824,59 @@ var SceneGame = (function (_super) {
         _super.prototype.partAdded.call(this, partName, instance);
     };
     SceneGame.prototype.childrenCreated = function () {
+        var _this = this;
         _super.prototype.childrenCreated.call(this);
+        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
         this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
         this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
         this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
-    };
-    SceneGame.prototype.onpaihang = function () {
-        var _this = this;
-        //处理遮罩，避免开放数据域事件影响主域。
-        this.rankingListMask = new egret.Shape();
-        this.rankingListMask.graphics.beginFill(0x000000, 1);
-        this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
-        this.rankingListMask.graphics.endFill();
-        this.rankingListMask.alpha = 0.5;
-        this.rankingListMask.touchEnabled = true;
-        this.addChild(this.rankingListMask);
-        this.rankingListMask.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+        this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            _this.openGroup.visible = false;
+            _this.closeBtn.visible = false;
             _this.bitmap.parent && _this.bitmap.parent.removeChild(_this.bitmap);
+            _this.myscrollView.parent.removeChild(_this.myscrollView);
             _this.rankingListMask.parent && _this.rankingListMask.parent.removeChild(_this.rankingListMask);
             platform.openDataContext.postMessage({
                 isDisplay: _this.isdisplay,
                 command: "close",
                 type: "closedata"
             });
+            LevelDataManager.getInstance().getAd().show();
         }, this);
+    };
+    SceneGame.prototype.onpaihang = function () {
+        //处理遮罩，避免开放数据域事件影响主域。
+        this.rankingListMask = new egret.Shape();
+        this.rankingListMask.graphics.beginFill(0x000000, 1);
+        this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
+        this.rankingListMask.graphics.endFill();
+        this.rankingListMask.alpha = 0.5;
+        this.rankingListMask.touchEnabled = false;
         console.log("点击排行");
-        var platform = window.platform;
         //主要示例代码开始
-        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
-        this.addChild(this.bitmap);
+        // this.addChild(this.bitmap);
         //主域向子域发送自定义消息
         platform.openDataContext.postMessage({
             command: "open",
-            type: "opendata"
+            type: "friend"
         });
+        var container = new egret.DisplayObjectContainer();
+        this.myscrollView.setContent(container);
+        this.myscrollView.bounces = true;
+        this.myscrollView.x = this.bitmap.x;
+        this.myscrollView.y = this.bitmap.y + 300;
+        this.myscrollView.width = 680;
+        this.myscrollView.height = 720;
+        this.openGroup.visible = true;
+        this.closeBtn.visible = true;
+        this.addChild(this.rankingListMask);
+        container.addChild(this.bitmap);
+        this.addChild(this.openGroup);
+        this.addChild(this.myscrollView);
+        this.addChild(this.closeBtn);
+        console.log("isFirst" + this.isFirst);
+        //隐藏广告
+        LevelDataManager.getInstance().getAd().hide();
         console.log("点击了排行榜");
     };
     SceneGame.prototype.onLevel = function () {
@@ -1856,13 +1889,13 @@ var SceneGame = (function (_super) {
         egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
             to({ scaleX: 1, scaleY: 1 }, 100);
         if (LevelDataManager.getInstance().GetShare() == 1) {
-            console.log("开分享，分享开启Scene");
+            console.log("开分享，分享开启Scene GetShare()  " + LevelDataManager.getInstance().GetShare());
             // platform.updateShareMenu();
             // platform.showVideoAD();
             platform.shareAppMessage(); //无差别分享
         }
         else if (LevelDataManager.getInstance().GetShare() == 0) {
-            console.log("看视频，分享关闭Scene");
+            console.log("看视频，分享关闭Scene   GetShare()" + LevelDataManager.getInstance().GetShare());
             platform.showVideoAD();
         }
     };

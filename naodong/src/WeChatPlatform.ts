@@ -189,10 +189,31 @@ class WeChatPlatform implements Platform {
 
     public async  testShare(){
     return new Promise((resole, reject)=>{
-      (wx as any).shareAppMessage({
-        title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-        imageUrl: "resource/assets/common/title11.png"
-      })
+        if (LevelDataManager.getInstance().GetShare() == 1) {
+            (wx as any).shareAppMessage({
+                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                imageUrl: "resource/assets/common/title11.png",
+                fail: function () {
+                    console.log("fail函数有效");
+                    (wx as any).showModal({
+                        title: "提示",
+                        content: "可以分享快乐给朋友哦~~~",
+                        showCancel: false,
+                        success: function (res) {
+                            if (res.confirm == true) {
+                                platform.testShare();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        else if (LevelDataManager.getInstance().GetShare() == 0) {
+            (wx as any).shareAppMessage({
+                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                imageUrl: "resource/assets/common/title11.png"
+            });
+        }
     })
   }
     public async leancloudInit()
@@ -212,44 +233,41 @@ class WeChatPlatform implements Platform {
     async shareAppMessage(){
         (wx as any).shareAppMessage({
         title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-        imageUrl: "resource/assets/common/title11.png",
-        success:function(){
-             if(LevelDataManager.shareNum % 2 == 0)
-      {
-            egret.Tween.get(this).wait(200).call(()=>{
-            SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-            SoundManager.getInstance().windowSoundChanel.volume = 1;
-            SceneGame.getInstance().bingoLayer.visible = true;
-            SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-            SceneGame.getInstance().bingoLayer.daandi.visible = true;
-            SceneGame.getInstance().hintBg(true);
-            SceneGame.getInstance().bingoLayer.labelresult.text =
-            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-            SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
-            console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-           });
-           
-      }
-      else if(LevelDataManager.shareNum % 2 == 1)
-      {
-          egret.Tween.get(this).wait(200).call(()=>{
-               (wx as any).showModal({
-              title: "提示",
-              content: "别总骚扰这个群的朋友啦，换个群分享吧~",
-              showCancel: false,//不显示取消按钮
-              success: function (res) {
-                  if (res.confirm == true) {
-                      platform.shareAppMessage();
-                  }
-              }
-          })
-          })
-         
-      }
-       LevelDataManager.shareNum ++;
-        }
+        imageUrl: "resource/assets/common/title11.png"
       });
+         if (LevelDataManager.shareNum % 2 == 0) {
+                egret.Tween.get(this).wait(200).call(function () {
+                  SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                  SoundManager.getInstance().windowSoundChanel.volume = 1;
+                  SceneGame.getInstance().bingoLayer.visible = true;
+                  SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                  SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                  SceneGame.getInstance().hintBg(true);
+                  SceneGame.getInstance().bingoLayer.labelresult.text =
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                  SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                  console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                  LevelDataManager.shareNum++;
+                  console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
+                });
+              }
+              else if (LevelDataManager.shareNum % 2 == 1) {
+                egret.Tween.get(this).wait(200).call(function () {
+                  (wx as any).showModal({
+                    title: "提示",
+                    content: "别总骚扰这个群的朋友啦，换个群分享吧~",
+                    showCancel: false,
+                    success: function (res) {
+                      if (res.confirm == true) {
+                        platform.shareAppMessage();
+                      }
+                    }
+                  });
+                  LevelDataManager.shareNum++;
+                  console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
+                });
+              }
     }
    
     async updateShareMenu(){
@@ -390,6 +408,7 @@ class WxOpenDataContext{
                 }, this);
             }
         }
+        
         return bitmap;
     }
    

@@ -6,7 +6,7 @@
  */
 var {Query,User} = AV;
 declare interface Platform {
- //开放数据域
+  //开放数据域
     openDataContext:any;
 
     shareCloud():Promise<any>;
