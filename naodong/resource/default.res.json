@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "description_json,test_json,number_fnt,number_png,word_mp3,window_wav,answer1_mp3,danan_png,gameBg_jpg,guanka_png,zidi_png,daandi_png,close_png,dashi_png,ditu_png,guankadi_png,hengfu_png,huidashi_png,huihengfu_png,huilock_png,huixianzhi_png,huixinshou_png,huixuezhe_png,huizhizhe_png,huizongshi_png,jiantou_png,levelBg_png,star_png,xianzhi_png,xinshou_png,xuezhe_png,zhizhe_png,zongshi_png,tanchuandaandi_png,daduidi_png,daduile_png,next_png,share_png,dacuole_png,shareFail_png,dashizi_png,dizi_png,xianzhizi_png,xingzi_png,xinshouzi_png,xuezhezi_png,zhizhezi_png,zongshizi_png,surebtn_png,title11_png,erroSound_mp3,trueSound_mp3,paihangbang_png,dibang_png,cha_png",
+			"keys": "description_json,test_json,number_fnt,number_png,word_mp3,window_wav,answer1_mp3,danan_png,gameBg_jpg,guanka_png,zidi_png,daandi_png,close_png,dashi_png,ditu_png,guankadi_png,hengfu_png,huidashi_png,huihengfu_png,huilock_png,huixianzhi_png,huixinshou_png,huixuezhe_png,huizhizhe_png,huizongshi_png,jiantou_png,levelBg_png,star_png,xianzhi_png,xinshou_png,xuezhe_png,zhizhe_png,zongshi_png,tanchuandaandi_png,daduidi_png,daduile_png,next_png,share_png,dacuole_png,shareFail_png,dashizi_png,dizi_png,xianzhizi_png,xingzi_png,xinshouzi_png,xuezhezi_png,zhizhezi_png,zongshizi_png,surebtn_png,title11_png,erroSound_mp3,trueSound_mp3,paihangbang_png,dibang_png,cha_png,tiaozhan_png",
 			"name": "preload"
 		}
 	],
@@ -280,6 +280,11 @@
 			"name": "cha_png",
 			"type": "image",
 			"url": "assets/common/cha.png"
+		},
+		{
+			"name": "tiaozhan_png",
+			"type": "image",
+			"url": "assets/shengji/tiaozhan.png"
 		}
 	]
 }

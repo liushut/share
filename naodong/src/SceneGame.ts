@@ -79,26 +79,28 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	 }
 	 private changeWord()
 	 {
-		  if(this.levelIndex <= 150)
+		  if(this.levelIndex < 150)
 		 {
 			 if(this.group_Chaotic.numChildren == 10)
 			 {
 				 return;
 			 }
 			 this.group_Chaotic.removeChildren();
+			 
 			 for(let i = 0;i < 10;i++)
 			 {
 				 let word = new Word();
 				 this.group_Chaotic.addChild(word);
 			 }
 		 }
-		 else if(this.levelIndex >= 151)
+		 else if(this.levelIndex >= 150)
 		 {
 			 if(this.group_Chaotic.numChildren == 15)
 			 {
 				 return;
 			 }
 			 this.group_Chaotic.removeChildren();
+			 //实在不行就加布局类。
 			 for(let i = 0;i < 15;i++)
 			 {
 				 let word = new Word();
@@ -206,7 +208,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	{
 		super.childrenCreated();
 		
-		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight );
 		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP,this.showResult,this);
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onLevel,this);
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onpaihang,this);
@@ -233,11 +235,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	private rankingListMask: egret.Shape;
    
     private isdisplay = false;
-	private  myscrollView = new egret.ScrollView();
-
-
-
-	
+	private myscrollView = new egret.ScrollView();
 	public openGroup:eui.Group;
 	public imgDibang:eui.Image;
 	public closeBtn:eui.Button;
@@ -249,9 +247,6 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 
 	private onpaihang()
 	{
-
-
-
 		//处理遮罩，避免开放数据域事件影响主域。
 		this.rankingListMask = new egret.Shape();
 		this.rankingListMask.graphics.beginFill(0x000000, 1);
@@ -259,46 +254,32 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		this.rankingListMask.graphics.endFill();
 		this.rankingListMask.alpha = 0.5;
 		this.rankingListMask.touchEnabled = false;
-
-
-
 		console.log("点击排行");
 
-		//主要示例代码开始
-
-		// this.addChild(this.bitmap);
 		//主域向子域发送自定义消息
 		platform.openDataContext.postMessage({
 			command: "open",
 			type: "friend"
 		});
 
-
-
-
-
 		let container = new egret.DisplayObjectContainer();
-
 		this.myscrollView.setContent(container);
 		this.myscrollView.bounces = true;
-		this.myscrollView.x = this.bitmap.x;
+		this.myscrollView.x = this.bitmap.x + 100;
 		this.myscrollView.y = this.bitmap.y + 300;
-		this.myscrollView.width = 680;
-		this.myscrollView.height = 720;
+		this.myscrollView.width = this.stage.stageWidth;
+		this.myscrollView.height = this.stage.stageHeight / 2;
+		this.myscrollView.setScrollLeft(0);
+		this.myscrollView.scrollSpeed = 1;
 
-
-
-		
-		
 		this.openGroup.visible = true;
 		this.closeBtn.visible = true;
 		this.addChild(this.rankingListMask);
 		container.addChild(this.bitmap);
 		this.addChild(this.openGroup);
 		this.addChild(this.myscrollView);
-		
 		this.addChild(this.closeBtn);
-		console.log("isFirst" + this.isFirst);
+		
 		//隐藏广告
 		LevelDataManager.getInstance().getAd().hide();
 		console.log("点击了排行榜");  

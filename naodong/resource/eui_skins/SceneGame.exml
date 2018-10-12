@@ -47,10 +47,11 @@
 			<ns1:Word width="123" height="135" x="233" y="379"/>
 			<ns1:Word width="123" height="135" x="243" y="389"/>
 			<ns1:Word width="123" height="135" x="253" y="399"/>
-			<ns1:Word width="123" height="135" x="263" y="409"/>
-			<ns1:Word width="123" height="135" x="273" y="419"/>
+				<ns1:Word width="123" height="135" x="323" y="469"/>
+
+
 				<e:layout>
-					<e:TileLayout horizontalGap="3"/>
+					<e:TileLayout horizontalGap="3" rowAlign="top" columnAlign="justifyUsingGap" orientation="rows" horizontalAlign="left" verticalAlign="top" paddingLeft="0" paddingTop="0" paddingBottom="0"/>
 				</e:layout>
 			</e:Group>
 			<e:Label id="labelLevel" text="999" y="267" width="100" height="100" verticalAlign="middle" size="30" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="353"/>

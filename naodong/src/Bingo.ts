@@ -23,7 +23,7 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 
 	//升级的UI
 	public upgradeGroup: eui.Group;
-	public imgdizi: eui.Image;
+	public tiaozhanBtn:eui.Button;
 	public imgDengji: eui.Image;
 	public imgTouxiang: eui.Image;
 	public starsGroup: eui.Group;
@@ -46,7 +46,7 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 		super.childrenCreated();
 		this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onNext,this);
 		this.btn_share.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onShare,this);
-		this.imgdizi.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onImgZidi,this);
+		this.tiaozhanBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.ontiaozhanBtn,this);
 		this.erroBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onErro,this);
 		
 	}
@@ -54,8 +54,9 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 	{
 		platform.shareAppMessage();
 	}
-	private onImgZidi()
+	private ontiaozhanBtn()
 	{
+		platform.testShare();
 		this.visible = false;
 		this.upgradeGroup.visible = false;
 	}
@@ -94,7 +95,11 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 		console.log(LevelDataManager.getInstance().curIcon);
 		if(LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone())//如果大于最远
 		{
-			LevelDataManager.getInstance().SetMileStone(LevelDataManager.getInstance().curIcon);//存储
+			let level = LevelDataManager.getInstance().curIcon;
+			LevelDataManager.getInstance().SetMileStone(level);//存储
+			(wx as any).setUserCloudStorage({
+				KVDataList:[{key:"score",value:level.toString()}]
+			})
 		}
 		SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 		this.imageUpdate();

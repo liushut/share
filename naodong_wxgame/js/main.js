@@ -560,13 +560,14 @@ var Bingo = (function (_super) {
         _super.prototype.childrenCreated.call(this);
         this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onNext, this);
         this.btn_share.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onShare, this);
-        this.imgdizi.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onImgZidi, this);
+        this.tiaozhanBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.ontiaozhanBtn, this);
         this.erroBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onErro, this);
     };
     Bingo.prototype.onErro = function () {
         platform.shareAppMessage();
     };
-    Bingo.prototype.onImgZidi = function () {
+    Bingo.prototype.ontiaozhanBtn = function () {
+        platform.testShare();
         this.visible = false;
         this.upgradeGroup.visible = false;
     };
@@ -599,7 +600,11 @@ var Bingo = (function (_super) {
         LevelDataManager.getInstance().curIcon++;
         console.log(LevelDataManager.getInstance().curIcon);
         if (LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone()) {
-            LevelDataManager.getInstance().SetMileStone(LevelDataManager.getInstance().curIcon); //存储
+            var level = LevelDataManager.getInstance().curIcon;
+            LevelDataManager.getInstance().SetMileStone(level); //存储
+            wx.setUserCloudStorage({
+                KVDataList: [{ key: "score", value: level.toString() }]
+            });
         }
         SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
         this.imageUpdate();
@@ -1742,6 +1747,7 @@ var SceneGame = (function (_super) {
                 return;
             }
             this.group_Chaotic.removeChildren();
+            //实在不行就加布局类。
             for (var i = 0; i < 15; i++) {
                 var word = new Word();
                 this.group_Chaotic.addChild(word);
@@ -1826,7 +1832,7 @@ var SceneGame = (function (_super) {
     SceneGame.prototype.childrenCreated = function () {
         var _this = this;
         _super.prototype.childrenCreated.call(this);
-        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth * 4 / 5, this.stage.stageHeight * 2 / 3);
         this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
         this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
         this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
@@ -1853,8 +1859,6 @@ var SceneGame = (function (_super) {
         this.rankingListMask.alpha = 0.5;
         this.rankingListMask.touchEnabled = false;
         console.log("点击排行");
-        //主要示例代码开始
-        // this.addChild(this.bitmap);
         //主域向子域发送自定义消息
         platform.openDataContext.postMessage({
             command: "open",
@@ -1863,10 +1867,12 @@ var SceneGame = (function (_super) {
         var container = new egret.DisplayObjectContainer();
         this.myscrollView.setContent(container);
         this.myscrollView.bounces = true;
-        this.myscrollView.x = this.bitmap.x;
+        this.myscrollView.x = this.bitmap.x + 100;
         this.myscrollView.y = this.bitmap.y + 300;
-        this.myscrollView.width = 680;
-        this.myscrollView.height = 720;
+        this.myscrollView.width = this.stage.stageWidth * 4 / 5;
+        this.myscrollView.height = this.stage.stageHeight / 2;
+        this.myscrollView.setScrollLeft(0);
+        this.myscrollView.scrollSpeed = 1;
         this.openGroup.visible = true;
         this.closeBtn.visible = true;
         this.addChild(this.rankingListMask);
@@ -1874,7 +1880,6 @@ var SceneGame = (function (_super) {
         this.addChild(this.openGroup);
         this.addChild(this.myscrollView);
         this.addChild(this.closeBtn);
-        console.log("isFirst" + this.isFirst);
         //隐藏广告
         LevelDataManager.getInstance().getAd().hide();
         console.log("点击了排行榜");
