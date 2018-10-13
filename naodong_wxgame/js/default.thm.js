@@ -1715,92 +1715,10 @@ var egret = window.egret;window.skins={};
 		t.x = 65;
 		t.y = 680;
 		t.layout = this._TileLayout1_i();
-		t.elementsContent = [this._Word1_i(),this._Word2_i(),this._Word3_i(),this._Word4_i(),this._Word5_i(),this._Word6_i(),this._Word7_i(),this._Word8_i(),this._Word9_i()];
 		return t;
 	};
 	_proto._TileLayout1_i = function () {
 		var t = new eui.TileLayout();
-		t.columnAlign = "justifyUsingGap";
-		t.horizontalAlign = "left";
-		t.horizontalGap = 3;
-		t.orientation = "rows";
-		t.paddingBottom = 0;
-		t.paddingLeft = 0;
-		t.paddingTop = 0;
-		t.rowAlign = "top";
-		t.verticalAlign = "top";
-		return t;
-	};
-	_proto._Word1_i = function () {
-		var t = new Word();
-		t.height = 117;
-		t.width = 113;
-		t.x = 203;
-		t.y = 349;
-		return t;
-	};
-	_proto._Word2_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 283;
-		t.y = 429;
-		return t;
-	};
-	_proto._Word3_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 293;
-		t.y = 439;
-		return t;
-	};
-	_proto._Word4_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 213;
-		t.y = 359;
-		return t;
-	};
-	_proto._Word5_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 223;
-		t.y = 369;
-		return t;
-	};
-	_proto._Word6_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 233;
-		t.y = 379;
-		return t;
-	};
-	_proto._Word7_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 243;
-		t.y = 389;
-		return t;
-	};
-	_proto._Word8_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 253;
-		t.y = 399;
-		return t;
-	};
-	_proto._Word9_i = function () {
-		var t = new Word();
-		t.height = 135;
-		t.width = 123;
-		t.x = 323;
-		t.y = 469;
 		return t;
 	};
 	_proto.labelLevel_i = function () {

@@ -47,7 +47,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		 //内容区域赋值  大于150关   变为15字
 		 
 		 this.changeWord();//改变选择区域字数
-		//  this.group_Chaotic.layout = new eui.TileLayout();
+		
 		 for(let i = 0; i < this.group_Chaotic.numChildren; i++)
 		 {
 			 let wordRect = <Word>this.group_Chaotic.getChildAt(i);
@@ -86,7 +86,10 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 				 return;
 			 }
 			 this.group_Chaotic.removeChildren();
-			 
+			 let tLayout:eui.TileLayout = new eui.TileLayout();
+			 tLayout.horizontalGap = 35;
+			 tLayout.verticalGap = 30;
+			 this.group_Chaotic.layout = tLayout;
 			 for(let i = 0;i < 10;i++)
 			 {
 				 let word = new Word();
@@ -100,7 +103,11 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 				 return;
 			 }
 			 this.group_Chaotic.removeChildren();
-			 //实在不行就加布局类。
+			 //加布局类。   eui正确设置一次就可以不变了。除非想改变布局才改。
+			 let tLayout:eui.TileLayout = new eui.TileLayout();
+			 tLayout.horizontalGap = 35;
+			 tLayout.verticalGap = 30;
+			 this.group_Chaotic.layout = tLayout;
 			 for(let i = 0;i < 15;i++)
 			 {
 				 let word = new Word();
@@ -139,7 +146,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		 {
 			 rect.SetSelectWord(word);//字显示
 			 //判断是否胜利
-			 let str:string = "";
+			 let str:string = "";//每点击一次把答案都加上来判断一次。
 			 for(let i = 0;i < this.group_Result.numChildren; i++)
 			 {
 				 let answer = <AnswerWord>this.group_Result.getChildAt(i);

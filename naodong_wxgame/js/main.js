@@ -1707,7 +1707,6 @@ var SceneGame = (function (_super) {
         //  wordList = this.randomList(wordList);
         //内容区域赋值  大于150关   变为15字
         this.changeWord(); //改变选择区域字数
-        //  this.group_Chaotic.layout = new eui.TileLayout();
         for (var i = 0; i < this.group_Chaotic.numChildren; i++) {
             var wordRect = this.group_Chaotic.getChildAt(i);
             wordRect.SetWordText(wordList[i]);
@@ -1732,22 +1731,30 @@ var SceneGame = (function (_super) {
         this.label_Question.text = levelData.question;
     };
     SceneGame.prototype.changeWord = function () {
-        if (this.levelIndex <= 150) {
+        if (this.levelIndex < 150) {
             if (this.group_Chaotic.numChildren == 10) {
                 return;
             }
             this.group_Chaotic.removeChildren();
+            var tLayout = new eui.TileLayout();
+            tLayout.horizontalGap = 3;
+            tLayout.verticalGap = 6;
+            this.group_Chaotic.layout = tLayout;
             for (var i = 0; i < 10; i++) {
                 var word = new Word();
                 this.group_Chaotic.addChild(word);
             }
         }
-        else if (this.levelIndex >= 151) {
+        else if (this.levelIndex >= 150) {
             if (this.group_Chaotic.numChildren == 15) {
                 return;
             }
             this.group_Chaotic.removeChildren();
             //实在不行就加布局类。
+            var tLayout = new eui.TileLayout();
+            tLayout.horizontalGap = 3;
+            tLayout.verticalGap = 6;
+            this.group_Chaotic.layout = tLayout;
             for (var i = 0; i < 15; i++) {
                 var word = new Word();
                 this.group_Chaotic.addChild(word);
@@ -1832,7 +1839,7 @@ var SceneGame = (function (_super) {
     SceneGame.prototype.childrenCreated = function () {
         var _this = this;
         _super.prototype.childrenCreated.call(this);
-        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth * 4 / 5, this.stage.stageHeight * 2 / 3);
+        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
         this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
         this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
         this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
@@ -1869,7 +1876,7 @@ var SceneGame = (function (_super) {
         this.myscrollView.bounces = true;
         this.myscrollView.x = this.bitmap.x + 100;
         this.myscrollView.y = this.bitmap.y + 300;
-        this.myscrollView.width = this.stage.stageWidth * 4 / 5;
+        this.myscrollView.width = this.stage.stageWidth;
         this.myscrollView.height = this.stage.stageHeight / 2;
         this.myscrollView.setScrollLeft(0);
         this.myscrollView.scrollSpeed = 1;
