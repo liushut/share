@@ -93,6 +93,8 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 			 for(let i = 0;i < 10;i++)
 			 {
 				 let word = new Word();
+				 word.width = 95;
+				 word.height = 103;
 				 this.group_Chaotic.addChild(word);
 			 }
 		 }
@@ -111,6 +113,8 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 			 for(let i = 0;i < 15;i++)
 			 {
 				 let word = new Word();
+				 word.width = 95;//要设置  不然group中布局以子元素中最大的做基础。默认为20
+				 word.height = 103;
 				 this.group_Chaotic.addChild(word);
 			 }
 		 }
