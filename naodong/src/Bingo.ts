@@ -48,7 +48,6 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 		this.btn_share.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onShare,this);
 		this.tiaozhanBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.ontiaozhanBtn,this);
 		this.erroBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onErro,this);
-		
 	}
 	private onErro()
 	{

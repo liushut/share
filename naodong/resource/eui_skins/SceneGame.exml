@@ -72,7 +72,7 @@
 
 			</e:Group>
 			<e:Label id="labelLevel" text="999" y="267" width="100" height="100" verticalAlign="middle" size="30" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="353"/>
-			<e:Button id="caiziBtn" label="" x="163" enabled="true" width="120" anchorOffsetX="60" anchorOffsetY="60" y="514">
+			<e:Button id="caiziBtn" label="" x="72" enabled="true" width="100" anchorOffsetX="60" anchorOffsetY="60" y="525" height="100">
 				<e:skinName>
 				<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="caizi_png"/>

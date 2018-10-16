@@ -17,25 +17,25 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 		this.btn_before.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onBefore,this);
 		this.levelBg.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onBg,this);
 	}
-	
-public imgHead:eui.Image;
-public groupHead:eui.Group;
-public imgHeadBlack:eui.Image;
-public btn_before:eui.Button;
-public labelGrade:eui.Label;
-public groupLevel:eui.Group;//容器类
-public btn_next:eui.Button;
-public groupStars:eui.Group;//星星数组
-public levelBg:eui.Image;
+		
+	public imgHead:eui.Image;
+	public groupHead:eui.Group;
+	public imgHeadBlack:eui.Image;
+	public btn_before:eui.Button;
+	public labelGrade:eui.Label;
+	public groupLevel:eui.Group;//容器类
+	public btn_next:eui.Button;
+	public groupStars:eui.Group;//星星数组
+	public levelBg:eui.Image;
 
-private nameArray:string[] = ["xinshou_png","xuezhe_png","dashi_png","zongshi_png","zhizhe_png","xianzhi_png"];
-// private groups:eui.Group[] = [];//group数组
-private curIndex:number = 0;//当前关卡页数。
-private cunLevelIndex:number = 0;//当前关卡数
-// private curGroup:eui.Group;//当前
-private static levelScene:LevelScene;
-public imagehuiGrade:eui.Image;//灰横幅
-public imageGrade:eui.Image;//横幅
+	private nameArray:string[] = ["xinshou_png","xuezhe_png","dashi_png","zongshi_png","zhizhe_png","xianzhi_png"];
+	// private groups:eui.Group[] = [];//group数组
+	private curIndex:number = 0;//当前关卡页数。  0 - 29
+
+	// private curGroup:eui.Group;//当前
+	private static levelScene:LevelScene;
+	public imagehuiGrade:eui.Image;//灰横幅
+	public imageGrade:eui.Image;//横幅
 
 
 
@@ -136,13 +136,15 @@ public static  getInstance()
 		{
 			console.log("最后一关");
 			this.btn_next.visible = false;
+			
+			return;
 		}
 		
 		this.curIndex++;
 		console.log("sss" + this.curIndex);
-		this.updateLabel(this.groupLevel,this.curIndex);
-		this.updateGrade(this.curIndex);
-		this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
+		this.updateLabel(this.groupLevel,this.curIndex);//更新关卡
+		this.updateGrade(this.curIndex);//更新头像
+		this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());//显示关卡和头像
 	}
 	//判断最远关数在第几页
 	private getCurIndex():number
@@ -398,7 +400,7 @@ public static  getInstance()
 			}
 		
 		}
-		else if(index >= 25 && index <30)
+		else if(index >= 25 && index < 30)
 		{
 			this.btn_next.visible = true;
 			this.imgHead.source = this.nameArray[5];
@@ -427,29 +429,50 @@ public static  getInstance()
 		let group = this.groupStars;
 		group.getChildAt(starIndex).alpha = 1;
 			
-			//当前的页面到达指定 真实页面
-				let realIndex = Math.floor(LevelDataManager.getInstance().GetMileStone() / 30);//真实页面  最远关卡  0   展示页面到达5 封锁   除去realIndex == 0
-				//数字可以是浮点数
-				if (realIndex % 5 == 0) 
-				{
-					LevelDataManager.tempIndex = realIndex;
-				}
-				if (index >= LevelDataManager.tempIndex + 5)// 1  30  60  90  120  151     0 1 2 3 4       0  5  10  15  20   25   
-				{
-					this.imagehuiGrade.visible = true;
-					this.imgHeadBlack.visible = true;
-				}
-				else 
-				{
-					this.imagehuiGrade.visible = false;
-					this.imgHeadBlack.visible = false;
-				}		
+		//当前的页面到达指定 真实页面
+		let realIndex = (LevelDataManager.getInstance().GetMileStone() / 30);//真实页面  最远关卡  0   展示页面到达5 封锁   除去realIndex == 0
+		//数字可以是浮点数
+		if(realIndex >= 0 && realIndex <= 5)
+		{
+			LevelDataManager.tempIndex = 5;  //新手
+		}
+		else if(realIndex > 5 && realIndex <= 10)
+		{
+			LevelDataManager.tempIndex =  10;//
+		}
+		else if(realIndex > 10 && realIndex <= 15)
+		{
+			LevelDataManager.tempIndex = 15;
+		}
+		else if(realIndex > 15 && realIndex <= 20)
+		{
+			LevelDataManager.tempIndex = 20;
+		}
+		else if(realIndex > 20 && realIndex <= 25)
+		{
+			LevelDataManager.tempIndex = 25;
+		}
+		else if(realIndex > 25 && realIndex <= 30)
+		{
+			LevelDataManager.tempIndex = 30
+		}
+
+		
+		if (index >= LevelDataManager.tempIndex)//    150  300 450  600  750  900   
+		{
+			this.imagehuiGrade.visible = true;
+			this.imgHeadBlack.visible = true;
+		}
+		else {
+			this.imagehuiGrade.visible = false;
+			this.imgHeadBlack.visible = false;
+		}		
 
 	}
 	//替换label显示。
 	private updateLabel(group:eui.Group,num:number)
 	{
-		for(let i = 0;i<group.numChildren;i++)
+		for(let i = 0;i < group.numChildren;i++)
 		{
 			let x = <LevelIcon>group.getChildAt(i);
 			if(num == 0)

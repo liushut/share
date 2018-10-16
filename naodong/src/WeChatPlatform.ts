@@ -43,7 +43,7 @@ class WeChatPlatform implements Platform {
             }, function (err) {
                 //回调函数调用失败逻辑
                 console.log("函数调用失败 --------------------- ");
-                 LevelDataManager.getInstance().isShare = true;
+                 LevelDataManager.getInstance().SetShare(1);
             });
         })
     }
@@ -189,31 +189,24 @@ class WeChatPlatform implements Platform {
 
     public async  testShare(){
     return new Promise((resole, reject)=>{
-        if (LevelDataManager.getInstance().GetShare() == 1) {
-            (wx as any).shareAppMessage({
-                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                imageUrl: "resource/assets/common/title11.png"
-            });
-        }
-        else if (LevelDataManager.getInstance().GetShare() == 0) {
-            (wx as any).shareAppMessage({
-                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                imageUrl: "resource/assets/common/title11.png"
-            });
-        }
-    })
-  }
-  public async wxShare()
-  {
-    return new Promise((resole, reject)=>{
             (wx as any).shareAppMessage({
                 title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
                 imageUrl: "resource/assets/common/title11.png"
             });
         
     })
-
   }
+//   public async wxShare()
+//   {
+//     return new Promise((resole, reject)=>{
+//             (wx as any).shareAppMessage({
+//                 title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+//                 imageUrl: "resource/assets/common/title11.png"
+//             });
+        
+//     })
+
+//   }
     public async leancloudInit()
     {
         var _selt = this;

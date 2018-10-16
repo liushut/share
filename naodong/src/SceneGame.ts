@@ -234,16 +234,16 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	{
 		super.childrenCreated();
 		
-		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight );//创建的整个开放域的大小
-		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP,this.showResult,this);
-		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onLevel,this);
-		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onpaihang,this);
-		this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,()=>{
+		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);//创建的整个开放域的大小
+		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
+		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
+		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
+		this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
 			this.openGroup.visible = false;
 			this.closeBtn.visible = false;
 			this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
 			this.myscrollView.parent.removeChild(this.myscrollView);
-            this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
+			this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
 
 			  
 
@@ -342,8 +342,6 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		if(LevelDataManager.getInstance().GetShare() == 1)
 		{
 			console.log("开分享，分享开启Scene GetShare()  " + LevelDataManager.getInstance().GetShare());
-			// platform.updateShareMenu();
-			// platform.showVideoAD();
 			platform.shareAppMessage();//无差别分享
 		}
 		else if(LevelDataManager.getInstance().GetShare() == 0)
