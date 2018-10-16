@@ -127,7 +127,6 @@ class Main extends eui.UILayer {
                 LevelDataManager.getInstance();
                 SceneGame.getInstance();
                 this.addChild(SceneGame.getInstance());
-                
                 let data =  LevelDataManager.getInstance().GetMileStone();
                 LevelDataManager.getInstance().curIcon = data;
                 SceneGame.getInstance().InitLevel(data);

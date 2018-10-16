@@ -23,6 +23,7 @@ declare interface Platform {
     wxCloudCallFunc():Promise<any>;
     //wx数据
     wxGetCloudData():Promise<any>;
+    wxShare():Promise<any>;
 
 }
 

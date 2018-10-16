@@ -14,7 +14,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	
 		return  SceneGame.scenegame;
 	}
-	public btn_paihang:eui.Button;
+	public btn_paihang:eui.Button;//排行榜按钮
 
 	public bingoLayer:Bingo;//层
 	public levelScene:LevelScene;//关卡层。
@@ -28,6 +28,21 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	public group_Chaotic:eui.Group;
 	public levelIndex:number;//当前的关卡数
 	
+
+
+	private bitmap:egret.Bitmap;
+	private rankingListMask: egret.Shape;
+   
+    private isdisplay = false;
+	private myscrollView = new egret.ScrollView();
+	public openGroup:eui.Group;
+	public imgDibang:eui.Image;
+	public closeBtn:eui.Button;
+	public openScroller:eui.Scroller;
+	public ToOpenGroup:eui.Group;
+	private isFirst:boolean = false;
+
+	public caiziBtn:eui.Button;
  	public InitLevel(index:number)//初始化关卡
 	 {
 		 this.levelIndex = index;
@@ -219,7 +234,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	{
 		super.childrenCreated();
 		
-		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight );
+		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight );//创建的整个开放域的大小
 		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP,this.showResult,this);
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onLevel,this);
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onpaihang,this);
@@ -240,19 +255,31 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		
 		LevelDataManager.getInstance().getAd().show();
 			},this);
+
+		this.caiziBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.toCaizi,this);
+		this.xiaoguo();
 		
 	}
-	private bitmap:egret.Bitmap;
-	private rankingListMask: egret.Shape;
-   
-    private isdisplay = false;
-	private myscrollView = new egret.ScrollView();
-	public openGroup:eui.Group;
-	public imgDibang:eui.Image;
-	public closeBtn:eui.Button;
-	public openScroller:eui.Scroller;
-	public ToOpenGroup:eui.Group;
-	private isFirst:boolean = false;
+	private xiaoguo()
+	{
+		
+		egret.Tween.get(this.caiziBtn).to({scaleX:1.2,scaleY:1.2},1000).to({scaleX:0.8,scaleY:0.8},1000).call(()=>{
+			//call方法中使用()=>{}，知道this指向。不然指向window    还可以call(this.xiaoguo,this)
+			this.xiaoguo();
+		});
+	}
+	private toCaizi()
+	{
+		(wx as any).navigateToMiniProgram({
+			appId:"wx617cbc6f541518e6",
+			path:"",
+			extraData:{},
+			success:()=>{
+				console.log("跳转猜字");
+			}
+
+		})
+	}
 
 
 
@@ -264,7 +291,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
 		this.rankingListMask.graphics.endFill();
 		this.rankingListMask.alpha = 0.5;
-		this.rankingListMask.touchEnabled = false;
+		this.rankingListMask.touchEnabled = true;
 		console.log("点击排行");
 
 		//主域向子域发送自定义消息
@@ -276,10 +303,10 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		let container = new egret.DisplayObjectContainer();
 		this.myscrollView.setContent(container);
 		this.myscrollView.bounces = true;
-		this.myscrollView.x = this.bitmap.x + 100;
-		this.myscrollView.y = this.bitmap.y + 300;
+		this.myscrollView.x = 0 ;//左上角位置。
+		this.myscrollView.y = this.stage.height / 4 ;//左上角位置。
 		this.myscrollView.width = this.stage.stageWidth;
-		this.myscrollView.height = this.stage.stageHeight / 2;
+		this.myscrollView.height = this.stage.stageHeight / 3 + 300;
 		this.myscrollView.setScrollLeft(0);
 		this.myscrollView.scrollSpeed = 1;
 
@@ -303,6 +330,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		SoundManager.getInstance().answerSoundChanel =  SoundManager.getInstance().answerSound.play(0,1);
 		SoundManager.getInstance().answerSoundChanel.volume = 1;
 		this.levelScene.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
+		// this.levelScene.showMaxLevelIcon(LevelDataManager.getInstance().GetMileStone());
 		this.levelScene.visible = true;		
 	}
 

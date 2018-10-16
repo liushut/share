@@ -70,13 +70,21 @@ public static  getInstance()
 
 
 		//当前头像正确
-			this.imgHead.source = this.nameArray[0];
-			this.imgHeadBlack.alpha = 0;
+		this.imgHead.source = this.nameArray[0];
+		this.imgHeadBlack.alpha = 0;
 
 		//将当前关卡显示正确
 		this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());//显示到最远的
+		//打开就是最远纪录的关卡
+		// this.showMaxLevelIcon(LevelDataManager.getInstance().GetMileStone());
 
+		
 
+	}
+		//打开就是最远纪录的关卡,然后在此基础上翻页
+	public showMaxLevelIcon(level:number)
+	{
+		this.curIndex = this.getCurIndex();//得到当前的页数
 	}
 	//当前关卡的前面都显示
 	public showLevelIcon(index:number)
@@ -95,18 +103,6 @@ public static  getInstance()
 			}
 			
 		}
-	}
-
-	//当前关卡判断在第几页，打开界面可以直接跳转到这一页来。头像更新在这里调用。
-	private judgeCurIndex(curIcon:number)
-	{
-		
-	
-	}
-	//头像跟随关卡更新,到达多少关后头像需要更新
-	private headFollowLevel(curIcon:number)
-	{
-
 	}
 
 	//点击背景缩放
@@ -141,20 +137,156 @@ public static  getInstance()
 			console.log("最后一关");
 			this.btn_next.visible = false;
 		}
-	
+		
 		this.curIndex++;
 		console.log("sss" + this.curIndex);
 		this.updateLabel(this.groupLevel,this.curIndex);
 		this.updateGrade(this.curIndex);
 		this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
 	}
+	//判断最远关数在第几页
+	private getCurIndex():number
+	{
+		let level = LevelDataManager.getInstance().GetMileStone();
+		let curLevel = 0;
+		if(level >= 1 && level <= 30)
+		{
+			curLevel = 0;
+		}
+		else if(level >= 31 && level <= 60)
+		{
+			curLevel = 1;
+		}
+		else if(level >= 61 && level <= 90)
+		{
+			curLevel = 2;
+		}
+		else if(level >= 91 && level <= 120)
+		{
+			curLevel = 3;
+		}
+		else if(level >= 121 && level <= 150)
+		{
+			curLevel = 4;
+		}
+		else if(level >= 151 && level <=180)
+		{
+			curLevel = 5;
+		}
+		else if(level >= 181 && level <= 210)
+		{
+			curLevel = 6;
+		}
+		else if(level >= 211 && level <= 240)
+		{
+			curLevel = 7;
+		}
+		else if(level >= 241 && level <= 270)
+		{
+			curLevel = 8;
+		}
+		else if(level >= 271 && level <= 300)
+		{
+			curLevel = 9;
+		}
+		else if(level >= 301 && level <= 330)
+		{
+			curLevel = 10;
+		}
+		else if(level >= 331 && level <= 360)
+		{
+			curLevel = 11;
+		}
+		else if(level >= 361 && level <= 390)
+		{
+			curLevel = 12;
+		}
+		else if(level >= 391 && level <= 420)
+		{
+			curLevel = 13;
+		}
+		else if(level >= 421 && level <= 450)
+		{
+			curLevel = 14;
+		}
+		else if(level >= 451 && level <= 480)
+		{
+			curLevel = 15;
+		}
+		else if(level >= 481 && level <= 510)
+		{
+			curLevel = 16;
+		}
+		else if(level >= 511 && level <= 540)
+		{
+			curLevel = 17;
+		}
+		else if(level >= 541 && level <= 570)
+		{
+			curLevel = 18;
+		}
+		else if(level >= 571 && level <= 600)
+		{
+			curLevel = 19;
+		}
+		else if(level >= 601 && level <= 630)
+		{
+			curLevel = 20;
+		}
+		else if(level >= 631 && level <= 660)
+		{
+			curLevel = 21;
+		}
+		else if(level >= 661 && level <= 690)
+		{
+			curLevel = 22;
+		}
+		else if(level >= 691 && level <= 720)
+		{
+			curLevel = 23;
+		}
+		else if(level >= 721 && level <= 750)
+		{
+			curLevel = 24;
+		}
+		else if(level >= 751 && level <= 780)
+		{
+			curLevel = 25;
+		}
+		else if(level >= 781 && level <= 810)
+		{
+			curLevel = 26;
+		}
+		else if(level >= 811 && level <= 840)
+		{
+			curLevel = 27;
+		}
+		else if(level >= 841 && level <= 870)
+		{
+			curLevel = 28;
+		}
+		else if(level >= 871 && level<= 900)
+		{
+			curLevel = 29;
+		}
+
+		return  curLevel;
+
+	}
+	//得到最远关数在第几页。
+	private getCurIndexMini(level:number):number
+	{
+		let curIndex = 0;
+		curIndex  = Math.ceil(level / 30);//只数组从0开始。其余还是遵守习惯。因为从0开始的,从1开始的就是floor
+		return curIndex;
+	}
 	//更新头像级别
 	private updateGrade(index:number)//30页
 	{
 		if(index == 0)
 		{
-				this.imgHead.source = this.nameArray[0];
-				this.imgHeadBlack.alpha = 0;
+			this.imgHead.source = this.nameArray[0];
+			this.imgHeadBlack.alpha = 0;
 			
 		}
 		else if(index >0 && index < 5)//0 4
@@ -311,12 +443,7 @@ public static  getInstance()
 				{
 					this.imagehuiGrade.visible = false;
 					this.imgHeadBlack.visible = false;
-				}
-			
-				
-			
-			
-		
+				}		
 
 	}
 	//替换label显示。
@@ -337,35 +464,7 @@ public static  getInstance()
 		}
 		
 	}
-	//创建group
-	private  createGroup()
-	{
-		for(let i = 0;i < 30;i++)
-		{
-		let group = new eui.Group();
-		group.width =  580;//总共30页  最大长度
-		group.height = 680;
-		this.createLevel(group,i);
-		// this.groups.push(group);//总共得到30个
-		}
-	}
-	//创建关卡
-	private createLevel(group:eui.Group,num:number)
-	{
-		//绘制关卡  30个
-		for(let i = num * 30; i< num * 30 + 30; i++)
-		{
-			let icon = new LevelIcon();
-			icon.Level = i + 1;
-			let tLayout:eui.TileLayout = new eui.TileLayout();
-			tLayout.horizontalGap = 2;
-			tLayout.verticalGap = 10;
-			tLayout.requestedColumnCount = 6; 
-			group.layout = tLayout;
-			group.addChild(icon);
-		}
-	}
-
+	
 		
 }
 window["LevelScene"] = LevelScene;

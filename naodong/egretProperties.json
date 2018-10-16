@@ -25,7 +25,8 @@
       "name": "assetsmanager"
     },
     {
-      "name": "tween"
+      "name": "tween",
+      "path":"./libs/modules/tween"
     },
     {
       "name": "game"
