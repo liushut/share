@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "description_json,test_json,number_fnt,number_png,word_mp3,window_wav,answer1_mp3,danan_png,gameBg_jpg,guanka_png,zidi_png,daandi_png,close_png,dashi_png,ditu_png,guankadi_png,hengfu_png,huidashi_png,huihengfu_png,huilock_png,huixianzhi_png,huixinshou_png,huixuezhe_png,huizhizhe_png,huizongshi_png,jiantou_png,levelBg_png,star_png,xianzhi_png,xinshou_png,xuezhe_png,zhizhe_png,zongshi_png,tanchuandaandi_png,daduidi_png,daduile_png,next_png,share_png,dacuole_png,shareFail_png,dashizi_png,dizi_png,xianzhizi_png,xingzi_png,xinshouzi_png,xuezhezi_png,zhizhezi_png,zongshizi_png,surebtn_png,title11_png,erroSound_mp3,trueSound_mp3,paihangbang_png,dibang_png,cha_png,tiaozhan_png,caizi_png",
+			"keys": "description_json,test_json,number_fnt,number_png,word_mp3,window_wav,answer1_mp3,gameBg_jpg,guanka_png,zidi_png,daandi_png,close_png,dashi_png,ditu_png,guankadi_png,hengfu_png,huidashi_png,huihengfu_png,huilock_png,huixianzhi_png,huixinshou_png,huixuezhe_png,huizhizhe_png,huizongshi_png,jiantou_png,levelBg_png,star_png,xianzhi_png,xinshou_png,xuezhe_png,zhizhe_png,zongshi_png,tanchuandaandi_png,daduidi_png,daduile_png,next_png,share_png,dacuole_png,shareFail_png,dashizi_png,dizi_png,xianzhizi_png,xingzi_png,xinshouzi_png,xuezhezi_png,zhizhezi_png,zongshizi_png,surebtn_png,title11_png,erroSound_mp3,trueSound_mp3,paihangbang_png,dibang_png,cha_png,tiaozhan_png,caizi_png,dian_png,xiaoren_png,daan_png,ten_png",
 			"name": "preload"
 		}
 	],
@@ -40,11 +40,6 @@
 			"name": "answer1_mp3",
 			"type": "sound",
 			"url": "assets/sound/answer1.mp3"
-		},
-		{
-			"name": "danan_png",
-			"type": "image",
-			"url": "assets/home/danan.png"
 		},
 		{
 			"name": "gameBg_jpg",
@@ -290,6 +285,26 @@
 			"name": "caizi_png",
 			"type": "image",
 			"url": "assets/common/caizi.png"
+		},
+		{
+			"name": "dian_png",
+			"type": "image",
+			"url": "assets/home/dian.png"
+		},
+		{
+			"name": "xiaoren_png",
+			"type": "image",
+			"url": "assets/home/xiaoren.png"
+		},
+		{
+			"name": "daan_png",
+			"type": "image",
+			"url": "assets/home/daan.png"
+		},
+		{
+			"name": "ten_png",
+			"type": "image",
+			"url": "assets/daduile/qietu/ten.png"
 		}
 	]
 }

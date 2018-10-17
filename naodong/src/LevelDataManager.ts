@@ -17,6 +17,7 @@ class LevelDataManager//关卡数据管理
     public   isShare:boolean = false;
     public   static isLogin:boolean = true;
 
+    public  static comboTen:number = 1;
 
     public  static encryptedData:any;
     public  static iv:any;

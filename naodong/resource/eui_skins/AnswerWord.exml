@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="AnswerWordSkin" width="101" height="112" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+<e:Skin class="AnswerWordSkin" width="100" height="100" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
 	<w:Config id="165cb9a0abb" ></w:Config>
-	<e:Image width="101" height="112" x="0" y="0" source="daandi_png"/>
-	<e:Label id="label_answer" text="答" y="0" width="80" verticalAlign="middle" textAlign="center" size="55" fontFamily="Microsoft YaHei" textColor="0x070000" height="80" x="15"/>
+	<e:Image width="100" height="100" x="0" y="0" source="daandi_png"/>
+	<e:Label id="label_answer" text="答" width="100" verticalAlign="middle" textAlign="center" size="55" fontFamily="Microsoft YaHei" textColor="0x070000" height="100" anchorOffsetX="50" anchorOffsetY="50" horizontalCenter="0" verticalCenter="0"/>
 </e:Skin>

@@ -27,7 +27,11 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	public group_Result:eui.Group;
 	public group_Chaotic:eui.Group;
 	public levelIndex:number;//当前的关卡数
-	
+
+
+	public xiaorenBtn:eui.Button;
+    public dianImg:eui.Image;
+
 
 
 	private bitmap:egret.Bitmap;
@@ -76,6 +80,8 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		while(len)
 		{
 			let temp = new AnswerWord();
+			temp.width = 100;
+			temp.height = 100;
 			this.group_Result.addChild(temp);
 			len--;
 		}
@@ -173,12 +179,14 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 			 }
 			 if(str == LevelDataManager.getInstance().GetLevelData(this.levelIndex).result)
 			 {
-				 console.log("你赢了");
+				 
+				  console.log("你赢了");
 				  this.bingoLayer.visible = true;
 				  this.bingoLayer.bingoGroup.visible = true;
 				  this.hintBg(false);
 				  SoundManager.getInstance().trueSoundChanel= SoundManager.getInstance().trueSound.play(0,1);
 				  SoundManager.getInstance().trueSoundChanel.volume = 1;
+				
 				 
 			 }
 			 else if(str.length == this.group_Result.numChildren )
@@ -234,7 +242,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	{
 		super.childrenCreated();
 		
-		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);//创建的整个开放域的大小
+		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
 		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
@@ -258,8 +266,18 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 
 		this.caiziBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.toCaizi,this);
 		this.xiaoguo();
+		this.xiaorenBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,()=>{
+			  (wx as any).shareAppMessage({
+                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                imageUrl: "resource/assets/common/title11.png"
+            });
+			egret.Tween.get(this.dianImg).wait(200).call(()=>{
+				this.dianImg.visible = false;
+			}).wait(10000).call(()=>{this.dianImg.visible = true;})
+		},this);
 		
 	}
+	
 	private xiaoguo()
 	{
 		
@@ -294,11 +312,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		this.rankingListMask.touchEnabled = true;
 		console.log("点击排行");
 
-		//主域向子域发送自定义消息
-		platform.openDataContext.postMessage({
-			command: "open",
-			type: "friend"
-		});
+	
 
 		let container = new egret.DisplayObjectContainer();
 		this.myscrollView.setContent(container);
@@ -321,6 +335,12 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		//隐藏广告
 		LevelDataManager.getInstance().getAd().hide();
 		console.log("点击了排行榜");  
+
+			//主域向子域发送自定义消息
+		platform.openDataContext.postMessage({
+			command: "open",
+			type: "friend"
+		});
 		
 			
 

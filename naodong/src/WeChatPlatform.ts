@@ -193,20 +193,21 @@ class WeChatPlatform implements Platform {
                 title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
                 imageUrl: "resource/assets/common/title11.png"
             });
+               egret.Tween.get(this).wait(200).call(function () {
+                  SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                  SoundManager.getInstance().windowSoundChanel.volume = 1;
+                  SceneGame.getInstance().bingoLayer.visible = true;
+                  SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                  SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                  SceneGame.getInstance().hintBg(true);
+                  SceneGame.getInstance().bingoLayer.labelresult.text =
+                  LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                  SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                });
         
     })
   }
-//   public async wxShare()
-//   {
-//     return new Promise((resole, reject)=>{
-//             (wx as any).shareAppMessage({
-//                 title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-//                 imageUrl: "resource/assets/common/title11.png"
-//             });
-        
-//     })
-
-//   }
     public async leancloudInit()
     {
         var _selt = this;
