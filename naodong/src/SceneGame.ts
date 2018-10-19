@@ -37,8 +37,8 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 	private bitmap:egret.Bitmap;
 	private rankingListMask: egret.Shape;
    
-    private isdisplay = false;
-	private myscrollView = new egret.ScrollView();
+
+
 	public openGroup:eui.Group;
 	public imgDibang:eui.Image;
 	public closeBtn:eui.Button;
@@ -108,7 +108,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 			 }
 			 this.group_Chaotic.removeChildren();
 			 let tLayout:eui.TileLayout = new eui.TileLayout();
-			 tLayout.horizontalGap = 35;
+			 tLayout.horizontalGap = 20;
 			 tLayout.verticalGap = 30;
 			 this.group_Chaotic.layout = tLayout;
 			 for(let i = 0;i < 10;i++)
@@ -128,7 +128,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 			 this.group_Chaotic.removeChildren();
 			 //加布局类。   eui正确设置一次就可以不变了。除非想改变布局才改。
 			 let tLayout:eui.TileLayout = new eui.TileLayout();
-			 tLayout.horizontalGap = 35;
+			 tLayout.horizontalGap = 20;
 			 tLayout.verticalGap = 30;
 			 this.group_Chaotic.layout = tLayout;
 			 for(let i = 0;i < 15;i++)
@@ -237,12 +237,12 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		super.partAdded(partName,instance);
 	}
 
-	
+	private isdisplay = false;
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		
-		this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+		let openDataContext = wx.getOpenDataContext();
+		// this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
 		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
@@ -250,15 +250,11 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 			this.openGroup.visible = false;
 			this.closeBtn.visible = false;
 			this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
-			this.myscrollView.parent.removeChild(this.myscrollView);
+			this.isdisplay = false;
 			this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
 
-			  
-
-            platform.openDataContext.postMessage({
-                isDisplay: this.isdisplay,
-                command: "close",
-                type:"closedata"
+            openDataContext.postMessage({
+                isdisplay: this.isdisplay,
             });
 		
 		LevelDataManager.getInstance().getAd().show();
@@ -303,6 +299,7 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 
 	private onpaihang()
 	{
+		let openDataContext = wx.getOpenDataContext();
 		//处理遮罩，避免开放数据域事件影响主域。
 		this.rankingListMask = new egret.Shape();
 		this.rankingListMask.graphics.beginFill(0x000000, 1);
@@ -312,34 +309,39 @@ class SceneGame extends eui.Component implements  eui.UIComponent {
 		this.rankingListMask.touchEnabled = true;
 		console.log("点击排行");
 
-	
 
-		let container = new egret.DisplayObjectContainer();
-		this.myscrollView.setContent(container);
-		this.myscrollView.bounces = true;
-		this.myscrollView.x = 0 ;//左上角位置。
-		this.myscrollView.y = this.stage.height / 4 ;//左上角位置。
-		this.myscrollView.width = this.stage.stageWidth;
-		this.myscrollView.height = this.stage.stageHeight / 3 + 300;
-		this.myscrollView.setScrollLeft(0);
-		this.myscrollView.scrollSpeed = 1;
+
+		//开放域开始
+		
+		const bitmapdata = new egret.BitmapData(window["sharedCanvas"]);
+		bitmapdata.$deleteSource = false;
+		const texture = new egret.Texture();
+		texture._setBitmapData(bitmapdata);
+		this.bitmap = new egret.Bitmap(texture);
+		this.bitmap.width = this.stage.stageWidth;
+		this.bitmap.height = this.stage.stageHeight;
+		
 
 		this.openGroup.visible = true;
 		this.closeBtn.visible = true;
 		this.addChild(this.rankingListMask);
-		container.addChild(this.bitmap);
 		this.addChild(this.openGroup);
-		this.addChild(this.myscrollView);
+		this.addChild(this.bitmap);
 		this.addChild(this.closeBtn);
 		
 		//隐藏广告
 		LevelDataManager.getInstance().getAd().hide();
 		console.log("点击了排行榜");  
 
+		  egret.startTick((timeStarmp: number) => {
+                egret.WebGLUtils.deleteWebGLTexture(bitmapdata.webGLTexture);
+                bitmapdata.webGLTexture = null;
+                return false;
+            }, this);
 			//主域向子域发送自定义消息
-		platform.openDataContext.postMessage({
-			command: "open",
-			type: "friend"
+		this.isdisplay = true;
+		openDataContext.postMessage({
+			isdisplay:this.isdisplay
 		});
 		
 			

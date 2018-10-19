@@ -13,17 +13,11 @@ declare interface Platform {
     testShare():Promise<any>;
     getAVUserInfo(): Promise<any>;//得到用户信息
     shareAppMessage():Promise<any>;//分享功能
-    // updateShareMenu():Promise<any>;//判定群
+
     shouAD():Promise<any>;//看广告
     showVideoAD():Promise<any>;//看视频
 
-    //wx云初始化
-    wxCloudInit():Promise<any>;
-    //wx云回调
-    wxCloudCallFunc():Promise<any>;
-    //wx数据
-    wxGetCloudData():Promise<any>;
-    // wxShare():Promise<any>;
+
 
 }
 

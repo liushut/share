@@ -31,17 +31,17 @@
 					</e:skinName>
 				</e:Button>
 			</e:Group>
-			<e:Label id="label_Question" text="      小明的爷爷七十岁小明的爷                爷七十岁小明的爷爷七十岁小明的爷爷七十岁小明的爷爷七十岁" y="303" anchorOffsetY="0" height="146" anchorOffsetX="0" width="550" fontFamily="Microsoft YaHei" size="35" verticalAlign="top" textAlign="left" textColor="0xf7f7f7" bold="true" x="85"/>
-			<e:Group id="group_Result" width="624" height="116.42" y="565" anchorOffsetX="0" anchorOffsetY="0" x="53">
+			<e:Label id="label_Question" text="小明的爷爷七十岁小明的爷 爷七十岁小明的爷爷七十岁小明的爷爷七十岁小明的爷爷七十岁" y="303" anchorOffsetY="0" height="154" anchorOffsetX="0" width="518" fontFamily="Microsoft YaHei" size="35" verticalAlign="top" textAlign="left" textColor="0xf7f7f7" horizontalCenter="0" bold="true"/>
+			<e:Group id="group_Result" width="624" height="116.42" y="576" anchorOffsetX="0" anchorOffsetY="0" x="53">
 			<ns1:AnswerWord width="100" height="100" x="0" y="37"/>
 				<ns1:AnswerWord width="100" height="100" x="10" y="47"/>
 			<e:layout>
 				<e:HorizontalLayout horizontalAlign="center"/>
 			</e:layout>
 			</e:Group>
-			<e:Group id="group_Chaotic" width="636" height="400" y="680" anchorOffsetX="0" anchorOffsetY="0" x="65">
+			<e:Group id="group_Chaotic" width="574" height="400" y="680" anchorOffsetX="0" anchorOffsetY="0" x="73">
 				<e:layout>
-					<e:TileLayout horizontalGap="35" verticalGap="30"/>
+					<e:TileLayout verticalGap="30" horizontalGap="20"/>
 				</e:layout>
 				<ns1:Word width="95" height="103" x="59" y="61"/>
 				<ns1:Word width="95" height="103" x="69" y="71"/>
@@ -49,6 +49,8 @@
 				<ns1:Word width="95" height="103" x="89" y="91"/>
 				<ns1:Word width="95" height="103" x="99" y="101"/>
 				<ns1:Word width="95" height="103" x="109" y="111"/>
+				<ns1:Word width="95" height="103" x="119" y="121"/>
+				<ns1:Word width="95" height="103" x="129" y="131"/>
 				<ns1:Word width="95" height="103" x="119" y="121"/>
 				<ns1:Word width="95" height="103" x="129" y="131"/>
 

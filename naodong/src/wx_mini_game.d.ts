@@ -30,6 +30,10 @@ declare function setInterval(callback: ()=>void, delay: number, rest: any): numb
 
 declare const wx: {
     /**
+     * 长时间抖动
+     */
+    vibrateLong(obj:Object):void;
+    /**
      * 创建一个画布对象。首次调用创建的是显示在屏幕上的画布，之后调用创建的都是离屏画布。
      */
     createCanvas(): Canvas;

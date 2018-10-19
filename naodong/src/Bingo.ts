@@ -113,6 +113,12 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 					let level = LevelDataManager.getInstance().GetMileStone();
 					if( level > 1 && level % 10 == 1)
 					{
+					wx.vibrateLong({
+						success:function()
+						{
+							console.log("抖动成功");
+						}
+					});
 					 SceneGame.getInstance().bingoLayer.visible = true;
 					 SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
 					 SceneGame.getInstance().bingoLayer.comboGroup.visible = true;
@@ -321,9 +327,11 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 					else if (level == 900) {
 						this.imgTouxiang.source = this.names[6];
 						this.imgDengji.source = this.gradename[6];
-						this.upgradeGroup.visible = true;
-						this.visible = true;
-						console.log("无敌");
+						(wx as any).showModal({
+							title: "提示",
+							content: "已经到最后啦，大神~~",
+							showCancel: false,
+						});
 					}
 				SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 		}

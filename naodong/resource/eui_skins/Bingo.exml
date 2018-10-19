@@ -74,7 +74,7 @@
 					</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Label id="guanLabel" text="当前解锁第11关" y="241" scaleX="1" scaleY="1" anchorOffsetX="0" width="252" anchorOffsetY="0" height="55" size="35" horizontalCenter="0" textColor="0x0a0909" fontFamily="Microsoft YaHei"/>
+			<e:Label id="guanLabel" text="当前解锁第111关" y="241" scaleX="1" scaleY="1" anchorOffsetX="0" width="292.91" anchorOffsetY="0" height="55" size="35" horizontalCenter="0" textColor="0x0a0909" fontFamily="Microsoft YaHei"/>
 		</e:Group>
 	</e:Group>
 </e:Skin>

@@ -16,34 +16,37 @@ var egret = window.egret;window.skins={};
 		_super.call(this);
 		this.skinParts = ["label_answer"];
 		
-		this.height = 112;
-		this.width = 101;
+		this.width = 80;
 		this.elementsContent = [this._Image1_i(),this.label_answer_i()];
 	}
 	var _proto = AnswerWordSkin.prototype;
 
 	_proto._Image1_i = function () {
 		var t = new eui.Image();
-		t.height = 112;
+		t.anchorOffsetX = 40;
+		t.anchorOffsetY = 40;
+		t.height = 80;
 		t.source = "daandi_png";
-		t.width = 101;
-		t.x = 0;
-		t.y = 0;
+		t.width = 80;
+		t.x = 40;
+		t.y = 40;
 		return t;
 	};
 	_proto.label_answer_i = function () {
 		var t = new eui.Label();
 		this.label_answer = t;
+		t.anchorOffsetX = 40;
+		t.anchorOffsetY = 40;
 		t.fontFamily = "Microsoft YaHei";
 		t.height = 80;
-		t.horizontalCenter = 0;
 		t.size = 55;
 		t.text = "答";
 		t.textAlign = "center";
 		t.textColor = 0x070000;
 		t.verticalAlign = "middle";
 		t.width = 80;
-		t.y = 0;
+		t.x = 40;
+		t.y = 40;
 		return t;
 	};
 	return AnswerWordSkin;
@@ -209,9 +212,49 @@ var egret = window.egret;window.skins={};
 		return BingoSkin$Skin4;
 	})(eui.Skin);
 
+	var BingoSkin$Skin5 = 	(function (_super) {
+		__extends(BingoSkin$Skin5, _super);
+		function BingoSkin$Skin5() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = BingoSkin$Skin5.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "tiaozhan_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return BingoSkin$Skin5;
+	})(eui.Skin);
+
 	function BingoSkin() {
 		_super.call(this);
-		this.skinParts = ["bg","btn_share","btn_next","ditu","bingoGroup","daandi","labelresult","labelExplain","trueGroup","imgErro","shareFail","erroBtn","erroGroup","imgdizi","imgDengji","imgTouxiang","star0","star1","star2","star3","star4","starsGroup","tiaozhanBtn","upgradeGroup","groupAll"];
+		this.skinParts = ["bg","btn_share","btn_next","ditu","bingoGroup","daandi","labelresult","labelExplain","trueGroup","imgErro","shareFail","erroBtn","erroGroup","imgdizi","imgDengji","imgTouxiang","star0","star1","star2","star3","star4","starsGroup","tiaozhanBtn","upgradeGroup","diImg","tenImg","Btntiaozhan","guanLabel","comboGroup","groupAll"];
 		
 		this.height = 1280;
 		this.width = 720;
@@ -228,7 +271,7 @@ var egret = window.egret;window.skins={};
 		t.left = 0;
 		t.right = 0;
 		t.top = 0;
-		t.elementsContent = [this.bg_i(),this.bingoGroup_i(),this.trueGroup_i(),this.imgErro_i(),this.erroGroup_i(),this.upgradeGroup_i()];
+		t.elementsContent = [this.bg_i(),this.bingoGroup_i(),this.trueGroup_i(),this.imgErro_i(),this.erroGroup_i(),this.upgradeGroup_i(),this.comboGroup_i()];
 		return t;
 	};
 	_proto.bg_i = function () {
@@ -534,9 +577,72 @@ var egret = window.egret;window.skins={};
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
+		t.visible = false;
 		t.width = 230;
 		t.y = 331;
 		t.skinName = BingoSkin$Skin4;
+		return t;
+	};
+	_proto.comboGroup_i = function () {
+		var t = new eui.Group();
+		this.comboGroup = t;
+		t.height = 200;
+		t.horizontalCenter = 0;
+		t.verticalCenter = 0;
+		t.visible = false;
+		t.width = 200;
+		t.elementsContent = [this.diImg_i(),this.tenImg_i(),this.Btntiaozhan_i(),this.guanLabel_i()];
+		return t;
+	};
+	_proto.diImg_i = function () {
+		var t = new eui.Image();
+		this.diImg = t;
+		t.height = 477;
+		t.horizontalCenter = 0;
+		t.source = "daduidi_png";
+		t.verticalCenter = 0;
+		t.width = 561;
+		return t;
+	};
+	_proto.tenImg_i = function () {
+		var t = new eui.Image();
+		this.tenImg = t;
+		t.height = 54;
+		t.horizontalCenter = 0;
+		t.source = "ten_png";
+		t.width = 221;
+		t.y = 130;
+		return t;
+	};
+	_proto.Btntiaozhan_i = function () {
+		var t = new eui.Button();
+		this.Btntiaozhan = t;
+		t.enabled = true;
+		t.height = 96;
+		t.label = "";
+		t.scaleX = 1;
+		t.scaleY = 1;
+		t.width = 230;
+		t.x = -15;
+		t.y = 358;
+		t.skinName = BingoSkin$Skin5;
+		return t;
+	};
+	_proto.guanLabel_i = function () {
+		var t = new eui.Label();
+		this.guanLabel = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.fontFamily = "Microsoft YaHei";
+		t.height = 55;
+		t.horizontalCenter = 0;
+		t.scaleX = 1;
+		t.scaleY = 1;
+		t.size = 35;
+		t.text = "当前解锁第111关";
+		t.textColor = 0x0a0909;
+		t.width = 292.91;
+		t.y = 241;
 		return t;
 	};
 	return BingoSkin;
@@ -827,46 +933,6 @@ var egret = window.egret;window.skins={};
 	return LevelIconSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/LevelScene.exml'] = window.LevelSceneSkin = (function (_super) {
 	__extends(LevelSceneSkin, _super);
-	var LevelSceneSkin$Skin5 = 	(function (_super) {
-		__extends(LevelSceneSkin$Skin5, _super);
-		function LevelSceneSkin$Skin5() {
-			_super.call(this);
-			this.skinParts = ["labelDisplay"];
-			
-			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
-			this.states = [
-				new eui.State ("up",
-					[
-					])
-				,
-				new eui.State ("down",
-					[
-					])
-				,
-				new eui.State ("disabled",
-					[
-					])
-			];
-		}
-		var _proto = LevelSceneSkin$Skin5.prototype;
-
-		_proto._Image1_i = function () {
-			var t = new eui.Image();
-			t.percentHeight = 100;
-			t.source = "jiantou_png";
-			t.percentWidth = 100;
-			return t;
-		};
-		_proto.labelDisplay_i = function () {
-			var t = new eui.Label();
-			this.labelDisplay = t;
-			t.horizontalCenter = 0;
-			t.verticalCenter = 0;
-			return t;
-		};
-		return LevelSceneSkin$Skin5;
-	})(eui.Skin);
-
 	var LevelSceneSkin$Skin6 = 	(function (_super) {
 		__extends(LevelSceneSkin$Skin6, _super);
 		function LevelSceneSkin$Skin6() {
@@ -905,6 +971,46 @@ var egret = window.egret;window.skins={};
 			return t;
 		};
 		return LevelSceneSkin$Skin6;
+	})(eui.Skin);
+
+	var LevelSceneSkin$Skin7 = 	(function (_super) {
+		__extends(LevelSceneSkin$Skin7, _super);
+		function LevelSceneSkin$Skin7() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = LevelSceneSkin$Skin7.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "jiantou_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return LevelSceneSkin$Skin7;
 	})(eui.Skin);
 
 	function LevelSceneSkin() {
@@ -970,7 +1076,7 @@ var egret = window.egret;window.skins={};
 		t.width = 54;
 		t.x = 594;
 		t.y = 327;
-		t.skinName = LevelSceneSkin$Skin5;
+		t.skinName = LevelSceneSkin$Skin6;
 		return t;
 	};
 	_proto.btn_before_i = function () {
@@ -985,7 +1091,7 @@ var egret = window.egret;window.skins={};
 		t.width = 54;
 		t.x = 136;
 		t.y = 327;
-		t.skinName = LevelSceneSkin$Skin6;
+		t.skinName = LevelSceneSkin$Skin7;
 		return t;
 	};
 	_proto.groupHead_i = function () {
@@ -1145,9 +1251,9 @@ var egret = window.egret;window.skins={};
 		return t;
 	};
 	return LevelSceneSkin;
-})(eui.Skin);generateEUI.paths['resource/eui_skins/list.exml'] = window.$exmlClass7 = (function (_super) {
-	__extends($exmlClass7, _super);
-	function $exmlClass7() {
+})(eui.Skin);generateEUI.paths['resource/eui_skins/list.exml'] = window.$exmlClass8 = (function (_super) {
+	__extends($exmlClass8, _super);
+	function $exmlClass8() {
 		_super.call(this);
 		this.skinParts = ["testlist"];
 		
@@ -1155,7 +1261,7 @@ var egret = window.egret;window.skins={};
 		this.width = 400;
 		this.elementsContent = [this._Scroller1_i()];
 	}
-	var _proto = $exmlClass7.prototype;
+	var _proto = $exmlClass8.prototype;
 
 	_proto._Scroller1_i = function () {
 		var t = new eui.Scroller();
@@ -1171,7 +1277,7 @@ var egret = window.egret;window.skins={};
 		this.testlist = t;
 		return t;
 	};
-	return $exmlClass7;
+	return $exmlClass8;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/PanelSkin.exml'] = window.skins.PanelSkin = (function (_super) {
 	__extends(PanelSkin, _super);
 	function PanelSkin() {
@@ -1401,46 +1507,6 @@ var egret = window.egret;window.skins={};
 	return RadioButtonSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/SceneGame.exml'] = window.SceneGameSkin = (function (_super) {
 	__extends(SceneGameSkin, _super);
-	var SceneGameSkin$Skin8 = 	(function (_super) {
-		__extends(SceneGameSkin$Skin8, _super);
-		function SceneGameSkin$Skin8() {
-			_super.call(this);
-			this.skinParts = ["labelDisplay"];
-			
-			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
-			this.states = [
-				new eui.State ("up",
-					[
-					])
-				,
-				new eui.State ("down",
-					[
-					])
-				,
-				new eui.State ("disabled",
-					[
-					])
-			];
-		}
-		var _proto = SceneGameSkin$Skin8.prototype;
-
-		_proto._Image1_i = function () {
-			var t = new eui.Image();
-			t.percentHeight = 100;
-			t.source = "guanka_png";
-			t.percentWidth = 100;
-			return t;
-		};
-		_proto.labelDisplay_i = function () {
-			var t = new eui.Label();
-			this.labelDisplay = t;
-			t.horizontalCenter = 0;
-			t.verticalCenter = 0;
-			return t;
-		};
-		return SceneGameSkin$Skin8;
-	})(eui.Skin);
-
 	var SceneGameSkin$Skin9 = 	(function (_super) {
 		__extends(SceneGameSkin$Skin9, _super);
 		function SceneGameSkin$Skin9() {
@@ -1467,7 +1533,7 @@ var egret = window.egret;window.skins={};
 		_proto._Image1_i = function () {
 			var t = new eui.Image();
 			t.percentHeight = 100;
-			t.source = "danan_png";
+			t.source = "guanka_png";
 			t.percentWidth = 100;
 			return t;
 		};
@@ -1507,7 +1573,7 @@ var egret = window.egret;window.skins={};
 		_proto._Image1_i = function () {
 			var t = new eui.Image();
 			t.percentHeight = 100;
-			t.source = "paihangbang_png";
+			t.source = "daan_png";
 			t.percentWidth = 100;
 			return t;
 		};
@@ -1547,7 +1613,7 @@ var egret = window.egret;window.skins={};
 		_proto._Image1_i = function () {
 			var t = new eui.Image();
 			t.percentHeight = 100;
-			t.source = "close_png";
+			t.source = "paihangbang_png";
 			t.percentWidth = 100;
 			return t;
 		};
@@ -1561,9 +1627,129 @@ var egret = window.egret;window.skins={};
 		return SceneGameSkin$Skin11;
 	})(eui.Skin);
 
+	var SceneGameSkin$Skin12 = 	(function (_super) {
+		__extends(SceneGameSkin$Skin12, _super);
+		function SceneGameSkin$Skin12() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = SceneGameSkin$Skin12.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "caizi_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return SceneGameSkin$Skin12;
+	})(eui.Skin);
+
+	var SceneGameSkin$Skin13 = 	(function (_super) {
+		__extends(SceneGameSkin$Skin13, _super);
+		function SceneGameSkin$Skin13() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = SceneGameSkin$Skin13.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "xiaoren_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return SceneGameSkin$Skin13;
+	})(eui.Skin);
+
+	var SceneGameSkin$Skin14 = 	(function (_super) {
+		__extends(SceneGameSkin$Skin14, _super);
+		function SceneGameSkin$Skin14() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = SceneGameSkin$Skin14.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "close_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return SceneGameSkin$Skin14;
+	})(eui.Skin);
+
 	function SceneGameSkin() {
 		_super.call(this);
-		this.skinParts = ["gameBg","btn_Level","btn_result","btn_paihang","group_Help","label_Question","group_Result","group_Chaotic","labelLevel","bingoLayer","levelScene","imgDibang","openGroup","closeBtn"];
+		this.skinParts = ["gameBg","btn_Level","btn_result","btn_paihang","group_Help","label_Question","group_Result","group_Chaotic","labelLevel","caiziBtn","xiaorenBtn","dianImg","bingoLayer","levelScene","imgDibang","openGroup","closeBtn"];
 		
 		this.height = 1280;
 		this.width = 720;
@@ -1588,7 +1774,7 @@ var egret = window.egret;window.skins={};
 		t.scaleY = 1;
 		t.verticalCenter = 0;
 		t.width = 720;
-		t.elementsContent = [this.gameBg_i(),this.group_Help_i(),this.label_Question_i(),this.group_Result_i(),this.group_Chaotic_i(),this.labelLevel_i(),this.bingoLayer_i(),this.levelScene_i(),this.openGroup_i(),this.closeBtn_i()];
+		t.elementsContent = [this.gameBg_i(),this.group_Help_i(),this.label_Question_i(),this.group_Result_i(),this.group_Chaotic_i(),this.labelLevel_i(),this.caiziBtn_i(),this.xiaorenBtn_i(),this.dianImg_i(),this.bingoLayer_i(),this.levelScene_i(),this.openGroup_i(),this.closeBtn_i()];
 		return t;
 	};
 	_proto.gameBg_i = function () {
@@ -1624,7 +1810,7 @@ var egret = window.egret;window.skins={};
 		t.width = 109;
 		t.x = 10;
 		t.y = 150;
-		t.skinName = SceneGameSkin$Skin8;
+		t.skinName = SceneGameSkin$Skin9;
 		return t;
 	};
 	_proto.btn_result_i = function () {
@@ -1638,7 +1824,7 @@ var egret = window.egret;window.skins={};
 		t.width = 207;
 		t.x = 360;
 		t.y = 506;
-		t.skinName = SceneGameSkin$Skin9;
+		t.skinName = SceneGameSkin$Skin10;
 		return t;
 	};
 	_proto.btn_paihang_i = function () {
@@ -1650,7 +1836,7 @@ var egret = window.egret;window.skins={};
 		t.scaleY = 1;
 		t.x = 600;
 		t.y = 150;
-		t.skinName = SceneGameSkin$Skin10;
+		t.skinName = SceneGameSkin$Skin11;
 		return t;
 	};
 	_proto.label_Question_i = function () {
@@ -1660,14 +1846,14 @@ var egret = window.egret;window.skins={};
 		t.anchorOffsetY = 0;
 		t.bold = true;
 		t.fontFamily = "Microsoft YaHei";
-		t.height = 146;
+		t.height = 154;
+		t.horizontalCenter = 0;
 		t.size = 35;
-		t.text = "      小明的爷爷七十岁小明的爷                爷七十岁小明的爷爷七十岁小明的爷爷七十岁小明的爷爷七十岁";
+		t.text = "小明的爷爷七十岁小明的爷 爷七十岁小明的爷爷七十岁小明的爷爷七十岁小明的爷爷七十岁";
 		t.textAlign = "left";
 		t.textColor = 0xf7f7f7;
 		t.verticalAlign = "top";
-		t.width = 550;
-		t.x = 85;
+		t.width = 518;
 		t.y = 303;
 		return t;
 	};
@@ -1679,7 +1865,7 @@ var egret = window.egret;window.skins={};
 		t.height = 116.42;
 		t.width = 624;
 		t.x = 53;
-		t.y = 565;
+		t.y = 576;
 		t.layout = this._HorizontalLayout1_i();
 		t.elementsContent = [this._AnswerWord1_i(),this._AnswerWord2_i()];
 		return t;
@@ -1691,16 +1877,16 @@ var egret = window.egret;window.skins={};
 	};
 	_proto._AnswerWord1_i = function () {
 		var t = new AnswerWord();
-		t.height = 117;
-		t.width = 113;
+		t.height = 100;
+		t.width = 100;
 		t.x = 0;
 		t.y = 37;
 		return t;
 	};
 	_proto._AnswerWord2_i = function () {
 		var t = new AnswerWord();
-		t.height = 117;
-		t.width = 113;
+		t.height = 100;
+		t.width = 100;
 		t.x = 10;
 		t.y = 47;
 		return t;
@@ -1711,14 +1897,97 @@ var egret = window.egret;window.skins={};
 		t.anchorOffsetX = 0;
 		t.anchorOffsetY = 0;
 		t.height = 400;
-		t.width = 636;
-		t.x = 65;
+		t.width = 574;
+		t.x = 73;
 		t.y = 680;
 		t.layout = this._TileLayout1_i();
+		t.elementsContent = [this._Word1_i(),this._Word2_i(),this._Word3_i(),this._Word4_i(),this._Word5_i(),this._Word6_i(),this._Word7_i(),this._Word8_i(),this._Word9_i(),this._Word10_i()];
 		return t;
 	};
 	_proto._TileLayout1_i = function () {
 		var t = new eui.TileLayout();
+		t.horizontalGap = 20;
+		t.verticalGap = 30;
+		return t;
+	};
+	_proto._Word1_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 59;
+		t.y = 61;
+		return t;
+	};
+	_proto._Word2_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 69;
+		t.y = 71;
+		return t;
+	};
+	_proto._Word3_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 79;
+		t.y = 81;
+		return t;
+	};
+	_proto._Word4_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 89;
+		t.y = 91;
+		return t;
+	};
+	_proto._Word5_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 99;
+		t.y = 101;
+		return t;
+	};
+	_proto._Word6_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 109;
+		t.y = 111;
+		return t;
+	};
+	_proto._Word7_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 119;
+		t.y = 121;
+		return t;
+	};
+	_proto._Word8_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 129;
+		t.y = 131;
+		return t;
+	};
+	_proto._Word9_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 119;
+		t.y = 121;
+		return t;
+	};
+	_proto._Word10_i = function () {
+		var t = new Word();
+		t.height = 103;
+		t.width = 95;
+		t.x = 129;
+		t.y = 131;
 		return t;
 	};
 	_proto.labelLevel_i = function () {
@@ -1726,16 +1995,53 @@ var egret = window.egret;window.skins={};
 		this.labelLevel = t;
 		t.anchorOffsetX = 50;
 		t.anchorOffsetY = 50;
+		t.bold = true;
 		t.fontFamily = "Microsoft YaHei";
 		t.height = 100;
-		t.size = 30;
+		t.size = 32;
 		t.text = "999";
 		t.textAlign = "center";
 		t.textColor = 0x000000;
 		t.verticalAlign = "middle";
 		t.width = 100;
 		t.x = 353;
-		t.y = 267;
+		t.y = 263;
+		return t;
+	};
+	_proto.caiziBtn_i = function () {
+		var t = new eui.Button();
+		this.caiziBtn = t;
+		t.anchorOffsetX = 60;
+		t.anchorOffsetY = 60;
+		t.enabled = true;
+		t.height = 100;
+		t.label = "";
+		t.width = 100;
+		t.x = 72;
+		t.y = 525;
+		t.skinName = SceneGameSkin$Skin12;
+		return t;
+	};
+	_proto.xiaorenBtn_i = function () {
+		var t = new eui.Button();
+		this.xiaorenBtn = t;
+		t.anchorOffsetX = 44;
+		t.anchorOffsetY = 48;
+		t.enabled = true;
+		t.label = "";
+		t.x = 656;
+		t.y = 516;
+		t.skinName = SceneGameSkin$Skin13;
+		return t;
+	};
+	_proto.dianImg_i = function () {
+		var t = new eui.Image();
+		this.dianImg = t;
+		t.height = 30;
+		t.source = "dian_png";
+		t.width = 30;
+		t.x = 665;
+		t.y = 460;
 		return t;
 	};
 	_proto.bingoLayer_i = function () {
@@ -1796,7 +2102,7 @@ var egret = window.egret;window.skins={};
 		t.width = 80;
 		t.x = 669;
 		t.y = 243;
-		t.skinName = SceneGameSkin$Skin11;
+		t.skinName = SceneGameSkin$Skin14;
 		return t;
 	};
 	return SceneGameSkin;
