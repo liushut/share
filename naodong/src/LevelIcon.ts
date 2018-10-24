@@ -38,14 +38,14 @@ class LevelIcon extends eui.Component implements  eui.UIComponent {
 	{
 		if(status == false)
 		{
-			this.imgLock.visible = true;//锁
-			this.bitlabel_levelIndex.visible = false;
+			this.imgLock.alpha = 1;//锁
+			this.bitlabel_levelIndex.alpha = 0;
 			this.touchEnabled = false;
 		}
 		else if(status == true)
 		{
-			this.imgLock.visible = false;//锁
-			this.bitlabel_levelIndex.visible = true;
+			this.imgLock.alpha = 0;//锁
+			this.bitlabel_levelIndex.alpha = 1;
 			this.touchEnabled = true;
 		}
 		

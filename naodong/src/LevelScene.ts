@@ -15,7 +15,7 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 		this.initMap();
 		this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onNext,this);
 		this.btn_before.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onBefore,this);
-		this.levelBg.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onBg,this);
+		this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onClose,this);
 	}
 		
 
@@ -24,6 +24,8 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 	public chenghuArray = ["1_png","2_png","3_png","4_png","5_png","6_png","7_png","8_png","9_png","10_png"];
 	public ImgName:eui.Image;
 
+
+	public closeBtn:eui.Button;
 
 	public imgHead:eui.Image;
 	public groupHead:eui.Group;
@@ -61,13 +63,44 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 			this.groupLevel.addChild(icon);
 		}
 
-		//将当前关卡显示正确
-		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());//显示到最远的
+		// // //将当前关卡显示正确
+		this.pageIndex = SceneGame.getInstance().bingoLayer.getNumCurIndex(LevelDataManager.getInstance().GetMileStone());
+		this.updateLabel(this.groupLevel, this.pageIndex);//更新这一页的icon的label
+		this.updataName();	
+		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());//显示到最远的关卡
+	}
+	public showLevelIconTween(index:number)
+	{
+			for(let i = 0;i < this.groupLevel.numChildren;i++)//numChildren  9 个
+		{
+			let icon = <LevelIcon>this.groupLevel.getChildAt(i);
+			let num = icon.Level;//开始是1 
+			if(num < index)
+			{
+					icon.isCanShow(true);
+			}
+			else
+			{
+					icon.isCanShow(false);
+			}
+		}
 	}
 
 	//当前关卡的前面都显示
 	public showLevelIcon(index:number)
 	{
+		if (this.pageIndex == 1) {
+			console.log("第一关");
+			this.btn_before.visible = false;
+			
+		}
+		else if(this.pageIndex == 10)
+		{
+			
+			console.log("最后一关");
+			this.btn_next.visible = false;
+			
+		}
 		for(let i = 0;i < this.groupLevel.numChildren;i++)//numChildren  9 个
 		{
 			let icon = <LevelIcon>this.groupLevel.getChildAt(i);
@@ -83,10 +116,10 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 		}
 	}
 
-	//点击背景缩放
-	private onBg()
+	//点击关闭按钮缩放
+	private onClose()
 	{
-		egret.Tween.get(this).to({scaleX:1.5,scaleY:1.5},100).to({scaleX:1,scaleY:1},100)
+		egret.Tween.get(this).to({scaleX:1.2,scaleY:1.2},100).to({scaleX:1,scaleY:1},100)
 		.call(()=>{this.visible = false});
 	}
 	//前一个关卡
@@ -94,9 +127,9 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 	{
 		SoundManager.getInstance().answerSound.play(0,1);
 		this.pageIndex--;
-		this.updateLabel(this.groupLevel, this.pageIndex);
+		this.updateLabel(this.groupLevel, this.pageIndex);//更新这一页的icon的label
 		this.updataName();
-		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());
+		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());//小于最远的就更新
 		if (this.pageIndex == 1) {
 			console.log("第一关");
 			this.btn_before.visible = false;
@@ -181,14 +214,6 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 			this.ImgName.width = 147;
 		}
 	}
-	//得到最远关数在第几页。
-	private getCurIndexMini(level:number):number
-	{
-		let curIndex = 0;
-		curIndex  = Math.ceil(level / 30);//只数组从0开始。其余还是遵守习惯。因为从0开始的,从1开始的就是floor
-		return curIndex;
-	}
-	
 	//替换label显示。
 	public updateLabel(group:eui.Group,num:number)//num从1开始  1- 9 numChildren  9 个
 	{

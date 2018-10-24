@@ -134,7 +134,7 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 			SceneGame.getInstance().levelScene.pageIndex = page;
 			SceneGame.getInstance().levelScene.updateLabel(SceneGame.getInstance().levelScene.groupLevel, SceneGame.getInstance().levelScene.pageIndex);
 			SceneGame.getInstance().levelScene.updataName();
-			SceneGame.getInstance().levelScene.showLevelIcon(curIndex);
+			SceneGame.getInstance().levelScene.showLevelIconTween(curIndex);
 				//关卡界面出来  就是现在的当前页面
 			SceneGame.getInstance().levelScene.visible = true;
 			let index = (replaceIndex - 1) % 9;//数组元素  所以要-1
@@ -142,9 +142,10 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 			let img:eui.Image = element.imgLock;
 			let label:eui.BitmapLabel = element.bitlabel_levelIndex;
 			//解锁关卡的标签动画   关卡界面消失后弹出发起挑战界面
-			egret.Tween.get(img).to({visible:false},1000).call(()=>{
-				egret.Tween.get(label).to({visible:true},1000);
-			}).wait(200).call(()=>{
+			egret.Tween.get(img).to({alpha:0},1000).call(()=>{
+				egret.Tween.get(label).to({alpha:1},1000).call(()=>{
+				})
+			}).wait(1000).call(()=>{
 			//界面出来后进入发起挑战界面去下一题
 			SceneGame.getInstance().bingoLayer.visible = true;
 			SceneGame.getInstance().bingoLayer.comboGroup.visible = true;
@@ -153,8 +154,6 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 			SoundManager.getInstance().trueSoundChanel.volume = 1;
 			console.log("发起挑战");
 			})
-
-		
 		}
 		else if (level > 1) {
 			console.log("直接去下一关");
@@ -162,7 +161,7 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 		}
 
 	}
-	private getNumCurIndex(index:number):number
+	public getNumCurIndex(index:number):number
 	{
 		let pageIndex = Math.ceil(index / 9);
 		console.log("当前页面" + pageIndex);

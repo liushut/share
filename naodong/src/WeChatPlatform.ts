@@ -92,7 +92,18 @@ class WeChatPlatform implements Platform {
 
             videoAd.load()
                 .then(() => videoAd.show())
-                .catch(err => console.log(err.errMsg));
+                .catch(err => {
+                    console.log(err.errMsg);
+                    (wx as any).shareAppMessage({
+                        title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                        imageUrl: "resource/assets/common/title11.png"
+            });
+            egret.Tween.get(this).wait(200).call(()=>{
+                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon); 
+                    SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+                    SceneGame.getInstance().bingoLayer.visible = false;
+            })
+                });
             videoAd.onClose(res=>{
                    if (res && res.isEnded || res === undefined) {
                     // 正常播放结束，可以下发游戏奖励
@@ -104,7 +115,7 @@ class WeChatPlatform implements Platform {
                 else {
                     // 播放中途退出，不下发游戏奖励
                     console.log("提前关闭");
-
+                   
                 }
             })
         })

@@ -84,7 +84,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			});
 			egret.Tween.get(this.dianImg).wait(200).call(() => {
 				this.dianImg.visible = false;
-			}).wait(10000).call(() => { this.dianImg.visible = true; })
+			}).wait(300000).call(() => { this.dianImg.visible = true; })//1000ms = 1s   3000 0  0 3s00
 		}, this);
 
 	}
@@ -311,6 +311,11 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 	private onLevel() {
 		SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
 		SoundManager.getInstance().answerSoundChanel.volume = 1;
+		
+		let page = this.bingoLayer.getNumCurIndex(LevelDataManager.getInstance().GetCurIndex());
+		this.levelScene.pageIndex = page;
+		this.levelScene.updataName();
+		this.levelScene.updateLabel(this.levelScene.groupLevel,this.levelScene.pageIndex);
 		this.levelScene.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());
 		this.levelScene.visible = true;
 	}
