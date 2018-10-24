@@ -83,7 +83,32 @@ class WeChatPlatform implements Platform {
             LevelDataManager.oldADs = ad;
         })
     }
-    
+    async restartVideo()
+    {
+        return new Promise(function(resolve,reject){
+            let videoAd = (wx as any).createRewardedVideoAd({
+                adUnitId: 'adunit-597cc618faea8408'
+            })
+
+            videoAd.load()
+                .then(() => videoAd.show())
+                .catch(err => console.log(err.errMsg));
+            videoAd.onClose(res=>{
+                   if (res && res.isEnded || res === undefined) {
+                    // 正常播放结束，可以下发游戏奖励
+                    console.log("正常播放，重新开始");
+                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon); 
+                    SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+                    SceneGame.getInstance().bingoLayer.visible = false;
+                }
+                else {
+                    // 播放中途退出，不下发游戏奖励
+                    console.log("提前关闭");
+
+                }
+            })
+        })
+    }
     async showVideoAD():Promise<any>
     {
         return new Promise(function(resolve,reject){
@@ -104,7 +129,6 @@ class WeChatPlatform implements Platform {
                     SoundManager.getInstance().windowSoundChanel.volume = 1;
                     SceneGame.getInstance().bingoLayer.visible = true;
                     SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                    SceneGame.getInstance().bingoLayer.daandi.visible = true;
                     SceneGame.getInstance().hintBg(true);
                     SceneGame.getInstance().bingoLayer.labelresult.text =
                     LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
@@ -233,7 +257,6 @@ class WeChatPlatform implements Platform {
                   SoundManager.getInstance().windowSoundChanel.volume = 1;
                   SceneGame.getInstance().bingoLayer.visible = true;
                   SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                  SceneGame.getInstance().bingoLayer.daandi.visible = true;
                   SceneGame.getInstance().hintBg(true);
                   SceneGame.getInstance().bingoLayer.labelresult.text =
                     LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
@@ -299,7 +322,8 @@ class WxOpenDataContext{
     }
    
     postMessage(data) {
-        const openDataContext = wx.getOpenDataContext();
+        // const openDataContext = wx.getOpenDataContext();
+        let openDataContext = wx.getOpenDataContext();
         openDataContext.postMessage(data);
     }
 }

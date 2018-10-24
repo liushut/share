@@ -2,35 +2,29 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 	public constructor() {
 		super();
 	}
-	public btn_share:eui.Button;
-	public btn_next:eui.Button;
-	public bg:eui.Image;
-	public groupAll:eui.Group;
-	public trueGroup:eui.Group;
-	public labelresult:eui.Label;
-	public erroGroup:eui.Group;
-	public bingoGroup:eui.Group;
-	public imgErro:eui.Image;
-	public erroBtn:eui.Button;
 
-	public daandi:eui.Image;
-	public labelExplain:eui.Label;//解释
+	public btn_share: eui.Button;
+	public btn_next: eui.Button;
+	public bg: eui.Image;
+	public groupAll: eui.Group;
+	public trueGroup: eui.Group;
+	public labelresult: eui.Label;
 
+	public bingoGroup: eui.Group;
+	public imgErro: eui.Image;
 
+	public daandi: eui.Image;
+	public labelExplain: eui.Label;//解释
 
 	//	十连胜
-	public comboGroup:eui.Group;
+	public comboGroup: eui.Group;
+	public chachaBtn: eui.Button;
 
-	public Btntiaozhan:eui.Button;
-	public guanLabel:eui.Label;
-
-
-
+	public Btntiaozhan: eui.Button;
+	public guanLabel: eui.Label;
 	//升级的UI
-	public upgradeGroup: eui.Group;
-	public tiaozhanBtn:eui.Button;
+	public tiaozhanBtn: eui.Button;
 	public imgDengji: eui.Image;
-	public imgdizi:eui.Image;
 
 	public imgTouxiang: eui.Image;
 	public starsGroup: eui.Group;
@@ -39,23 +33,37 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 	public star2: eui.Image;
 	public star3: eui.Image;
 	public star4: eui.Image;
-	public names:string[] = ["xinshou_png","xuezhe_png","dashi_png","zongshi_png","zhizhe_png","xianzhi_png"];
-	private gradename:string[] = ["xinshouzi_png","xuezhezi_png","dashizi_png","zongshizi_png","zhizhezi_png","xianzhizi_png"];
+
+	//回答错误
+	public errGroup:eui.Group;
+	public jixuBtn:eui.Button;
+	public chongwanBtn:eui.Button;
+
 
 	protected partAdded(partName:string,instance:any):void
 	{
 		super.partAdded(partName,instance);
 	}
-
-
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
 		this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onNext,this);
 		this.btn_share.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onShare,this);
-		this.imgdizi.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onzidi,this);
-		this.erroBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onErro,this);
+		
+		
 		this.Btntiaozhan.addEventListener(egret.TouchEvent.TOUCH_TAP,this.tiaozhan,this);
+		this.chachaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onchacha,this);
+
+		//重玩和继续的按钮方法
+		this.chongwanBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onreStart,this);
+		this.jixuBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onResume,this);
+	}
+	private onchacha(e:TouchEvent)
+	{
+		this.visible = false;
+		this.comboGroup.visible = false;
+		SceneGame.getInstance().levelScene.visible = false;
+		SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 	}
 	private tiaozhan()
 	{
@@ -63,20 +71,17 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 			title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
 			imageUrl: "resource/assets/common/title11.png"
 		});
-		this.visible = false;
-		this.comboGroup.visible = false;
-		SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+		egret.Tween.get(this).wait(200).call(()=>{
+			this.visible = false;
+			this.comboGroup.visible = false;
+			SceneGame.getInstance().levelScene.visible = false;
+			SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+		})
 	}
 	private onErro()
 	{
 		platform.shareAppMessage();
-	}
-	private onzidi()
-	{
-		this.visible = false;
-		this.upgradeGroup.visible = false;
-	}
-	
+	}	
 	private onNext()
 	{
 		console.log("点击下一题");
@@ -97,263 +102,149 @@ class Bingo extends eui.Component implements  eui.UIComponent {
 		}
 		this.imageUpdate();
 	}
-	private onShare()
-	{
+	private onShare() {
 		console.log("分享");
-		egret.Tween.get(this.btn_share).to({scaleX:1.2,scaleY:1.2},100).to({scaleX:1,scaleY:1},100);
+		egret.Tween.get(this.btn_share).to({ scaleX: 1.2, scaleY: 1.2 }, 100).to({ scaleX: 1, scaleY: 1 }, 100);
 		(wx as any).shareAppMessage({
-                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                imageUrl: "resource/assets/common/title11.png"
-        });
+			title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+			imageUrl: "resource/assets/common/title11.png"
+		});
 	}
 
-		public imageUpdate()
-		{
-				//记录的关卡
-					let level = LevelDataManager.getInstance().GetMileStone();
-					if( level > 1 && level % 10 == 1)
-					{
-					wx.vibrateLong({
-						success:function()
-						{
-							console.log("抖动成功");
-						}
-					});
-					 SceneGame.getInstance().bingoLayer.visible = true;
-					 SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
-					 SceneGame.getInstance().bingoLayer.comboGroup.visible = true;
-					 this.guanLabel.text = "当前解锁第" + (LevelDataManager.getInstance().curIcon) + "关";
-					 LevelDataManager.comboTen = 0;
-					 console.log("你赢了");
-					 SoundManager.getInstance().trueSoundChanel = SoundManager.getInstance().trueSound.play(0, 1);
-					 SoundManager.getInstance().trueSoundChanel.volume = 1;
-					 return;
-					}
-					if (level == 1) {
-						this.resetStart();//重置星星
-						//一星
-						this.imgTouxiang.source = this.names[0];
-						this.imgDengji.source = this.gradename[0];
-						this.updateStar(0);
-					}
-					else if (level == 31)//2
-					{
-						this.imgTouxiang.source = this.names[0];
-						this.imgDengji.source = this.gradename[0];
-						this.updateStar(1);
-					
-					}
-					else if (level == 61) {
-						this.imgTouxiang.source = this.names[0];
-						this.imgDengji.source = this.gradename[0];
-						this.updateStar(2);
-						
-					}
-					else if (level == 91) {
-						this.imgTouxiang.source = this.names[0];
-						this.imgDengji.source = this.gradename[0];
-						this.updateStar(3);
-					
-					}
-					else if (level == 121) {
-						this.imgTouxiang.source = this.names[0];
-						this.imgDengji.source = this.gradename[0];
-						this.updateStar(4);
-					
-					}
-					else if (level == 151) {
-						//重置
-						this.resetStart();
-						//一星
-						this.imgTouxiang.source = this.names[1];
-						this.imgDengji.source = this.gradename[1];
-						this.updateStar(0);
-						
-					}
-					else if (level == 181) {
-						this.imgTouxiang.source = this.names[1];
-						this.imgDengji.source = this.gradename[1];
-						this.updateStar(1);
-					
-					}
-					else if (level == 211) {
-						this.imgTouxiang.source = this.names[1];
-						this.imgDengji.source = this.gradename[1];
-						this.updateStar(2);
-					
-					}
-					else if (level == 241) {
-						this.imgTouxiang.source = this.names[1];
-						this.imgDengji.source = this.gradename[1];
-						this.updateStar(3);
-						
-					}
-					else if (level == 271) {
-						this.imgTouxiang.source = this.names[1];
-						this.imgDengji.source = this.gradename[1];
-						this.updateStar(4);
-					
-					}
-					else if (level == 301) {
-						this.resetStart();
-						//一星
-						this.imgTouxiang.source = this.names[2];
-						this.imgDengji.source = this.gradename[2];
-						this.updateStar(0);
-						
-					}
-					else if (level == 331) {
-						this.imgTouxiang.source = this.names[2];
-						this.imgDengji.source = this.gradename[2];
-						this.updateStar(1);
-				
-					}
-					else if (level == 361) {
-						this.imgTouxiang.source = this.names[2];
-						this.imgDengji.source = this.gradename[2];
-						this.updateStar(2);
-						
-					}
-					else if (level == 391) {
-						this.imgTouxiang.source = this.names[2];
-						this.imgDengji.source = this.gradename[2];
-						this.updateStar(3);
-					
-					}
-					else if (level == 421) {
-						this.imgTouxiang.source = this.names[2];
-						this.imgDengji.source = this.gradename[2];
-						this.updateStar(4);
-				
-					}
-					else if (level == 451) {
-
-						this.resetStart();
-						//1
-						this.imgTouxiang.source = this.names[3];
-						this.imgDengji.source = this.gradename[3];
-						this.updateStar(0);
-						
-
-					}
-					else if (level == 481) {
-						this.imgTouxiang.source = this.names[3];
-						this.imgDengji.source = this.gradename[3];
-						this.updateStar(1);
-						
-					}
-					else if (level == 511) {
-						this.imgTouxiang.source = this.names[3];
-						this.imgDengji.source = this.gradename[3];
-						this.updateStar(2);
-					
-					}
-					else if (level == 541) {
-						this.imgTouxiang.source = this.names[3];
-						this.imgDengji.source = this.gradename[3];
-						this.updateStar(3);
-						
-					}
-					else if (level == 571) {
-						this.imgTouxiang.source = this.names[3];
-						this.imgDengji.source = this.gradename[3];
-						this.updateStar(4);
-						
-					}
-					else if (level == 601) {
-						this.resetStart();
-						this.imgTouxiang.source = this.names[4];
-						this.imgDengji.source = this.gradename[4];
-						this.updateStar(0);
-					
-
-					}
-					else if (level == 631) {
-						this.imgTouxiang.source = this.names[4];
-						this.imgDengji.source = this.gradename[4];
-						this.updateStar(1);
-					
-					}
-					else if (level == 661) {
-						this.imgTouxiang.source = this.names[4];
-						this.imgDengji.source = this.gradename[4];
-						this.updateStar(2);
-					
-					}
-					else if (level == 691) {
-						this.imgTouxiang.source = this.names[4];
-						this.imgDengji.source = this.gradename[4];
-						this.updateStar(3);
-						
-					}
-					else if (level == 721) {
-						this.imgTouxiang.source = this.names[4];
-						this.imgDengji.source = this.gradename[4];
-						this.updateStar(4);
-						
-					}
-					else if (level == 751) {
-						this.resetStart();
-						this.imgTouxiang.source = this.names[5];
-						this.imgDengji.source = this.gradename[5];
-						this.updateStar(0);
-					
-
-					}
-					else if (level == 781) {
-							this.imgTouxiang.source = this.names[5];
-						this.imgDengji.source = this.gradename[5];
-						this.updateStar(1);
-					
-					}
-					else if (level == 811) {
-							this.imgTouxiang.source = this.names[5];
-						this.imgDengji.source = this.gradename[5];
-						this.updateStar(2);
-					
-					}
-					else if (level == 841) {
-							this.imgTouxiang.source = this.names[5];
-						this.imgDengji.source = this.gradename[5];
-						this.updateStar(3);
-						
-					}
-					else if (level == 871) {
-							this.imgTouxiang.source = this.names[5];
-						this.imgDengji.source = this.gradename[5];
-						this.updateStar(4);
-					
-					}
-					else if (level == 900) {
-						this.imgTouxiang.source = this.names[6];
-						this.imgDengji.source = this.gradename[6];
-						(wx as any).showModal({
-							title: "提示",
-							content: "已经到最后啦，大神~~",
-							showCancel: false,
-						});
-					}
-				SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
-		}
-		public updateStar(index)
-		{
-			if(index > this.starsGroup.numChildren)
+	public imageUpdate() {
+		//记录的关卡
+		let level = LevelDataManager.getInstance().GetMileStone();
+		this.changeImg(level);
+		if (level > 1 && level % 10 == 1) {  //level 是 存储的 
+			let curIndex = LevelDataManager.getInstance().GetCurIndex();
+			curIndex++;//每十个题目 增加一关。 1  11 2  21 3  31  4  41  5   81 9  91 10
+			let replaceIndex = curIndex; //11 第2关  子元素 1
+			if(curIndex > LevelDataManager.getInstance().GetCurIndex())
 			{
-				console.log("超出star数组");
-				return ;
+				LevelDataManager.getInstance().SetCurIndex(curIndex);//当前关卡数存储起来
 			}
-			for(let i = 0;i <= index;i++)
-			{
-				this.starsGroup.getChildAt(i).visible = true;
+			wx.vibrateLong({
+				success: function () {
+					console.log("抖动成功");
+				}
+			});
+		
+			//显示当前关所在的页面
+			let page = this.getNumCurIndex(curIndex);
+			SceneGame.getInstance().levelScene.pageIndex = page;
+			SceneGame.getInstance().levelScene.updateLabel(SceneGame.getInstance().levelScene.groupLevel, SceneGame.getInstance().levelScene.pageIndex);
+			SceneGame.getInstance().levelScene.updataName();
+			SceneGame.getInstance().levelScene.showLevelIcon(curIndex);
+				//关卡界面出来  就是现在的当前页面
+			SceneGame.getInstance().levelScene.visible = true;
+			let index = (replaceIndex - 1) % 9;//数组元素  所以要-1
+			let element = SceneGame.getInstance().levelScene.groupLevel.getChildAt(index) as any; //子元素  0 8   
+			let img:eui.Image = element.imgLock;
+			let label:eui.BitmapLabel = element.bitlabel_levelIndex;
+			//解锁关卡的标签动画   关卡界面消失后弹出发起挑战界面
+			egret.Tween.get(img).to({visible:false},1000).call(()=>{
+				egret.Tween.get(label).to({visible:true},1000);
+			}).wait(200).call(()=>{
+			//界面出来后进入发起挑战界面去下一题
+			SceneGame.getInstance().bingoLayer.visible = true;
+			SceneGame.getInstance().bingoLayer.comboGroup.visible = true;
+			this.guanLabel.text = "当前解锁第" + (LevelDataManager.getInstance().GetCurIndex()) + "关"; // 2
+			SoundManager.getInstance().trueSoundChanel = SoundManager.getInstance().trueSound.play(0, 1);
+			SoundManager.getInstance().trueSoundChanel.volume = 1;
+			console.log("发起挑战");
+			})
+
+		
+		}
+		else if (level > 1) {
+			console.log("直接去下一关");
+			SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+		}
+
+	}
+	private getNumCurIndex(index:number):number
+	{
+		let pageIndex = Math.ceil(index / 9);
+		console.log("当前页面" + pageIndex);
+		return pageIndex;
+	}
+	private changeImg(index:number)
+	{
+		if(index >= 1 && index <= 90)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[0];
+			SceneGame.getInstance().levelScene.ImgName.width = 86;
+			
+		}
+		else if(index >= 91 && index <= 180)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[1];
+			SceneGame.getInstance().levelScene.ImgName.width = 86;
+		}
+		else if(index >= 181 && index <= 270)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[2];
+			SceneGame.getInstance().levelScene.ImgName.width = 86;
+		}
+		else if(index >= 271 && index <= 360)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[3];
+			SceneGame.getInstance().levelScene.ImgName.width = 86;
+		}
+		else if(index >= 361 && index <= 450)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[4];
+			SceneGame.getInstance().levelScene.ImgName.width = 86;
+		}
+		else if(index >= 451 && index <= 540)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[5];
+			SceneGame.getInstance().levelScene.ImgName.width = 86;
+		}
+		else if(index >= 541 && index <= 630)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[6];
+			SceneGame.getInstance().levelScene.ImgName.width = 86;
+		}
+		else if(index >= 631 && index <= 720)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[7];
+			SceneGame.getInstance().levelScene.ImgName.width = 147;
+		}
+		else if(index >= 721 && index <= 810)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[8];
+			SceneGame.getInstance().levelScene.ImgName.width = 147;
+		}
+		else if(index >= 811 && index <= 900)
+		{
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[9];
+			SceneGame.getInstance().levelScene.ImgName.width = 147;
+			if (index == 900) {
+				(wx as any).showModal({
+					title: "提示",
+					content: "已经到最后啦，大神~~",
+					showCancel: false,
+				});
 			}
 		}
-		public resetStart()
-		{
-			for(let i = 0;i < this.starsGroup.numChildren;i++)
-			{
-				this.starsGroup.getChildAt(i).visible = false;
-			}
+	}
+			//继续
+		private onResume() {
+			platform.restartVideo();
+		}
+		//回到 161 重新开始
+		private onreStart() {
+			let curIcon = LevelDataManager.getInstance().curIcon;
+			let remaining = curIcon % 10;//多余的关数   165   5
+			curIcon -= remaining;
+			LevelDataManager.getInstance().curIcon = curIcon + 1;
+			SceneGame.getInstance().bingoLayer.visible = false;
+			SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+			SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+			console.log("答错后的关数curIcon" + LevelDataManager.getInstance().curIcon);
 		}
 }
+	
 
 window["Bingo"] = Bingo;

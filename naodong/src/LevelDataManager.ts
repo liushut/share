@@ -11,8 +11,8 @@ class LevelDataManager//关卡数据管理
     public  static oldADs:any;
     private static levelDataManager:LevelDataManager;
     public  static shareNum:number = 0;//分享次数
-    public   curIcon:number = 1;;//当前关卡
-    public   curIndex:number = 0;//当前段位
+    public   curIcon:number = 1;;//当前题目数
+    private   curIndex:number = 1;//当前关卡数
     public   static tempIndex = 0;//当前页面
     public   isShare:boolean = false;
     public   static isLogin:boolean = true;
@@ -165,6 +165,20 @@ class LevelDataManager//关卡数据管理
             newad.show();
             LevelDataManager.oldADs = newad;
             return LevelDataManager.oldADs;
+    }
+
+    public  SetCurIndex(index:number)
+    {
+         egret.localStorage.setItem("CurIndex",index.toString());
+    }
+    public GetCurIndex()
+    {
+        let index = egret.localStorage.getItem("CurIndex");
+        if(index == "" || index == null)
+        {
+            index = "1";
+        }
+        return parseInt(index);
     }
     
 }

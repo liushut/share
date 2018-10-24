@@ -18,6 +18,13 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 		this.levelBg.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onBg,this);
 	}
 		
+
+
+	//称呼数组
+	public chenghuArray = ["1_png","2_png","3_png","4_png","5_png","6_png","7_png","8_png","9_png","10_png"];
+	public ImgName:eui.Image;
+
+
 	public imgHead:eui.Image;
 	public groupHead:eui.Group;
 	public imgHeadBlack:eui.Image;
@@ -27,81 +34,52 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 	public btn_next:eui.Button;
 	public groupStars:eui.Group;//星星数组
 	public levelBg:eui.Image;
+	
 
-	private nameArray:string[] = ["xinshou_png","xuezhe_png","dashi_png","zongshi_png","zhizhe_png","xianzhi_png"];
-	// private groups:eui.Group[] = [];//group数组
-	private curIndex:number = 0;//当前关卡页数。  0 - 29
+	public pageIndex:number = 1;//当前关卡页数。  1 - 10
 
-	// private curGroup:eui.Group;//当前
+	
 	private static levelScene:LevelScene;
 	public imagehuiGrade:eui.Image;//灰横幅
 	public imageGrade:eui.Image;//横幅
 
 
-
-
-public static  getInstance()
-{
-	if(LevelScene.levelScene == null)
-	{
-		LevelScene.levelScene = new LevelScene();
+	public static getInstance() {
+		if (LevelScene.levelScene == null) {
+			LevelScene.levelScene = new LevelScene();
+		}
+		return LevelScene.levelScene;
 	}
-	return LevelScene.levelScene;
-}
-	private initMap()
-	{
+	private initMap() {
 		//初始化group
-		for(let i =  0; i<  30 ; i++)
-		{
+		this.groupLevel.removeChildren();
+		for (let i = 0; i < 9; i++) {
 			let icon = new LevelIcon();
 			icon.Level = i + 1;
-			let tLayout:eui.TileLayout = new eui.TileLayout();
-			tLayout.horizontalGap = 2;
-			tLayout.verticalGap = 10;
-			tLayout.requestedColumnCount = 6; 
-			this.groupLevel.layout = tLayout;
+			icon.width = 175;
+			icon.height = 185;
 			this.groupLevel.addChild(icon);
-			
 		}
-		//初始化星星
-		let starIndex = this.curIndex % 5;
-		let group = this.groupStars;
-		group.getChildAt(starIndex).alpha = 1;
-
-
-		//当前头像正确
-		this.imgHead.source = this.nameArray[0];
-		this.imgHeadBlack.alpha = 0;
 
 		//将当前关卡显示正确
-		this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());//显示到最远的
-		//打开就是最远纪录的关卡
-		// this.showMaxLevelIcon(LevelDataManager.getInstance().GetMileStone());
-
-		
-
+		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());//显示到最远的
 	}
-		//打开就是最远纪录的关卡,然后在此基础上翻页
-	public showMaxLevelIcon(level:number)
-	{
-		this.curIndex = this.getCurIndex();//得到当前的页数
-	}
+
 	//当前关卡的前面都显示
 	public showLevelIcon(index:number)
 	{
-		for(let i = 0;i < this.groupLevel.numChildren;i++)
+		for(let i = 0;i < this.groupLevel.numChildren;i++)//numChildren  9 个
 		{
 			let icon = <LevelIcon>this.groupLevel.getChildAt(i);
 			let num = icon.Level;//开始是1 
 			if(num <= index)
 			{
-					icon.setLevelIndex(false);
+					icon.isCanShow(true);
 			}
 			else
 			{
-					icon.setLevelIndex(true);
+					icon.isCanShow(false);
 			}
-			
 		}
 	}
 
@@ -115,165 +93,93 @@ public static  getInstance()
 	private onBefore()
 	{
 		SoundManager.getInstance().answerSound.play(0,1);
-		if (this.curIndex == 1) {
+		this.pageIndex--;
+		this.updateLabel(this.groupLevel, this.pageIndex);
+		this.updataName();
+		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());
+		if (this.pageIndex == 1) {
 			console.log("第一关");
 			this.btn_before.visible = false;
+			return;
 		}
-		let starIndex = this.curIndex % 5;
-		let group = this.groupStars;
-		group.getChildAt(starIndex).alpha = 0;
-		this.curIndex--;
-		this.updateLabel(this.groupLevel, this.curIndex);
-		this.updateGrade(this.curIndex);
-		this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
-
+		else if(this.pageIndex > 1)
+		{
+			this.btn_next.visible = true;
+		}
 	}
 	//看下一个关卡
 	private onNext()
 	{
 		SoundManager.getInstance().answerSound.play(0,1);
-		if(this.curIndex == 29)
+		this.pageIndex++;
+		this.updateLabel(this.groupLevel,this.pageIndex);//更新关卡
+		this.updataName();
+		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());//显示关卡和头像
+		if(this.pageIndex == 10)
 		{
+			
 			console.log("最后一关");
 			this.btn_next.visible = false;
 			
-			return;
 		}
-		
-		this.curIndex++;
-		console.log("sss" + this.curIndex);
-		this.updateLabel(this.groupLevel,this.curIndex);//更新关卡
-		this.updateGrade(this.curIndex);//更新头像
-		this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());//显示关卡和头像
+		else if(this.pageIndex < 10)
+		{
+			this.btn_before.visible = true;
+		}
 	}
-	//判断最远关数在第几页
-	private getCurIndex():number
+	public updataName()
 	{
-		let level = LevelDataManager.getInstance().GetMileStone();
-		let curLevel = 0;
-		if(level >= 1 && level <= 30)
+		if(this.pageIndex == 1)
 		{
-			curLevel = 0;
+			this.ImgName.source = this.chenghuArray[0];
+			this.ImgName.width = 86;
+			
 		}
-		else if(level >= 31 && level <= 60)
+		else if(this.pageIndex == 2)
 		{
-			curLevel = 1;
+			this.ImgName.source = this.chenghuArray[1];
+			this.ImgName.width = 86;
 		}
-		else if(level >= 61 && level <= 90)
+		else if(this.pageIndex == 3)
 		{
-			curLevel = 2;
+			this.ImgName.source = this.chenghuArray[2];
+			this.ImgName.width = 86;
 		}
-		else if(level >= 91 && level <= 120)
+		else if(this.pageIndex == 4)
 		{
-			curLevel = 3;
+			this.ImgName.source = this.chenghuArray[3];
+			this.ImgName.width = 86;
 		}
-		else if(level >= 121 && level <= 150)
+		else if(this.pageIndex == 5)
 		{
-			curLevel = 4;
+			this.ImgName.source = this.chenghuArray[4];
+			this.ImgName.width = 86;
 		}
-		else if(level >= 151 && level <=180)
+		else if(this.pageIndex == 6)
 		{
-			curLevel = 5;
+			this.ImgName.source = this.chenghuArray[5];
+			this.ImgName.width = 86;
 		}
-		else if(level >= 181 && level <= 210)
+		else if(this.pageIndex == 7)
 		{
-			curLevel = 6;
+			this.ImgName.source = this.chenghuArray[6];
+			this.ImgName.width = 86;
 		}
-		else if(level >= 211 && level <= 240)
+		else if(this.pageIndex == 8)
 		{
-			curLevel = 7;
+			this.ImgName.source = this.chenghuArray[7];
+			this.ImgName.width = 147;
 		}
-		else if(level >= 241 && level <= 270)
+		else if(this.pageIndex == 9)
 		{
-			curLevel = 8;
+			this.ImgName.source = this.chenghuArray[8];
+			this.ImgName.width = 147;
 		}
-		else if(level >= 271 && level <= 300)
+		else if(this.pageIndex == 10)
 		{
-			curLevel = 9;
+			this.ImgName.source = this.chenghuArray[9];
+			this.ImgName.width = 147;
 		}
-		else if(level >= 301 && level <= 330)
-		{
-			curLevel = 10;
-		}
-		else if(level >= 331 && level <= 360)
-		{
-			curLevel = 11;
-		}
-		else if(level >= 361 && level <= 390)
-		{
-			curLevel = 12;
-		}
-		else if(level >= 391 && level <= 420)
-		{
-			curLevel = 13;
-		}
-		else if(level >= 421 && level <= 450)
-		{
-			curLevel = 14;
-		}
-		else if(level >= 451 && level <= 480)
-		{
-			curLevel = 15;
-		}
-		else if(level >= 481 && level <= 510)
-		{
-			curLevel = 16;
-		}
-		else if(level >= 511 && level <= 540)
-		{
-			curLevel = 17;
-		}
-		else if(level >= 541 && level <= 570)
-		{
-			curLevel = 18;
-		}
-		else if(level >= 571 && level <= 600)
-		{
-			curLevel = 19;
-		}
-		else if(level >= 601 && level <= 630)
-		{
-			curLevel = 20;
-		}
-		else if(level >= 631 && level <= 660)
-		{
-			curLevel = 21;
-		}
-		else if(level >= 661 && level <= 690)
-		{
-			curLevel = 22;
-		}
-		else if(level >= 691 && level <= 720)
-		{
-			curLevel = 23;
-		}
-		else if(level >= 721 && level <= 750)
-		{
-			curLevel = 24;
-		}
-		else if(level >= 751 && level <= 780)
-		{
-			curLevel = 25;
-		}
-		else if(level >= 781 && level <= 810)
-		{
-			curLevel = 26;
-		}
-		else if(level >= 811 && level <= 840)
-		{
-			curLevel = 27;
-		}
-		else if(level >= 841 && level <= 870)
-		{
-			curLevel = 28;
-		}
-		else if(level >= 871 && level<= 900)
-		{
-			curLevel = 29;
-		}
-
-		return  curLevel;
-
 	}
 	//得到最远关数在第几页。
 	private getCurIndexMini(level:number):number
@@ -282,206 +188,20 @@ public static  getInstance()
 		curIndex  = Math.ceil(level / 30);//只数组从0开始。其余还是遵守习惯。因为从0开始的,从1开始的就是floor
 		return curIndex;
 	}
-	//更新头像级别
-	private updateGrade(index:number)//30页
-	{
-		if(index == 0)
-		{
-			this.imgHead.source = this.nameArray[0];
-			this.imgHeadBlack.alpha = 0;
-			
-		}
-		else if(index >0 && index < 5)//0 4
-		{
-			this.imgHeadBlack.alpha = 1;
-			this.btn_before.visible = true;
-			this.imgHead.source = this.nameArray[0];
-			this.imgHeadBlack.source = "hui" + this.nameArray[0];
-			this.labelGrade.text = "新手";
-			if(index == 4)
-			{
-					//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 1;
-				}
-			}
-
-		}
-		else if(index >= 5 && index < 10)//5 9
-		{
-			this.imgHead.source = this.nameArray[1];
-			this.imgHeadBlack.source = "hui" + this.nameArray[1];
-			this.labelGrade.text = "学者"
-			if(index == 5)
-			{
-					//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 0;
-				}
-			}
-			else if(index == 9)
-			{
-					//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 1;
-				}
-			}
-		
-		}
-		else if(index >= 10 && index < 15)
-		{
-			this.imgHead.source = this.nameArray[2];
-			this.imgHeadBlack.source = "hui" + this.nameArray[2];
-			this.labelGrade.text = "大师"
-			if(index == 10)
-			{
-					//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 0;
-				}
-			}
-			else if(index == 14)
-			{
-						//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 1;
-				}
-			}
-			
-		}
-		else if(index >= 15 && index < 20)
-		{
-			this.imgHead.source = this.nameArray[3];
-			this.imgHeadBlack.source = "hui" + this.nameArray[3];
-			this.labelGrade.text = "宗师"
-			if(index == 15)
-			{
-						//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 0;
-				}
-			}
-			else if(index == 19)
-			{
-					//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 1;
-				}
-			}
-		
-		}
-		else if(index >=20 && index < 25 )
-		{
-			this.imgHead.source = this.nameArray[4];
-			this.imgHeadBlack.source = "hui" + this.nameArray[4];
-			this.labelGrade.text = "智者"
-			if(index == 20)
-			{
-						//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 0;
-				}
-			}
-			else if(index == 24)
-			{
-					//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 1;
-				}
-			}
-		
-		}
-		else if(index >= 25 && index < 30)
-		{
-			this.btn_next.visible = true;
-			this.imgHead.source = this.nameArray[5];
-			this.imgHeadBlack.source = "hui" + this.nameArray[5];
-			this.labelGrade.text = "先知";
-			if(index == 25)
-			{
-							//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 0;
-				}
-			}
-			else if(index == 29)
-			{
-					//星星重置
-				for(let i = 0; i < this.groupStars.numChildren;i++)
-				{
-					this.groupStars.getChildAt(i).alpha = 1;
-				}
-			}
-
-		
-		}
-		let starIndex = index % 5;
-		let group = this.groupStars;
-		group.getChildAt(starIndex).alpha = 1;
-			
-		//当前的页面到达指定 真实页面
-		let realIndex = (LevelDataManager.getInstance().GetMileStone() / 30);//真实页面  最远关卡  0   展示页面到达5 封锁   除去realIndex == 0
-		//数字可以是浮点数
-		if(realIndex >= 0 && realIndex <= 5)
-		{
-			LevelDataManager.tempIndex = 5;  //新手
-		}
-		else if(realIndex > 5 && realIndex <= 10)
-		{
-			LevelDataManager.tempIndex =  10;//
-		}
-		else if(realIndex > 10 && realIndex <= 15)
-		{
-			LevelDataManager.tempIndex = 15;
-		}
-		else if(realIndex > 15 && realIndex <= 20)
-		{
-			LevelDataManager.tempIndex = 20;
-		}
-		else if(realIndex > 20 && realIndex <= 25)
-		{
-			LevelDataManager.tempIndex = 25;
-		}
-		else if(realIndex > 25 && realIndex <= 30)
-		{
-			LevelDataManager.tempIndex = 30
-		}
-
-		
-		if (index >= LevelDataManager.tempIndex)//    150  300 450  600  750  900   
-		{
-			this.imagehuiGrade.visible = true;
-			this.imgHeadBlack.visible = true;
-		}
-		else {
-			this.imagehuiGrade.visible = false;
-			this.imgHeadBlack.visible = false;
-		}		
-
-	}
+	
 	//替换label显示。
-	private updateLabel(group:eui.Group,num:number)
+	public updateLabel(group:eui.Group,num:number)//num从1开始  1- 9 numChildren  9 个
 	{
 		for(let i = 0;i < group.numChildren;i++)
 		{
 			let x = <LevelIcon>group.getChildAt(i);
-			if(num == 0)
+			if(num == 1)
 			{
 				x.Level = i + 1;
 			}
 			else
 			{
-				x.Level = num * 30 + 1 + i;
+				x.Level = (num - 1) * 9 + i + 1;
 			}
 
 		}

@@ -8,18 +8,18 @@ class LevelIcon extends eui.Component implements  eui.UIComponent {
 
 	private  bitlabel_levelIndex:eui.BitmapLabel;
 	private  imgLock:eui.Image;
-	private  isCanTouch:boolean = false;
 	public   imgGuankadi:eui.Image;
 
 	private toGame()
 	{
 		egret.Tween.get(this.imgGuankadi).to({scaleX:0.8,scaleY:0.8},100).to({scaleX:1,scaleY:1});
 		let index = parseInt(this.bitlabel_levelIndex.text);
-		if(index < LevelDataManager.getInstance().GetMileStone())//只能在前往小于最远关卡
+		if(index <= LevelDataManager.getInstance().GetCurIndex())//只能在前往小于最远关卡
 		{
-			this.setLevelIndex(false);
-			LevelDataManager.getInstance().curIcon = index;
-			SceneGame.getInstance().InitLevel(index);//进入对应关卡游戏
+			index --;
+			let icon = index * 10 + 1;
+			LevelDataManager.getInstance().curIcon = icon;
+			SceneGame.getInstance().InitLevel(icon);//进入对应关卡游戏
 			//界面消失
 			SceneGame.getInstance().levelScene.visible = false;	
 		}
@@ -32,16 +32,22 @@ class LevelIcon extends eui.Component implements  eui.UIComponent {
 	public get Level() {
 		return parseInt(this.bitlabel_levelIndex.text);
 	}
-	public setLevelIndex(status:boolean)
+	//小于这个关卡全部显示
+
+	public isCanShow(status:boolean)
 	{
-		this.isCanTouch = !status;
-		if(this.isCanTouch)
+		if(status == false)
 		{
-			this.touchEnabled = !status;
+			this.imgLock.visible = true;//锁
+			this.bitlabel_levelIndex.visible = false;
+			this.touchEnabled = false;
 		}
-		this.imgLock.visible = status;//锁
-		this.bitlabel_levelIndex.visible = !status;
-		
+		else if(status == true)
+		{
+			this.imgLock.visible = false;//锁
+			this.bitlabel_levelIndex.visible = true;
+			this.touchEnabled = true;
+		}
 		
 	}
 	

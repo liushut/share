@@ -17,6 +17,8 @@ declare interface Platform {
     shouAD():Promise<any>;//看广告
     showVideoAD():Promise<any>;//看视频
 
+    restartVideo():Promise<any>;//复活看视频
+
 
 
 }

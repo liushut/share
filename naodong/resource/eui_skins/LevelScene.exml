@@ -21,21 +21,20 @@
 					</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Group id="groupHead" width="200" height="200" y="61" horizontalCenter="0" scaleX="1">
-				<e:Image id="imgHead" width="226" height="221" x="0" y="0" source="xinshou_png"/>
-				<e:Image id="imgHeadBlack" width="226" height="241" x="0" y="0" source="huixinshou_png"/>
-				<e:Image id="imageGrade" width="389" height="101" y="241" scaleX="1" scaleY="1" horizontalCenter="0" source="hengfu_png"/>
-				<e:Label id="labelGrade" text="新手" y="252" width="311" height="60" horizontalCenter="0" verticalAlign="middle" textAlign="center" size="50" textColor="0x020000" fontFamily="SimHei"/>
-				<e:Image id="imagehuiGrade" width="389" height="101" y="241" scaleX="1" scaleY="1" horizontalCenter="0" source="huihengfu_png" visible="false"/>
-				<e:Group id="groupStars" width="200" height="200" x="0" y="0">
-					<e:Image id="star0" width="58" height="57" x="-47" y="80" scaleX="1" scaleY="1" alpha="0" source="star_png"/>
-					<e:Image id="star1" width="58" height="57" x="-9" y="0" scaleX="1" scaleY="1" alpha="0" source="star_png"/>
-					<e:Image id="star2" width="58" height="57" y="-61" scaleX="1" scaleY="1" alpha="0" x="85" source="star_png"/>
-					<e:Image id="star3" width="58" height="57" x="179" y="0" scaleX="1" scaleY="1" alpha="0" source="star_png"/>
-					<e:Image id="star4" width="58" height="57" x="215" y="80" scaleX="1" scaleY="1" alpha="0" source="star_png"/>
-				</e:Group>
+			<e:Image id="ImgName" width="87" height="37" y="381" anchorOffsetY="0" anchorOffsetX="43" source="1_png" horizontalCenter="0"/>
+
+			<e:Group id="groupLevel" width="580" height="578" y="452" anchorOffsetX="0" x="62" anchorOffsetY="0">
+				<ns1:LevelIcon width="175" height="185" x="192" y="114"/>
+				<ns1:LevelIcon width="175" height="185" x="202" y="124"/>
+				<ns1:LevelIcon width="175" height="185" x="212" y="134"/>
+				<ns1:LevelIcon width="175" height="185" x="222" y="144"/>
+				<ns1:LevelIcon width="175" height="185" x="232" y="154"/>
+				<ns1:LevelIcon width="175" height="185" x="242" y="164"/>
+				<ns1:LevelIcon width="175" height="185" x="252" y="174"/>
+				<e:layout>
+					<e:TileLayout horizontalGap="25" verticalGap="15"/>
+				</e:layout>
 			</e:Group>
-			<e:Group id="groupLevel" width="580" height="680" y="418" anchorOffsetX="0" x="62"/>
 		</e:Group>
 	</e:Group>
 </e:Skin>

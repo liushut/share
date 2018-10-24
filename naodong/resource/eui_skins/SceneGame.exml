@@ -5,7 +5,7 @@
 		<e:Group scaleX="1" scaleY="1" width="720" height="1280" horizontalCenter="0" verticalCenter="0">
 			<e:Image id="gameBg" source="gameBg_jpg" width="720" height="1280" horizontalCenter="0" y="0"/>
 			<e:Group id="group_Help" width="720" height="180" y="0" horizontalCenter="0" anchorOffsetX="0" anchorOffsetY="0">
-			<e:Button id="btn_Level" label="" x="10" y="150" enabled="true" width="109" height="111" anchorOffsetX="0" anchorOffsetY="0">
+			<e:Button id="btn_Level" label="" x="22" y="138" enabled="true" width="89" height="101" anchorOffsetX="0" anchorOffsetY="0">
 				<e:skinName>
 					<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="guanka_png"/>
@@ -13,7 +13,7 @@
 					</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Button id="btn_result" label="" y="506" enabled="true" width="207" height="76" anchorOffsetX="103" anchorOffsetY="38" x="360">
+			<e:Button id="btn_result" label="" y="578" enabled="true" width="207" height="76" anchorOffsetX="103" anchorOffsetY="38" x="360">
 				<e:skinName>
 					<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="daan_png"/>
@@ -22,7 +22,7 @@
 				</e:skinName>
 
 			</e:Button>
-				<e:Button id="btn_paihang" label="" x="600" y="150" scaleX="1" scaleY="1" enabled="true">
+				<e:Button id="btn_paihang" label="" x="622" y="112.5" scaleX="1" scaleY="1" enabled="true">
 					<e:skinName>
 						<e:Skin states="up,down,disabled">
 						<e:Image width="100%" height="100%" source="paihangbang_png"/>
@@ -31,17 +31,23 @@
 					</e:skinName>
 				</e:Button>
 			</e:Group>
-			<e:Label id="label_Question" text="小明的爷爷七十岁小明的爷 爷七十岁小明的爷爷七十岁小明的爷爷七十岁小明的爷爷七十岁" y="303" anchorOffsetY="0" height="154" anchorOffsetX="0" width="518" fontFamily="Microsoft YaHei" size="35" verticalAlign="top" textAlign="left" textColor="0xf7f7f7" horizontalCenter="0" bold="true"/>
-			<e:Group id="group_Result" width="624" height="116.42" y="576" anchorOffsetX="0" anchorOffsetY="0" x="53">
-			<ns1:AnswerWord width="100" height="100" x="0" y="37"/>
-				<ns1:AnswerWord width="100" height="100" x="10" y="47"/>
+			<e:Label id="label_Question" text="小明的爷爷七十岁小明的爷 爷七十岁小明的爷爷七十岁小明的爷爷七十岁小明的爷爷七十岁" y="275" anchorOffsetY="0" height="266.3" anchorOffsetX="0" width="450" fontFamily="Microsoft YaHei" size="38" verticalAlign="top" textAlign="left" textColor="0xf7f7f7" horizontalCenter="0"/>
+			<e:Group id="group_Result" width="620" height="85.75" y="633" anchorOffsetX="0" anchorOffsetY="0" x="53">
+			<ns1:AnswerWord width="75" height="75" x="0" y="37"/>
+				<ns1:AnswerWord width="75" height="75" x="10" y="47"/>
+				<ns1:AnswerWord width="75" height="75" x="20" y="57"/>
+				<ns1:AnswerWord width="75" height="75" x="30" y="67"/>
+				<ns1:AnswerWord width="75" height="75" x="40" y="77"/>
+				<ns1:AnswerWord width="75" height="75" x="50" y="87"/>
+				<ns1:AnswerWord width="75" height="75" x="60" y="97"/>
+
 			<e:layout>
-				<e:HorizontalLayout horizontalAlign="center"/>
+				<e:HorizontalLayout horizontalAlign="center" gap="9"/>
 			</e:layout>
 			</e:Group>
-			<e:Group id="group_Chaotic" width="574" height="400" y="680" anchorOffsetX="0" anchorOffsetY="0" x="73">
+			<e:Group id="group_Chaotic" width="555" height="400" y="725" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0">
 				<e:layout>
-					<e:TileLayout verticalGap="30" horizontalGap="20"/>
+					<e:TileLayout verticalGap="10" horizontalGap="20"/>
 				</e:layout>
 				<ns1:Word width="95" height="103" x="59" y="61"/>
 				<ns1:Word width="95" height="103" x="69" y="71"/>
@@ -51,8 +57,14 @@
 				<ns1:Word width="95" height="103" x="109" y="111"/>
 				<ns1:Word width="95" height="103" x="119" y="121"/>
 				<ns1:Word width="95" height="103" x="129" y="131"/>
-				<ns1:Word width="95" height="103" x="119" y="121"/>
-				<ns1:Word width="95" height="103" x="129" y="131"/>
+				<ns1:Word width="95" height="103" x="139" y="141"/>
+				<ns1:Word width="95" height="103" x="149" y="151"/>
+
+
+
+
+
+
 
 
 
@@ -74,8 +86,8 @@
 
 
 			</e:Group>
-			<e:Label id="labelLevel" text="999" y="263" width="100" height="100" verticalAlign="middle" size="32" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="353" bold="true"/>
-			<e:Button id="caiziBtn" label="" x="72" enabled="true" width="100" anchorOffsetX="60" anchorOffsetY="60" y="525" height="100">
+			<e:Label id="labelLevel" text="999" y="248" width="100" height="100" verticalAlign="middle" size="32" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="353" bold="true"/>
+			<e:Button id="caiziBtn" label="" x="72" enabled="true" width="100" anchorOffsetX="60" anchorOffsetY="60" y="580" height="100">
 				<e:skinName>
 				<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="caizi_png"/>
@@ -83,7 +95,7 @@
 				</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Button id="xiaorenBtn" label="" x="656" y="516" enabled="true" anchorOffsetX="44" anchorOffsetY="48">
+			<e:Button id="xiaorenBtn" label="" x="656" y="567" enabled="true" anchorOffsetX="44" anchorOffsetY="48">
 				<e:skinName>
 				<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="xiaoren_png"/>
@@ -91,9 +103,10 @@
 				</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Image id="dianImg" width="30" height="30" x="665" y="460" source="dian_png"/>
-			<ns1:Bingo id="bingoLayer" width="720" height="1280" x="0" y="0" alpha="1" enabled="true" visible="false"/>
+			<e:Image id="dianImg" width="30" height="30" x="665" y="512" source="dian_png"/>
 			<ns1:LevelScene id="levelScene" width="720" height="1280" x="0" y="0" enabled="true" visible="false"/>
+			<ns1:Bingo id="bingoLayer" width="720" height="1280" x="0" y="0" alpha="1" enabled="true" visible="false"/>
+
 			<e:Group id="openGroup" width="200" height="200" verticalCenter="0" horizontalCenter="0" visible="false">
 				<e:Image id="imgDibang" width="648" height="893" source="dibang_png" horizontalCenter="0" verticalCenter="0"/>
 			</e:Group>

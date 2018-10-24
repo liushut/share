@@ -8,15 +8,12 @@ class AnswerWord extends Word{
 	{
 		SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0,1);
 		SoundManager.getInstance().answerSoundChanel.volume = 1;
-
-		
-		if(this.selectWord != null)
+		//恢复点进来的字
+		if(this.selectWord != null)//这里是恢复
 		{
-			
-			this.selectWord.visible = true;//利用这个变量来将存储进来的问题字显示。
+			this.selectWord.visible = true;  
 			this.selectWord = null;
-			this.SetWordText("");
-			
+			this.SetWordText("");//将自身的字清除
 		}
 		console.log("答案字被点击")
 	}
@@ -25,9 +22,8 @@ class AnswerWord extends Word{
 	{
 		if(word!=null)
 		{
-			
 			word.visible = false;
-			this.SetWordText(word.GetWordText());//这里实现答案字显示问题字
+			this.SetWordText(word.GetWordText());//这里实现答案字显示问题字.
 			this.selectWord = word;//将问题字存储在答案字，一一对应，方便后面恢复显示。
 		}
 		else
@@ -40,13 +36,9 @@ class AnswerWord extends Word{
 	{
 		super.partAdded(partName,instance);
 	}
-
-	
-
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		
 	}
 	
 }
