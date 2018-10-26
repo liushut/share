@@ -28,32 +28,48 @@
 			<e:Label id="labelresult" text="小蚊子" scaleX="1" scaleY="1" width="460" height="211.21" y="-24" verticalAlign="middle" textAlign="center" size="55" fontFamily="SimHei" horizontalCenter="0" anchorOffsetY="0" textColor="0x584e4e"/>
 			<e:Label id="labelExplain" text="解释解释解释解释解释解释解释解释解释解释解释解释解释解释" x="-72" y="119" textColor="0x584e4e" width="350" verticalAlign="top" fontFamily="Microsoft YaHei" size="30" anchorOffsetY="0" height="125.33"/>
 		</e:Group>
-		<e:Image id="imgErro" width="243" height="243" horizontalCenter="0" verticalCenter="0" source="dacuole_png" visible="false"/>
-		<e:Group id="erroGroup" width="200" height="200" horizontalCenter="0" verticalCenter="0" visible="false">
-			<e:Image id="shareFail" width="434" height="306" verticalCenter="0" horizontalCenter="0" source="shareFail_png" x="-117" y="-53" scaleX="1" scaleY="1"/>
-			<e:Button id="erroBtn" label="" x="6" y="147" scaleX="1" scaleY="1">
+
+
+
+		<e:Group id="comboGroup" width="200" height="200" x="260" y="540" visible="false">
+			<e:Image id="diImg" width="561" height="477" source="daduidi_png" horizontalCenter="0" verticalCenter="0"/>
+			<e:Image id="tenImg" width="154" height="55" source="ten_png" horizontalCenter="0" anchorOffsetX="77" anchorOffsetY="0" y="127"/>
+			<e:Button id="Btntiaozhan" label="" y="358" scaleX="1" scaleY="1" width="230" height="96" x="-15" enabled="true">
 				<e:skinName>
-				<e:Skin states="up,down,disabled">
-					<e:Image width="100%" height="100%" source="surebtn_png"/>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="tiaozhan_png"/>
 					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-				</e:Skin>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Label id="guanLabel" text="当前解锁第111关" y="241" scaleX="1" scaleY="1" anchorOffsetX="150" width="300" anchorOffsetY="0" height="55" size="35" textColor="0x0a0909" fontFamily="Microsoft YaHei" horizontalCenter="0" verticalAlign="middle" textAlign="center"/>
+			<e:Button id="chachaBtn" label="" y="34" width="32" height="32" x="339">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="chacha_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
 				</e:skinName>
 			</e:Button>
 		</e:Group>
-		<e:Group id="upgradeGroup" width="200" height="200" horizontalCenter="0" y="540" visible="false">
-			<e:Image id="imgdizi" width="720" height="720" source="dizi_png" y="-260" x="-260"/>
-			<e:Image id="imgDengji" width="155" height="212" x="30" y="54" source="zhizhezi_png"/>
-			<e:Image id="imgTouxiang" width="226" height="244" x="139" y="41" source="zhizhe_png"/>
-			<e:Group id="starsGroup" width="58" height="306" x="313" y="46">
-				<e:Image id="star0" width="58" height="57" x="172" y="112" source="star_png" visible="false"/>
-				<e:Image width="58" height="57" x="172" y="112" source="star_png" id="star1" visible="false"/>
-				<e:Image width="58" height="57" x="182" y="122" source="star_png" id="star2" visible="false"/>
-				<e:Image width="58" height="57" x="192" y="132" source="star_png" id="star3" visible="false"/>
-				<e:Image width="58" height="57" x="202" y="142" source="star_png" id="star4" visible="false"/>
-				<e:layout>
-					<e:VerticalLayout/>
-				</e:layout>
-			</e:Group>
+		<e:Group id="errGroup" width="200" height="200" x="260" y="540" visible="false">
+			<e:Image id="imgErrodi" width="561" height="477" x="-180" y="-138" scaleX="1" scaleY="1" source="cuoledi_png"/>
+			<e:Button id="jixuBtn" label="" x="148" y="358" scaleX="1" scaleY="1" width="230" height="96" enabled="true">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="jixu_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Button id="chongwanBtn" label="" x="-167" y="358" scaleX="1" scaleY="1" width="230" height="96" enabled="true">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="chongwan_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
 		</e:Group>
 	</e:Group>
 </e:Skin>

@@ -5,13 +5,12 @@ class Word extends eui.Component implements  eui.UIComponent {
 	
 	public constructor() {
 		super();
-		// this.skinName =  "resource/eui_skins/Word.exml"
+		
 		this.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onclick_tap,this);
 	}
  
 //点击到自己后
 	protected onclick_tap(){
-
 		SoundManager.getInstance().answerSoundChanel =	SoundManager.getInstance().answerSound.play(0,1);
 		SoundManager.getInstance().answerSoundChanel.volume = 1;
 		console.log("onclike" + this.label_answer.text); 

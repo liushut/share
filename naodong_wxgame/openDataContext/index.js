@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * 微信开放数据域
  * 使用 Canvas2DAPI 在 SharedCanvas 渲染一个排行榜，
@@ -168,171 +169,51 @@ function onTouchEnd(event) {
     //在next按钮的范围内
     if ((page + 1) * perPageMaxNum < totalGroup.length) {
       buttonClick(1);
+=======
+require('./weapp-adapter.js');
+// require('./platform.js');
+require('./manifest.js');
+require('./egret.wxgame.js');
+egret.wxgame.isSubContext = true;
+// 启动微信小游戏本地缓存，如果开发者不需要此功能，只需注释即可
+// 只有使用 assetsmanager 的项目可以使用
+if(window.RES && RES.processor) {
+    require('./library/image.js');
+    require('./library/text.js');
+    require('./library/sound.js');
+    require('./library/binary.js');
+}
+
+egret.runEgret({
+    //以下为自动修改，请勿修改
+    //The following is automatically modified, please do not modify
+    //----auto option start----
+		entryClassName: "Main",
+		orientation: "auto",
+		frameRate: 60,
+		scaleMode: "fixedWidth",
+		contentWidth: 640,
+		contentHeight: 1136,
+		showFPS: false,
+		fpsStyles: "x:0,y:0,size:12,textColor:0xffffff,bgAlpha:0.9",
+		showLog: false,
+		maxTouches: 2,
+		//----auto option end----
+  renderMode: 'canvas',
+    audioType: 0,
+    calculateCanvasScaleFactor: function (context) {
+        var backingStore = context.backingStorePixelRatio ||
+            context.webkitBackingStorePixelRatio ||
+            context.mozBackingStorePixelRatio ||
+            context.msBackingStorePixelRatio ||
+            context.oBackingStorePixelRatio ||
+            context.backingStorePixelRatio || 1;
+        return (window.devicePixelRatio || 1) / backingStore;
+>>>>>>> liu
     }
-  }
-
-}
-/**
- * 根据传入的buttonKey 执行点击处理
- * 0 为上一页按钮
- * 1 为下一页按钮
- */
-function buttonClick(buttonKey) {
-  let old_buttonY;
-  if (buttonKey == 0) {
-    //上一页按钮
-    old_buttonY = lastButtonY;
-    lastButtonY += 10;
-    page--;
-    renderDirty = true;
-    console.log('上一页' + page);
-    setTimeout(() => {
-      lastButtonY = old_buttonY;
-      //重新渲染必须标脏
-      renderDirty = true;
-    }, 100);
-  } else if (buttonKey == 1) {
-    //下一页按钮
-    old_buttonY = nextButtonY;
-    nextButtonY += 10;
-    page++;
-    renderDirty = true;
-    console.log('下一页' + page);
-    setTimeout(() => {
-      nextButtonY = old_buttonY;
-      //重新渲染必须标脏
-      renderDirty = true;
-    }, 100);
-  }
-
-}
-
-/////////////////////////////////////////////////////////////////// 相关缓存数据
-
-///////////////////////////////////数据相关/////////////////////////////////////
-
-/**
- * 渲染标脏量
- * 会在被标脏（true）后重新渲染
- */
-let renderDirty = true;
-
-/**
- * 当前绘制组
- */
-let currentGroup = [];
-/**
- * 每页最多显示个数
- */
-let perPageMaxNum = 5;
-/**
- * 当前页数,默认0为第一页
- */
-let page = 0;
-///////////////////////////////////绘制相关///////////////////////////////
-/**
- * 舞台大小
- */
-let stageWidth;
-let stageHeight;
-/**
- * 排行榜大小
- */
-let rankWidth;
-let rankHeight;
-
-/**
- * 每个头像条目的大小
- */
-let barWidth;
-let barHeight;
-/**
- * 条目与排行榜边界的水平距离
- */
-let offsetX_barToRank
-/**
- * 绘制排行榜起始点X
- */
-let startX;
-/**
- * 绘制排行榜起始点Y
- */
-let startY;
-/**
- * 每行Y轴间隔offsetY
- */
-let preOffsetY;
-/**
- * 按钮大小
- */
-let buttonWidth;
-let buttonHeight;
-/**
- * 上一页按钮X坐标
- */
-let lastButtonX;
-/**
- * 下一页按钮x坐标
- */
-let nextButtonX;
-/**
- * 上一页按钮y坐标
- */
-let lastButtonY;
-/**
- * 下一页按钮y坐标
- */
-let nextButtonY;
-/**
- * 两个按钮的间距
- */
-let buttonOffset;
-
-/**
- * 字体大小
- */
-let fontSize;
-/**
- * 文本文字Y轴偏移量
- * 可以使文本相对于图片大小居中
- */
-let textOffsetY;
-/**
- * 头像大小
- */
-let avatarSize;
-/**
- * 名字文本最大宽度，名称会根据
- */
-let textMaxSize;
-/**
- * 绘制元素之间的间隔量
- */
-let intervalX;
-/**
- * 排行榜与舞台边界的水平距离
- */
-let offsetX_rankToBorder;
-/**
- * 排行榜与舞台边界的竖直距离
- */
-let offsetY_rankToBorder;
-/**
- * 绘制排名的最大宽度
- */
-let indexWidth;
-
-//////////////////////////////////////////////////////////
-/**
- * 监听点击
- */
-wx.onTouchEnd((event) => {
-  const l = event.changedTouches.length;
-  for (let i = 0; i < l; i++) {
-    onTouchEnd(event.changedTouches[i]);
-  }
 });
 
+<<<<<<< HEAD
 
 /**
  * 是否加载过资源的标记量
@@ -502,3 +383,6 @@ function context_drawImage(image, x, y, width, height) {
     }
   }
 }
+=======
+// require("egret.min.js")
+>>>>>>> liu

@@ -54,12 +54,19 @@ class Main extends eui.UILayer {
             console.log(e);
         })
     }
-
     private async runGame(){
-         (wx as any).updateShareMenu({
-        withShareTicket: true
-      });
-       (wx as any).createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });//初始化广告
+        (wx as any).updateShareMenu({
+            withShareTicket: true
+        });
+        (wx as any).createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });//初始化广告
+        (wx as any).showShareMenu(); 
+        wx.onShareAppMessage(function () {
+            // 用户点击了“转发”按钮
+            return {
+                 title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                 imageUrl: "resource/assets/common/title11.png"
+            }
+        })
         try{
             if(wx.getUpdateManager())
             {
@@ -72,22 +79,23 @@ class Main extends eui.UILayer {
         await this.loadResource();
         this.createGameScene();
         const result = await RES.getResAsync("description_json");
-        this.startAnimation(result);
         console.log(this.stage.stageWidth);
         console.log(this.stage.stageHeight);
         const userInfo = await (platform as any).getAVUserInfo();
         console.log("游戏初始化");
         console.log("用户信息" + userInfo);
-        // await (platform as any).shareCloud();//分享开启
-        // await (platform as any).shouAD();//广告
         
         
     }
+    /**
+     * await 后面跟的是返回 promise 的函数。这个函数也可以是async   await只能在async函数中用。
+       async   return返回的都是一个Promise对象同时async适用于任何类型的函数上。这样await得到的就是一个Promise对象(如果不是Promise对象的话那async返回的是什么 就是什么)；
+     */
     private async loadResource() {
         try {
             const loadingView = new LoadingUI();
             this.addChild(loadingView);
-            await RES.loadConfig("resource/default.res.json", "resource/");
+            await RES.loadConfig("resource/default.res.json", "resource/");  
             await this.loadTheme();
             await RES.loadGroup("preload", 0, loadingView);
             this.removeChild(loadingView);
@@ -122,25 +130,20 @@ class Main extends eui.UILayer {
                 LevelDataManager.getInstance();
                 SceneGame.getInstance();
                 this.addChild(SceneGame.getInstance());
-                
-                let data =  LevelDataManager.getInstance().GetMileStone();
+                let data =  LevelDataManager.getInstance().GetMileStone();//218 8
+                if(data > 1)
+                {       
+                    let mod = data % 10;//8
+                    let num = data + (10 - mod);//218 + (10 - 8) = 220
+                    let curindex = num / 10;//220 / 10 22
+                    LevelDataManager.getInstance().SetCurIndex(curindex);
+                }
                 LevelDataManager.getInstance().curIcon = data;
                 SceneGame.getInstance().InitLevel(data);
-
-                
-
                 console.log(data);
                 LevelDataManager.getInstance().getAd();//手动拉AD
-                
 
-                // this.btnOpen = new eui.Button();
-                // this.btnOpen.label = "btnClose!";
-                // this.btnOpen.x = 50;
-                // this.btnOpen.y = 35;
-                // this.btnOpen.horizontalCenter = 0;
-                // this.addChild(this.btnOpen);
-                // this.btnOpen.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
-                // console.log("aaaaaa");
+           
     }
 
   
@@ -158,32 +161,7 @@ class Main extends eui.UILayer {
      * 描述文件加载成功，开始播放动画
      * Description file loading is successful, start to play the animation
      */
-    private startAnimation(result: Array<any>): void {
-        let parser = new egret.HtmlTextParser();
-
-        let textflowArr = result.map(text => parser.parse(text));
-        let textfield = this.textfield;
-        let count = -1;
-        let change = () => {
-            count++;
-            if (count >= textflowArr.length) {
-                count = 0;
-            }
-            let textFlow = textflowArr[count];
-
-            // 切换描述内容
-            // Switch to described content
-            textfield.textFlow = textFlow;
-            let tw = egret.Tween.get(textfield);
-            tw.to({ "alpha": 1 }, 200);
-            tw.wait(2000);
-            tw.to({ "alpha": 0 }, 200);
-            tw.call(change, this);
-        };
-
-        // change();
-    }
-
+    
     /**
      * 点击按钮
      * Click the button

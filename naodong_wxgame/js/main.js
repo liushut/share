@@ -47,7 +47,6 @@ var Word = (function (_super) {
     __extends(Word, _super);
     function Word() {
         var _this = _super.call(this) || this;
-        // this.skinName =  "resource/eui_skins/Word.exml"
         _this.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.onclick_tap, _this);
         return _this;
     }
@@ -86,6 +85,7 @@ var WeChatPlatform = (function () {
      * 平台初始化
      */
     WeChatPlatform.prototype._init = function () {
+        this.openDataContext = new WxOpenDataContext();
     };
     WeChatPlatform.prototype.shareCloud = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -94,6 +94,15 @@ var WeChatPlatform = (function () {
                         return __awaiter(this, void 0, void 0, function () {
                             return __generator(this, function (_a) {
                                 AV.Cloud.run('conf').then(function (data) {
+                                    console.log(data);
+                                    var myshare;
+                                    for (var key in data) {
+                                        console.log(key + "--------------------------");
+                                        if (key == "share") {
+                                            myshare = key;
+                                            console.log("myshare --------" + myshare);
+                                        }
+                                    }
                                     //成功逻辑
                                     var myshare;
                                     for (var key in data) {
@@ -104,19 +113,19 @@ var WeChatPlatform = (function () {
                                         }
                                     }
                                     if (data.share == true) {
-                                        LevelDataManager.getInstance().isShare = true;
+                                        LevelDataManager.getInstance().SetShare(1);
                                         console.log("开关开启，分享开启" + data.share + "           LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);
                                     }
                                     else if (data.share == false) {
-                                        LevelDataManager.getInstance().isShare = false;
+                                        LevelDataManager.getInstance().SetShare(0);
                                         console.log("开关关闭，分享关闭" + data.share + "            LevelDataManagerInstance     " + LevelDataManager.getInstance().isShare);
                                     }
                                     ;
                                     resolve(data.share);
                                 }, function (err) {
                                     //回调函数调用失败逻辑
-                                    console.log("函数调用失败");
-                                    LevelDataManager.getInstance().isShare = true;
+                                    console.log("函数调用失败 --------------------- ");
+                                    LevelDataManager.getInstance().SetShare(1);
                                 });
                                 return [2 /*return*/];
                             });
@@ -164,6 +173,57 @@ var WeChatPlatform = (function () {
             });
         });
     };
+    WeChatPlatform.prototype.restShare = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        wx.shareAppMessage({
+                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                            imageUrl: "resource/assets/common/title11.png"
+                        });
+                        egret.Tween.get(this).wait(200).call(function () {
+                            SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+                            SceneGame.getInstance().bingoLayer.visible = false;
+                            SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                        });
+                        console.log(" restShare()");
+                    })];
+            });
+        });
+    };
+    WeChatPlatform.prototype.restartVideo = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        var videoAd = wx.createRewardedVideoAd({
+                            adUnitId: 'adunit-597cc618faea8408'
+                        });
+                        videoAd.show().then(function () {
+                            console.log("视频成功");
+                        }).catch(function (err) {
+                            console.log("视频失败");
+                            platform.restShare();
+                        });
+                        videoAd.onClose(function (res) {
+                            if (res && res.isEnded || res === undefined) {
+                                // 正常播放结束，可以下发游戏奖励
+                                console.log("正常播放，重新开始");
+                                SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+                                SceneGame.getInstance().bingoLayer.visible = false;
+                                SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                            }
+                            else {
+                                // 播放中途退出，不下发游戏奖励
+                                console.log("提前关闭");
+                            }
+                        });
+                        videoAd.onError(function (err) {
+                            console.log("错误信息", err.errMsg, err.errCode);
+                        });
+                    })];
+            });
+        });
+    };
     WeChatPlatform.prototype.showVideoAD = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -173,7 +233,7 @@ var WeChatPlatform = (function () {
                             console.log("拉取视频成功");
                         }).catch(function (err) {
                             console.log("视频拉取失败");
-                            video.load().then(function () { return video.show(); });
+                            platform.testShare();
                         });
                         video.onClose(function (res) {
                             // 用户点击了【关闭广告】按钮
@@ -184,7 +244,6 @@ var WeChatPlatform = (function () {
                                 SoundManager.getInstance().windowSoundChanel.volume = 1;
                                 SceneGame.getInstance().bingoLayer.visible = true;
                                 SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                                SceneGame.getInstance().bingoLayer.daandi.visible = true;
                                 SceneGame.getInstance().hintBg(true);
                                 SceneGame.getInstance().bingoLayer.labelresult.text =
                                     LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
@@ -288,11 +347,24 @@ var WeChatPlatform = (function () {
     };
     WeChatPlatform.prototype.testShare = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resole, reject) {
                         wx.shareAppMessage({
                             title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
                             imageUrl: "resource/assets/common/title11.png"
+                        });
+                        egret.Tween.get(_this).wait(200).call(function () {
+                            SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                            SoundManager.getInstance().windowSoundChanel.volume = 1;
+                            SceneGame.getInstance().bingoLayer.visible = true;
+                            SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                            SceneGame.getInstance().bingoLayer.daandi.visible = true;
+                            SceneGame.getInstance().hintBg(true);
+                            SceneGame.getInstance().bingoLayer.labelresult.text =
+                                LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                            SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                                LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
                         });
                     })];
             });
@@ -328,18 +400,20 @@ var WeChatPlatform = (function () {
                     imageUrl: "resource/assets/common/title11.png"
                 });
                 if (LevelDataManager.shareNum % 2 == 0) {
-                    SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-                    SoundManager.getInstance().windowSoundChanel.volume = 1;
-                    SceneGame.getInstance().bingoLayer.visible = true;
-                    SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                    SceneGame.getInstance().bingoLayer.daandi.visible = true;
-                    SceneGame.getInstance().hintBg(true);
-                    SceneGame.getInstance().bingoLayer.labelresult.text =
-                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-                    SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain
-                        + "   ";
-                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                    egret.Tween.get(this).wait(200).call(function () {
+                        SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                        SoundManager.getInstance().windowSoundChanel.volume = 1;
+                        SceneGame.getInstance().bingoLayer.visible = true;
+                        SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                        SceneGame.getInstance().hintBg(true);
+                        SceneGame.getInstance().bingoLayer.labelresult.text =
+                            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                        SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                        console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                        LevelDataManager.shareNum++;
+                        console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
+                    });
                 }
                 else if (LevelDataManager.shareNum % 2 == 1) {
                     egret.Tween.get(this).wait(200).call(function () {
@@ -353,127 +427,11 @@ var WeChatPlatform = (function () {
                                 }
                             }
                         });
+                        LevelDataManager.shareNum++;
+                        console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
                     });
                 }
-                LevelDataManager.shareNum++;
                 return [2 /*return*/];
-            });
-        });
-    };
-    WeChatPlatform.prototype.updateShareMenu = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var self;
-            return __generator(this, function (_a) {
-                self = this;
-                wx.shareAppMessage({
-                    title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                    imageUrl: "resource/assets/common/title11.png",
-                    success: function (res) {
-                        console.log("主动转发成功");
-                        var theTickets = res.shareTickets;
-                        if (res.shareTickets) {
-                            wx.getShareInfo({
-                                shareTicket: theTickets,
-                                success: function (data) {
-                                    LevelDataManager.encryptedData = data.encryptedData;
-                                    LevelDataManager.iv = data.iv;
-                                    console.log("encryptedData 得到" + LevelDataManager.encryptedData);
-                                    console.log("iv 得到" + LevelDataManager.iv);
-                                    var pajson = {
-                                        gameId: 1002,
-                                        openId: LevelDataManager.openId,
-                                        sessionKey: LevelDataManager.sessionKey,
-                                        iv: LevelDataManager.iv,
-                                        encryptedData: LevelDataManager.encryptedData
-                                    };
-                                    console.log("gameId  " + pajson.gameId);
-                                    console.log("openId  " + pajson.openId);
-                                    console.log("sessionKey " + pajson.sessionKey);
-                                    console.log("iv  " + pajson.iv);
-                                    console.log("evcryteData   " + pajson.encryptedData);
-                                    AV.Cloud.run("share", pajson).then(function (data) {
-                                        console.log(data + "分享成功data");
-                                        for (var key1 in data) {
-                                            console.log(key1 + "why"); //输出can_share
-                                            var canShare = key1;
-                                            console.log(data[canShare] + "这里面的指");
-                                        }
-                                        console.log("转发群,分享");
-                                        if (data[canShare] == true) {
-                                            console.log("可以继续分享");
-                                            SceneGame.getInstance().bingoLayer.visible = false;
-                                            SceneGame.getInstance().bingoLayer.erroGroup.visible = false;
-                                            SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-                                            SoundManager.getInstance().windowSoundChanel.volume = 1;
-                                            SceneGame.getInstance().bingoLayer.visible = true;
-                                            SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                                            SceneGame.getInstance().bingoLayer.daandi.visible = true;
-                                            SceneGame.getInstance().hintBg(true);
-                                            SceneGame.getInstance().bingoLayer.labelresult.text =
-                                                LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-                                            SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                                                LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain
-                                                + "   ";
-                                            console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-                                        }
-                                        else if (data[canShare] == false) {
-                                            wx.showModal({
-                                                title: "不要总骚扰这个群",
-                                                content: "不可以骚扰这个群的朋友啦，换个群分享吧~",
-                                                showCancel: false,
-                                                success: function (res) {
-                                                    if (res.confirm == true) {
-                                                        // platform.updateShareMenu();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }, function (err) {
-                                        console.log("函数调用失败23333333");
-                                        SceneGame.getInstance().bingoLayer.visible = false;
-                                        SceneGame.getInstance().bingoLayer.erroGroup.visible = false;
-                                        SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
-                                        SoundManager.getInstance().windowSoundChanel.volume = 1;
-                                        SceneGame.getInstance().bingoLayer.visible = true;
-                                        SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
-                                        SceneGame.getInstance().bingoLayer.daandi.visible = true;
-                                        SceneGame.getInstance().hintBg(true);
-                                        SceneGame.getInstance().bingoLayer.labelresult.text =
-                                            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
-                                        SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                                            LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain
-                                            + "   ";
-                                        console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
-                                    });
-                                }
-                            });
-                        }
-                        else {
-                            console.log("分享到个人");
-                            SceneGame.getInstance().bingoLayer.visible = true;
-                            SceneGame.getInstance().bingoLayer.erroGroup.visible = true;
-                            SceneGame.getInstance().hintBg(true);
-                        }
-                    }
-                });
-                return [2 /*return*/];
-            });
-        });
-    };
-    WeChatPlatform.prototype.wxCloudInit = function () {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    WeChatPlatform.prototype.wxCloudCallFunc = function () {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    WeChatPlatform.prototype.wxGetCloudData = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, { data: "" }];
             });
         });
     };
@@ -485,10 +443,34 @@ var WxOpenDataContext = (function () {
     function WxOpenDataContext() {
     }
     WxOpenDataContext.prototype.createDisplayObject = function (type, width, height) {
-        var shareCanvas = window["shareCanvas"];
-        var bitmap = new egret.BitmapData(shareCanvas);
-        bitmap.$deleteSource = false;
+        var sharedCanvas = window["sharedCanvas"];
+        var bitmapdata = new egret.BitmapData(sharedCanvas);
+        bitmapdata.$deleteSource = false;
         var texture = new egret.Texture();
+        texture._setBitmapData(bitmapdata);
+        var bitmap = new egret.Bitmap(texture);
+        bitmap.width = width;
+        bitmap.height = height;
+        if (egret.Capabilities.renderMode == "webgl") {
+            var renderContext = egret.wxgame.WebGLRenderContext.getInstance();
+            var context = renderContext.context;
+            ////需要用到最新的微信版本
+            ////调用其接口WebGLRenderingContext.wxBindCanvasTexture(number texture, Canvas canvas)
+            ////如果没有该接口，会进行如下处理，保证画面渲染正确，但会占用内存。
+            if (!context.wxBindCanvasTexture) {
+                egret.startTick(function (timeStarmp) {
+                    egret.WebGLUtils.deleteWebGLTexture(bitmapdata.webGLTexture);
+                    bitmapdata.webGLTexture = null;
+                    return false;
+                }, this);
+            }
+        }
+        return bitmap;
+    };
+    WxOpenDataContext.prototype.postMessage = function (data) {
+        // const openDataContext = wx.getOpenDataContext();
+        var openDataContext = wx.getOpenDataContext();
+        openDataContext.postMessage(data);
     };
     return WxOpenDataContext;
 }());
@@ -496,11 +478,7 @@ __reflect(WxOpenDataContext.prototype, "WxOpenDataContext");
 var Bingo = (function (_super) {
     __extends(Bingo, _super);
     function Bingo() {
-        var _this = _super.call(this) || this;
-        _this.names = ["xinshou_png", "xuezhe_png", "dashi_png", "zongshi_png", "zhizhe_png", "xianzhi_png"];
-        _this.gradename = ["xinshouzi_png", "xuezhezi_png", "dashizi_png", "zongshizi_png", "zhizhezi_png", "xianzhizi_png"];
-        return _this;
-        // this.skinName =  "resource/eui_skins/Bingo.exml"
+        return _super.call(this) || this;
     }
     Bingo.prototype.partAdded = function (partName, instance) {
         _super.prototype.partAdded.call(this, partName, instance);
@@ -509,15 +487,33 @@ var Bingo = (function (_super) {
         _super.prototype.childrenCreated.call(this);
         this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onNext, this);
         this.btn_share.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onShare, this);
-        this.imgdizi.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onImgZidi, this);
-        this.erroBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onErro, this);
+        this.Btntiaozhan.addEventListener(egret.TouchEvent.TOUCH_TAP, this.tiaozhan, this);
+        this.chachaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onchacha, this);
+        //重玩和继续的按钮方法
+        this.chongwanBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onreStart, this);
+        this.jixuBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onResume, this);
+    };
+    Bingo.prototype.onchacha = function (e) {
+        this.visible = false;
+        this.comboGroup.visible = false;
+        SceneGame.getInstance().levelScene.visible = false;
+        SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+    };
+    Bingo.prototype.tiaozhan = function () {
+        var _this = this;
+        wx.shareAppMessage({
+            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+            imageUrl: "resource/assets/common/title11.png"
+        });
+        egret.Tween.get(this).wait(200).call(function () {
+            _this.visible = false;
+            _this.comboGroup.visible = false;
+            SceneGame.getInstance().levelScene.visible = false;
+            SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+        });
     };
     Bingo.prototype.onErro = function () {
         platform.shareAppMessage();
-    };
-    Bingo.prototype.onImgZidi = function () {
-        this.visible = false;
-        this.upgradeGroup.visible = false;
     };
     Bingo.prototype.onNext = function () {
         console.log("点击下一题");
@@ -530,286 +526,137 @@ var Bingo = (function (_super) {
         LevelDataManager.getInstance().curIcon++;
         if (LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone()) {
             var level = LevelDataManager.getInstance().curIcon;
-            LevelDataManager.getInstance().SetMileStone(level); //存储
-            // (wx as any).setUserCloudStorage({
-            // 	KVDataList:[{key:"score",value:level.toString()}],
-            // 	success: res => {
-            // 		console.log(res);
-            // 		// 让子域更新当前用户的最高分，因为主域无法得到getUserCloadStorage;
-            // 		let openDataContext = (wx as any).getOpenDataContext();
-            // 		openDataContext.postMessage({
-            // 			command:"open",
-            // 			type: "updateMaxScore"
-            // 		});
-            // 	},
-            // 	fail: res => {
-            // 		console.log(res);
-            // 	}
-            // })
+            LevelDataManager.getInstance().SetMileStone(level); //存储  	{key:"myscore",value:level.toString()}
+            wx.setUserCloudStorage({
+                KVDataList: [{ key: "score", value: level.toString() }]
+            });
         }
-        SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
         this.imageUpdate();
     };
     Bingo.prototype.onShare = function () {
         console.log("分享");
         egret.Tween.get(this.btn_share).to({ scaleX: 1.2, scaleY: 1.2 }, 100).to({ scaleX: 1, scaleY: 1 }, 100);
-        platform.testShare();
-        this.visible = false;
-        this.bingoGroup.visible = false;
-        this.trueGroup.visible = false;
-        LevelDataManager.getInstance().curIcon++;
-        console.log(LevelDataManager.getInstance().curIcon);
-        if (LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone()) {
-            LevelDataManager.getInstance().SetMileStone(LevelDataManager.getInstance().curIcon); //存储
-        }
-        SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
-        this.imageUpdate();
+        wx.shareAppMessage({
+            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+            imageUrl: "resource/assets/common/title11.png"
+        });
     };
     Bingo.prototype.imageUpdate = function () {
+        var _this = this;
         //记录的关卡
         var level = LevelDataManager.getInstance().GetMileStone();
-        if (level == 1) {
-            this.visible = true;
-            this.upgradeGroup.visible = true;
-            this.resetStart(); //重置星星
-            //一星
-            this.imgTouxiang.source = this.names[0];
-            this.imgDengji.source = this.gradename[0];
-            this.updateStar(0);
+        this.changeImg(level);
+        if (level > 1 && level % 10 == 1) {
+            var curIndex = LevelDataManager.getInstance().GetCurIndex();
+            curIndex++; //每十个题目 增加一关。 1  11 2  21 3  31  4  41  5   81 9  91 10
+            var replaceIndex = curIndex; //11 第2关  子元素 1
+            if (curIndex > LevelDataManager.getInstance().GetCurIndex()) {
+                LevelDataManager.getInstance().SetCurIndex(curIndex); //当前关卡数存储起来
+            }
+            wx.vibrateLong({
+                success: function () {
+                    console.log("抖动成功");
+                }
+            });
+            //显示当前关所在的页面
+            var page = this.getNumCurIndex(curIndex);
+            SceneGame.getInstance().levelScene.pageIndex = page;
+            SceneGame.getInstance().levelScene.updateLabel(SceneGame.getInstance().levelScene.groupLevel, SceneGame.getInstance().levelScene.pageIndex);
+            SceneGame.getInstance().levelScene.updataName();
+            SceneGame.getInstance().levelScene.showLevelIconTween(curIndex);
+            //关卡界面出来  就是现在的当前页面
+            SceneGame.getInstance().levelScene.visible = true;
+            var index = (replaceIndex - 1) % 9; //数组元素  所以要-1
+            var element = SceneGame.getInstance().levelScene.groupLevel.getChildAt(index); //子元素  0 8   
+            var img = element.imgLock;
+            var label_1 = element.bitlabel_levelIndex;
+            //解锁关卡的标签动画   关卡界面消失后弹出发起挑战界面
+            egret.Tween.get(img).to({ alpha: 0 }, 1000).call(function () {
+                egret.Tween.get(label_1).to({ alpha: 1 }, 1000).call(function () {
+                });
+            }).wait(1000).call(function () {
+                //界面出来后进入发起挑战界面去下一题
+                SceneGame.getInstance().bingoLayer.visible = true;
+                SceneGame.getInstance().bingoLayer.comboGroup.visible = true;
+                _this.guanLabel.text = "当前解锁第" + (LevelDataManager.getInstance().GetCurIndex()) + "关"; // 2
+                SoundManager.getInstance().trueSoundChanel = SoundManager.getInstance().trueSound.play(0, 1);
+                SoundManager.getInstance().trueSoundChanel.volume = 1;
+                console.log("发起挑战");
+            });
         }
-        else if (level == 31) {
-            this.imgTouxiang.source = this.names[0];
-            this.imgDengji.source = this.gradename[0];
-            this.updateStar(1);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 61) {
-            this.imgTouxiang.source = this.names[0];
-            this.imgDengji.source = this.gradename[0];
-            this.updateStar(2);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 91) {
-            this.imgTouxiang.source = this.names[0];
-            this.imgDengji.source = this.gradename[0];
-            this.updateStar(3);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 121) {
-            this.imgTouxiang.source = this.names[0];
-            this.imgDengji.source = this.gradename[0];
-            this.updateStar(4);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 151) {
-            //重置
-            this.resetStart();
-            //一星
-            this.imgTouxiang.source = this.names[1];
-            this.imgDengji.source = this.gradename[1];
-            this.updateStar(0);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 181) {
-            this.imgTouxiang.source = this.names[1];
-            this.imgDengji.source = this.gradename[1];
-            this.updateStar(1);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 211) {
-            this.imgTouxiang.source = this.names[1];
-            this.imgDengji.source = this.gradename[1];
-            this.updateStar(2);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 241) {
-            this.imgTouxiang.source = this.names[1];
-            this.imgDengji.source = this.gradename[1];
-            this.updateStar(3);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 271) {
-            this.imgTouxiang.source = this.names[1];
-            this.imgDengji.source = this.gradename[1];
-            this.updateStar(4);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 301) {
-            this.resetStart();
-            //一星
-            this.imgTouxiang.source = this.names[2];
-            this.imgDengji.source = this.gradename[2];
-            this.updateStar(0);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 331) {
-            this.imgTouxiang.source = this.names[2];
-            this.imgDengji.source = this.gradename[2];
-            this.updateStar(1);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 361) {
-            this.imgTouxiang.source = this.names[2];
-            this.imgDengji.source = this.gradename[2];
-            this.updateStar(2);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 391) {
-            this.imgTouxiang.source = this.names[2];
-            this.imgDengji.source = this.gradename[2];
-            this.updateStar(3);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 421) {
-            this.imgTouxiang.source = this.names[2];
-            this.imgDengji.source = this.gradename[2];
-            this.updateStar(4);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 451) {
-            this.resetStart();
-            //1
-            this.imgTouxiang.source = this.names[3];
-            this.imgDengji.source = this.gradename[3];
-            this.updateStar(0);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 481) {
-            this.imgTouxiang.source = this.names[3];
-            this.imgDengji.source = this.gradename[3];
-            this.updateStar(1);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 511) {
-            this.imgTouxiang.source = this.names[3];
-            this.imgDengji.source = this.gradename[3];
-            this.updateStar(2);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 541) {
-            this.imgTouxiang.source = this.names[3];
-            this.imgDengji.source = this.gradename[3];
-            this.updateStar(3);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 571) {
-            this.imgTouxiang.source = this.names[3];
-            this.imgDengji.source = this.gradename[3];
-            this.updateStar(4);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 601) {
-            this.resetStart();
-            this.imgTouxiang.source = this.names[4];
-            this.imgDengji.source = this.gradename[4];
-            this.updateStar(0);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 631) {
-            this.imgTouxiang.source = this.names[4];
-            this.imgDengji.source = this.gradename[4];
-            this.updateStar(1);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 661) {
-            this.imgTouxiang.source = this.names[4];
-            this.imgDengji.source = this.gradename[4];
-            this.updateStar(2);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 691) {
-            this.imgTouxiang.source = this.names[4];
-            this.imgDengji.source = this.gradename[4];
-            this.updateStar(3);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 721) {
-            this.imgTouxiang.source = this.names[4];
-            this.imgDengji.source = this.gradename[4];
-            this.updateStar(4);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 751) {
-            this.resetStart();
-            this.imgTouxiang.source = this.names[5];
-            this.imgDengji.source = this.gradename[5];
-            this.updateStar(0);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 781) {
-            this.imgTouxiang.source = this.names[5];
-            this.imgDengji.source = this.gradename[5];
-            this.updateStar(1);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 811) {
-            this.imgTouxiang.source = this.names[5];
-            this.imgDengji.source = this.gradename[5];
-            this.updateStar(2);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 841) {
-            this.imgTouxiang.source = this.names[5];
-            this.imgDengji.source = this.gradename[5];
-            this.updateStar(3);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 871) {
-            this.imgTouxiang.source = this.names[5];
-            this.imgDengji.source = this.gradename[5];
-            this.updateStar(4);
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-        }
-        else if (level == 900) {
-            this.imgTouxiang.source = this.names[6];
-            this.imgDengji.source = this.gradename[6];
-            this.upgradeGroup.visible = true;
-            this.visible = true;
-            console.log("无敌");
+        else if (level > 1) {
+            console.log("直接去下一关");
+            SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
         }
     };
-    Bingo.prototype.updateStar = function (index) {
-        if (index > this.starsGroup.numChildren) {
-            console.log("超出star数组");
-            return;
+    Bingo.prototype.getNumCurIndex = function (index) {
+        var pageIndex = Math.ceil(index / 9);
+        console.log("当前页面" + pageIndex);
+        return pageIndex;
+    };
+    Bingo.prototype.changeImg = function (index) {
+        if (index >= 1 && index <= 90) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[0];
+            SceneGame.getInstance().levelScene.ImgName.width = 86;
         }
-        for (var i = 0; i <= index; i++) {
-            this.starsGroup.getChildAt(i).visible = true;
+        else if (index >= 91 && index <= 180) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[1];
+            SceneGame.getInstance().levelScene.ImgName.width = 86;
+        }
+        else if (index >= 181 && index <= 270) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[2];
+            SceneGame.getInstance().levelScene.ImgName.width = 86;
+        }
+        else if (index >= 271 && index <= 360) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[3];
+            SceneGame.getInstance().levelScene.ImgName.width = 86;
+        }
+        else if (index >= 361 && index <= 450) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[4];
+            SceneGame.getInstance().levelScene.ImgName.width = 86;
+        }
+        else if (index >= 451 && index <= 540) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[5];
+            SceneGame.getInstance().levelScene.ImgName.width = 86;
+        }
+        else if (index >= 541 && index <= 630) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[6];
+            SceneGame.getInstance().levelScene.ImgName.width = 86;
+        }
+        else if (index >= 631 && index <= 720) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[7];
+            SceneGame.getInstance().levelScene.ImgName.width = 147;
+        }
+        else if (index >= 721 && index <= 810) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[8];
+            SceneGame.getInstance().levelScene.ImgName.width = 147;
+        }
+        else if (index >= 811 && index <= 900) {
+            SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[9];
+            SceneGame.getInstance().levelScene.ImgName.width = 147;
+            if (index == 900) {
+                wx.showModal({
+                    title: "提示",
+                    content: "已经到最后啦，大神~~",
+                    showCancel: false,
+                });
+            }
         }
     };
-    Bingo.prototype.resetStart = function () {
-        for (var i = 0; i < this.starsGroup.numChildren; i++) {
-            this.starsGroup.getChildAt(i).visible = false;
-        }
+    //继续
+    Bingo.prototype.onResume = function () {
+        platform.restartVideo();
+    };
+    //回到 161 重新开始
+    Bingo.prototype.onreStart = function () {
+        var curIcon = LevelDataManager.getInstance().curIcon;
+        var remaining = curIcon % 10; //多余的关数   165   5
+        curIcon -= remaining;
+        LevelDataManager.getInstance().curIcon = curIcon + 1;
+        SceneGame.getInstance().bingoLayer.visible = false;
+        SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+        SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+        console.log("答错后的关数curIcon" + LevelDataManager.getInstance().curIcon);
     };
     return Bingo;
 }(eui.Component));
@@ -824,19 +671,29 @@ __reflect(LevelDataItem.prototype, "LevelDataItem");
 var LevelDataManager = (function () {
     function LevelDataManager() {
         this.curIcon = 1;
-        this.curIndex = 0; //当前段位
-        this.isShare = true;
+        this.curIndex = 1; //当前关卡数
+        this.isShare = false;
         //关卡数据的数据组
         this.levelDataItemList = [];
         //使用RES读取和构建JSON数据。Json数据可以直接解析到目标结构
         this.levelDataItemList = RES.getRes("test_json");
     }
-    ; //当前关卡
+    ; //当前题目数
     LevelDataManager.getInstance = function () {
         if (LevelDataManager.levelDataManager == null) {
             LevelDataManager.levelDataManager = new LevelDataManager();
         }
         return LevelDataManager.levelDataManager;
+    };
+    LevelDataManager.prototype.GetShare = function () {
+        var milestone = egret.localStorage.getItem("SHARE");
+        if (milestone == "" || milestone == null) {
+            milestone = "0"; //默认0关闭  1 为开启
+        }
+        return parseInt(milestone);
+    };
+    LevelDataManager.prototype.SetShare = function (share) {
+        egret.localStorage.setItem("SHARE", share.toString());
     };
     //通过关卡号获取数据
     LevelDataManager.prototype.GetLevelData = function (level) {
@@ -931,10 +788,22 @@ var LevelDataManager = (function () {
         console.log(winSize.screenHeight + "winSize.screenHeight");
         newad.show();
         LevelDataManager.oldADs = newad;
+        return LevelDataManager.oldADs;
+    };
+    LevelDataManager.prototype.SetCurIndex = function (index) {
+        egret.localStorage.setItem("CurIndex", index.toString());
+    };
+    LevelDataManager.prototype.GetCurIndex = function () {
+        var index = egret.localStorage.getItem("CurIndex");
+        if (index == "" || index == null) {
+            index = "1";
+        }
+        return parseInt(index);
     };
     LevelDataManager.shareNum = 0; //分享次数
     LevelDataManager.tempIndex = 0; //当前页面
     LevelDataManager.isLogin = true;
+    LevelDataManager.comboTen = 1;
     return LevelDataManager;
 }());
 __reflect(LevelDataManager //关卡数据管理 
@@ -945,7 +814,6 @@ var LevelIcon = (function (_super) {
     __extends(LevelIcon, _super);
     function LevelIcon() {
         var _this = _super.call(this) || this;
-        _this.isCanTouch = false;
         _this.skinName = "resource/eui_skins/LevelIcon.exml"; //这里如果不指定就会出现构建错误。
         _this.imgGuankadi.touchEnabled = true;
         _this.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.toGame, _this);
@@ -954,10 +822,11 @@ var LevelIcon = (function (_super) {
     LevelIcon.prototype.toGame = function () {
         egret.Tween.get(this.imgGuankadi).to({ scaleX: 0.8, scaleY: 0.8 }, 100).to({ scaleX: 1, scaleY: 1 });
         var index = parseInt(this.bitlabel_levelIndex.text);
-        if (index < LevelDataManager.getInstance().GetMileStone()) {
-            this.setLevelIndex(false);
-            LevelDataManager.getInstance().curIcon = index;
-            SceneGame.getInstance().InitLevel(index); //进入对应关卡游戏
+        if (index <= LevelDataManager.getInstance().GetCurIndex()) {
+            index--;
+            var icon = index * 10 + 1;
+            LevelDataManager.getInstance().curIcon = icon;
+            SceneGame.getInstance().InitLevel(icon); //进入对应关卡游戏
             //界面消失
             SceneGame.getInstance().levelScene.visible = false;
         }
@@ -972,13 +841,18 @@ var LevelIcon = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    LevelIcon.prototype.setLevelIndex = function (status) {
-        this.isCanTouch = !status;
-        if (this.isCanTouch) {
-            this.touchEnabled = !status;
+    //小于这个关卡全部显示
+    LevelIcon.prototype.isCanShow = function (status) {
+        if (status == false) {
+            this.imgLock.alpha = 1; //锁
+            this.bitlabel_levelIndex.alpha = 0;
+            this.touchEnabled = false;
         }
-        this.imgLock.visible = status; //锁
-        this.bitlabel_levelIndex.visible = !status;
+        else if (status == true) {
+            this.imgLock.alpha = 0; //锁
+            this.bitlabel_levelIndex.alpha = 1;
+            this.touchEnabled = true;
+        }
     };
     return LevelIcon;
 }(eui.Component));
@@ -988,10 +862,9 @@ var LevelScene = (function (_super) {
     __extends(LevelScene, _super);
     function LevelScene() {
         var _this = _super.call(this) || this;
-        _this.nameArray = ["xinshou_png", "xuezhe_png", "dashi_png", "zongshi_png", "zhizhe_png", "xianzhi_png"];
-        // private groups:eui.Group[] = [];//group数组
-        _this.curIndex = 0; //当前关卡页数。
-        _this.cunLevelIndex = 0; //当前关卡数
+        //称呼数组
+        _this.chenghuArray = ["1_png", "2_png", "3_png", "4_png", "5_png", "6_png", "7_png", "8_png", "9_png", "10_png"];
+        _this.pageIndex = 1; //当前关卡页数。  1 - 10
         return _this;
         // this.skinName =  "resource/eui_skins/LevelScene.exml"
     }
@@ -1005,7 +878,7 @@ var LevelScene = (function (_super) {
         this.initMap();
         this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onNext, this);
         this.btn_before.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBefore, this);
-        this.levelBg.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onBg, this);
+        this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onClose, this);
     };
     LevelScene.getInstance = function () {
         if (LevelScene.levelScene == null) {
@@ -1015,236 +888,142 @@ var LevelScene = (function (_super) {
     };
     LevelScene.prototype.initMap = function () {
         //初始化group
-        for (var i = 0; i < 30; i++) {
+        this.groupLevel.removeChildren();
+        for (var i = 0; i < 9; i++) {
             var icon = new LevelIcon();
             icon.Level = i + 1;
-            var tLayout = new eui.TileLayout();
-            tLayout.horizontalGap = 2;
-            tLayout.verticalGap = 10;
-            tLayout.requestedColumnCount = 6;
-            this.groupLevel.layout = tLayout;
+            icon.width = 175;
+            icon.height = 185;
             this.groupLevel.addChild(icon);
         }
-        //初始化星星
-        var starIndex = this.curIndex % 5;
-        var group = this.groupStars;
-        group.getChildAt(starIndex).alpha = 1;
-        //当前头像正确
-        this.imgHead.source = this.nameArray[0];
-        this.imgHeadBlack.alpha = 0;
-        //将当前关卡显示正确
-        this.showLevelIcon(LevelDataManager.getInstance().GetMileStone()); //显示到最远的
+        // // //将当前关卡显示正确
+        this.pageIndex = SceneGame.getInstance().bingoLayer.getNumCurIndex(LevelDataManager.getInstance().GetMileStone());
+        this.updateLabel(this.groupLevel, this.pageIndex); //更新这一页的icon的label
+        this.updataName();
+        this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex()); //显示到最远的关卡
+    };
+    LevelScene.prototype.showLevelIconTween = function (index) {
+        for (var i = 0; i < this.groupLevel.numChildren; i++) {
+            var icon = this.groupLevel.getChildAt(i);
+            var num = icon.Level; //开始是1 
+            if (num < index) {
+                icon.isCanShow(true);
+            }
+            else {
+                icon.isCanShow(false);
+            }
+        }
     };
     //当前关卡的前面都显示
     LevelScene.prototype.showLevelIcon = function (index) {
+        if (this.pageIndex == 1) {
+            console.log("第一关");
+            this.btn_before.visible = false;
+        }
+        else if (this.pageIndex == 10) {
+            console.log("最后一关");
+            this.btn_next.visible = false;
+        }
         for (var i = 0; i < this.groupLevel.numChildren; i++) {
             var icon = this.groupLevel.getChildAt(i);
             var num = icon.Level; //开始是1 
             if (num <= index) {
-                icon.setLevelIndex(false);
+                icon.isCanShow(true);
             }
             else {
-                icon.setLevelIndex(true);
+                icon.isCanShow(false);
             }
         }
     };
-    //当前关卡判断在第几页，打开界面可以直接跳转到这一页来。头像更新在这里调用。
-    LevelScene.prototype.judgeCurIndex = function (curIcon) {
-    };
-    //头像跟随关卡更新,到达多少关后头像需要更新
-    LevelScene.prototype.headFollowLevel = function (curIcon) {
-    };
-    //点击背景缩放
-    LevelScene.prototype.onBg = function () {
+    //点击关闭按钮缩放
+    LevelScene.prototype.onClose = function () {
         var _this = this;
-        egret.Tween.get(this).to({ scaleX: 1.5, scaleY: 1.5 }, 100).to({ scaleX: 1, scaleY: 1 }, 100)
+        egret.Tween.get(this).to({ scaleX: 1.2, scaleY: 1.2 }, 100).to({ scaleX: 1, scaleY: 1 }, 100)
             .call(function () { _this.visible = false; });
     };
     //前一个关卡
     LevelScene.prototype.onBefore = function () {
         SoundManager.getInstance().answerSound.play(0, 1);
-        if (this.curIndex == 1) {
+        this.pageIndex--;
+        this.updateLabel(this.groupLevel, this.pageIndex); //更新这一页的icon的label
+        this.updataName();
+        this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex()); //小于最远的就更新
+        if (this.pageIndex == 1) {
             console.log("第一关");
             this.btn_before.visible = false;
+            return;
         }
-        var starIndex = this.curIndex % 5;
-        var group = this.groupStars;
-        group.getChildAt(starIndex).alpha = 0;
-        this.curIndex--;
-        this.updateLabel(this.groupLevel, this.curIndex);
-        this.updateGrade(this.curIndex);
-        this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
+        else if (this.pageIndex > 1) {
+            this.btn_next.visible = true;
+        }
     };
     //看下一个关卡
     LevelScene.prototype.onNext = function () {
         SoundManager.getInstance().answerSound.play(0, 1);
-        if (this.curIndex == 29) {
+        this.pageIndex++;
+        this.updateLabel(this.groupLevel, this.pageIndex); //更新关卡
+        this.updataName();
+        this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex()); //显示关卡和头像
+        if (this.pageIndex == 10) {
             console.log("最后一关");
             this.btn_next.visible = false;
         }
-        this.curIndex++;
-        console.log("sss" + this.curIndex);
-        this.updateLabel(this.groupLevel, this.curIndex);
-        this.updateGrade(this.curIndex);
-        this.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
-    };
-    //更新头像级别
-    LevelScene.prototype.updateGrade = function (index) {
-        if (index == 0) {
-            this.imgHead.source = this.nameArray[0];
-            this.imgHeadBlack.alpha = 0;
-        }
-        else if (index > 0 && index < 5) {
-            this.imgHeadBlack.alpha = 1;
+        else if (this.pageIndex < 10) {
             this.btn_before.visible = true;
-            this.imgHead.source = this.nameArray[0];
-            this.imgHeadBlack.source = "hui" + this.nameArray[0];
-            this.labelGrade.text = "新手";
-            if (index == 4) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 1;
-                }
-            }
         }
-        else if (index >= 5 && index < 10) {
-            this.imgHead.source = this.nameArray[1];
-            this.imgHeadBlack.source = "hui" + this.nameArray[1];
-            this.labelGrade.text = "学者";
-            if (index == 5) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 0;
-                }
-            }
-            else if (index == 9) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 1;
-                }
-            }
+    };
+    LevelScene.prototype.updataName = function () {
+        if (this.pageIndex == 1) {
+            this.ImgName.source = this.chenghuArray[0];
+            this.ImgName.width = 86;
         }
-        else if (index >= 10 && index < 15) {
-            this.imgHead.source = this.nameArray[2];
-            this.imgHeadBlack.source = "hui" + this.nameArray[2];
-            this.labelGrade.text = "大师";
-            if (index == 10) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 0;
-                }
-            }
-            else if (index == 14) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 1;
-                }
-            }
+        else if (this.pageIndex == 2) {
+            this.ImgName.source = this.chenghuArray[1];
+            this.ImgName.width = 86;
         }
-        else if (index >= 15 && index < 20) {
-            this.imgHead.source = this.nameArray[3];
-            this.imgHeadBlack.source = "hui" + this.nameArray[3];
-            this.labelGrade.text = "宗师";
-            if (index == 15) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 0;
-                }
-            }
-            else if (index == 19) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 1;
-                }
-            }
+        else if (this.pageIndex == 3) {
+            this.ImgName.source = this.chenghuArray[2];
+            this.ImgName.width = 86;
         }
-        else if (index >= 20 && index < 25) {
-            this.imgHead.source = this.nameArray[4];
-            this.imgHeadBlack.source = "hui" + this.nameArray[4];
-            this.labelGrade.text = "智者";
-            if (index == 20) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 0;
-                }
-            }
-            else if (index == 24) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 1;
-                }
-            }
+        else if (this.pageIndex == 4) {
+            this.ImgName.source = this.chenghuArray[3];
+            this.ImgName.width = 86;
         }
-        else if (index >= 25 && index < 30) {
-            this.btn_next.visible = true;
-            this.imgHead.source = this.nameArray[5];
-            this.imgHeadBlack.source = "hui" + this.nameArray[5];
-            this.labelGrade.text = "先知";
-            if (index == 25) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 0;
-                }
-            }
-            else if (index == 29) {
-                //星星重置
-                for (var i = 0; i < this.groupStars.numChildren; i++) {
-                    this.groupStars.getChildAt(i).alpha = 1;
-                }
-            }
+        else if (this.pageIndex == 5) {
+            this.ImgName.source = this.chenghuArray[4];
+            this.ImgName.width = 86;
         }
-        var starIndex = index % 5;
-        var group = this.groupStars;
-        group.getChildAt(starIndex).alpha = 1;
-        //当前的页面到达指定 真实页面
-        var realIndex = Math.floor(LevelDataManager.getInstance().GetMileStone() / 30); //真实页面  最远关卡  0   展示页面到达5 封锁   除去realIndex == 0
-        //数字可以是浮点数
-        if (realIndex % 5 == 0) {
-            LevelDataManager.tempIndex = realIndex;
+        else if (this.pageIndex == 6) {
+            this.ImgName.source = this.chenghuArray[5];
+            this.ImgName.width = 86;
         }
-        if (index >= LevelDataManager.tempIndex + 5) {
-            this.imagehuiGrade.visible = true;
-            this.imgHeadBlack.visible = true;
+        else if (this.pageIndex == 7) {
+            this.ImgName.source = this.chenghuArray[6];
+            this.ImgName.width = 86;
         }
-        else {
-            this.imagehuiGrade.visible = false;
-            this.imgHeadBlack.visible = false;
+        else if (this.pageIndex == 8) {
+            this.ImgName.source = this.chenghuArray[7];
+            this.ImgName.width = 147;
+        }
+        else if (this.pageIndex == 9) {
+            this.ImgName.source = this.chenghuArray[8];
+            this.ImgName.width = 147;
+        }
+        else if (this.pageIndex == 10) {
+            this.ImgName.source = this.chenghuArray[9];
+            this.ImgName.width = 147;
         }
     };
     //替换label显示。
     LevelScene.prototype.updateLabel = function (group, num) {
         for (var i = 0; i < group.numChildren; i++) {
             var x = group.getChildAt(i);
-            if (num == 0) {
+            if (num == 1) {
                 x.Level = i + 1;
             }
             else {
-                x.Level = num * 30 + 1 + i;
+                x.Level = (num - 1) * 9 + i + 1;
             }
-        }
-    };
-    //创建group
-    LevelScene.prototype.createGroup = function () {
-        for (var i = 0; i < 30; i++) {
-            var group = new eui.Group();
-            group.width = 580; //总共30页  最大长度
-            group.height = 680;
-            this.createLevel(group, i);
-            // this.groups.push(group);//总共得到30个
-        }
-    };
-    //创建关卡
-    LevelScene.prototype.createLevel = function (group, num) {
-        //绘制关卡  30个
-        for (var i = num * 30; i < num * 30 + 30; i++) {
-            var icon = new LevelIcon();
-            icon.Level = i + 1;
-            var tLayout = new eui.TileLayout();
-            tLayout.horizontalGap = 2;
-            tLayout.verticalGap = 10;
-            tLayout.requestedColumnCount = 6;
-            group.layout = tLayout;
-            group.addChild(icon);
         }
     };
     return LevelScene;
@@ -1368,6 +1147,14 @@ var Main = (function (_super) {
                             withShareTicket: true
                         });
                         wx.createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" }); //初始化广告
+                        wx.showShareMenu();
+                        wx.onShareAppMessage(function () {
+                            // 用户点击了“转发”按钮
+                            return {
+                                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                                imageUrl: "resource/assets/common/title11.png"
+                            };
+                        });
                         try {
                             if (wx.getUpdateManager()) {
                                 updateManager = wx.getUpdateManager();
@@ -1384,7 +1171,6 @@ var Main = (function (_super) {
                         return [4 /*yield*/, RES.getResAsync("description_json")];
                     case 2:
                         result = _a.sent();
-                        this.startAnimation(result);
                         console.log(this.stage.stageWidth);
                         console.log(this.stage.stageHeight);
                         return [4 /*yield*/, platform.getAVUserInfo()];
@@ -1397,6 +1183,10 @@ var Main = (function (_super) {
             });
         });
     };
+    /**
+     * await 后面跟的是返回 promise 的函数。这个函数也可以是async   await只能在async函数中用。
+       async   return返回的都是一个Promise对象同时async适用于任何类型的函数上。这样await得到的就是一个Promise对象(如果不是Promise对象的话那async返回的是什么 就是什么)；
+     */
     Main.prototype.loadResource = function () {
         return __awaiter(this, void 0, void 0, function () {
             var loadingView, e_1;
@@ -1443,19 +1233,17 @@ var Main = (function (_super) {
         LevelDataManager.getInstance();
         SceneGame.getInstance();
         this.addChild(SceneGame.getInstance());
-        var data = LevelDataManager.getInstance().GetMileStone();
+        var data = LevelDataManager.getInstance().GetMileStone(); //218 8
+        if (data > 1) {
+            var mod = data % 10; //8
+            var num = data + (10 - mod); //218 + (10 - 8) = 220
+            var curindex = num / 10; //220 / 10 22
+            LevelDataManager.getInstance().SetCurIndex(curindex);
+        }
         LevelDataManager.getInstance().curIcon = data;
         SceneGame.getInstance().InitLevel(data);
         console.log(data);
         LevelDataManager.getInstance().getAd(); //手动拉AD
-        // this.btnOpen = new eui.Button();
-        // this.btnOpen.label = "btnClose!";
-        // this.btnOpen.x = 50;
-        // this.btnOpen.y = 35;
-        // this.btnOpen.horizontalCenter = 0;
-        // this.addChild(this.btnOpen);
-        // this.btnOpen.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
-        // console.log("aaaaaa");
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -1466,33 +1254,6 @@ var Main = (function (_super) {
         var texture = RES.getRes(name);
         result.texture = texture;
         return result;
-    };
-    /**
-     * 描述文件加载成功，开始播放动画
-     * Description file loading is successful, start to play the animation
-     */
-    Main.prototype.startAnimation = function (result) {
-        var _this = this;
-        var parser = new egret.HtmlTextParser();
-        var textflowArr = result.map(function (text) { return parser.parse(text); });
-        var textfield = this.textfield;
-        var count = -1;
-        var change = function () {
-            count++;
-            if (count >= textflowArr.length) {
-                count = 0;
-            }
-            var textFlow = textflowArr[count];
-            // 切换描述内容
-            // Switch to described content
-            textfield.textFlow = textFlow;
-            var tw = egret.Tween.get(textfield);
-            tw.to({ "alpha": 1 }, 200);
-            tw.wait(2000);
-            tw.to({ "alpha": 0 }, 200);
-            tw.call(change, _this);
-        };
-        // change();
     };
     Main.prototype.onButtonClick = function (e) {
         console.log('点击btnClose按钮');
@@ -1616,7 +1377,10 @@ __reflect(PlayerData.prototype, "PlayerData");
 var SceneGame = (function (_super) {
     __extends(SceneGame, _super);
     function SceneGame() {
-        return _super.call(this) || this;
+        var _this = _super.call(this) || this;
+        _this.isdisplay = false;
+        _this.isFirst = false;
+        return _this;
     }
     // private s:string;
     SceneGame.getInstance = function () {
@@ -1624,6 +1388,53 @@ var SceneGame = (function (_super) {
             SceneGame.scenegame = new SceneGame();
         }
         return SceneGame.scenegame;
+    };
+    SceneGame.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    /**
+     *  /**
+         * @private
+         * 子类覆盖此方法可以执行一些初始化子项操作。此方法仅在组件第一次添加到舞台时回调一次。
+         * 请务必调用super.createChildren()以完成父类组件的初始化
+         */
+    // protected createChildren(): void;初始化自定义子项(没有在EUI面板上的)操作
+    /**
+     * @private
+     * 子项创建完成,此方法在createChildren()之后执行。
+     */
+    // protected childrenCreated(): void;
+    //  */
+    SceneGame.prototype.childrenCreated = function () {
+        var _this = this;
+        _super.prototype.childrenCreated.call(this);
+        // let openDataContext = wx.getOpenDataContext();
+        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+        this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
+        this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
+        this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
+        this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            _this.openGroup.visible = false;
+            _this.closeBtn.visible = false;
+            _this.bitmap.parent && _this.bitmap.parent.removeChild(_this.bitmap);
+            _this.isdisplay = false;
+            _this.rankingListMask.parent && _this.rankingListMask.parent.removeChild(_this.rankingListMask);
+            platform.openDataContext.postMessage({
+                isdisplay: _this.isdisplay,
+            });
+            LevelDataManager.getInstance().getAd().show();
+        }, this);
+        this.caiziBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.toCaizi, this);
+        this.xiaoguo();
+        this.xiaorenBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            wx.shareAppMessage({
+                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                imageUrl: "resource/assets/common/title11.png"
+            });
+            egret.Tween.get(_this.dianImg).wait(200).call(function () {
+                _this.dianImg.visible = false;
+            }).wait(300000).call(function () { _this.dianImg.visible = true; }); //1000ms = 1s   3000 0  0 3s00
+        }, this);
     };
     SceneGame.prototype.InitLevel = function (index) {
         this.levelIndex = index;
@@ -1640,7 +1451,6 @@ var SceneGame = (function (_super) {
         //  wordList = this.randomList(wordList);
         //内容区域赋值  大于150关   变为15字
         this.changeWord(); //改变选择区域字数
-        //  this.group_Chaotic.layout = new eui.TileLayout();
         for (var i = 0; i < this.group_Chaotic.numChildren; i++) {
             var wordRect = this.group_Chaotic.getChildAt(i);
             wordRect.SetWordText(wordList[i]);
@@ -1651,6 +1461,8 @@ var SceneGame = (function (_super) {
         var len = levelData.result.length;
         while (len) {
             var temp = new AnswerWord();
+            temp.width = 75;
+            temp.height = 75;
             this.group_Result.addChild(temp);
             len--;
         }
@@ -1665,23 +1477,36 @@ var SceneGame = (function (_super) {
         this.label_Question.text = levelData.question;
     };
     SceneGame.prototype.changeWord = function () {
-        if (this.levelIndex <= 150) {
+        if (this.levelIndex < 150) {
             if (this.group_Chaotic.numChildren == 10) {
                 return;
             }
             this.group_Chaotic.removeChildren();
+            var tLayout = new eui.TileLayout();
+            tLayout.horizontalGap = 20;
+            tLayout.verticalGap = 10;
+            this.group_Chaotic.layout = tLayout;
             for (var i = 0; i < 10; i++) {
                 var word = new Word();
+                word.width = 89;
+                word.height = 96;
                 this.group_Chaotic.addChild(word);
             }
         }
-        else if (this.levelIndex >= 151) {
+        else if (this.levelIndex >= 150) {
             if (this.group_Chaotic.numChildren == 15) {
                 return;
             }
             this.group_Chaotic.removeChildren();
+            //加布局类。   eui正确设置一次就可以不变了。除非想改变布局才改。
+            var tLayout = new eui.TileLayout();
+            tLayout.horizontalGap = 20;
+            tLayout.verticalGap = 10;
+            this.group_Chaotic.layout = tLayout;
             for (var i = 0; i < 15; i++) {
                 var word = new Word();
+                word.width = 89; //要设置  不然group中布局以子元素中最大的做基础。默认为20
+                word.height = 96;
                 this.group_Chaotic.addChild(word);
             }
         }
@@ -1700,7 +1525,7 @@ var SceneGame = (function (_super) {
         //找到一个合适的位置
         var rect = null;
         for (var i = 0; i < this.group_Result.numChildren; i++) {
-            var temp = this.group_Result.getChildAt(i);
+            var temp = this.group_Result.getChildAt(i); //找到空位置
             if (temp.selectWord == null) {
                 rect = temp; //此时赋值后rect代表空的那个答案字块
                 break;
@@ -1708,9 +1533,9 @@ var SceneGame = (function (_super) {
         }
         //找到位置后填充
         if (rect != null) {
-            rect.SetSelectWord(word); //字显示
-            //判断是否胜利
-            var str = "";
+            rect.SetSelectWord(word); //显示问题字
+            //判断是否胜利   点击一次判断一次
+            var str = ""; //每点击一次把答案都加上来判断一次。
             for (var i = 0; i < this.group_Result.numChildren; i++) {
                 var answer = this.group_Result.getChildAt(i);
                 str += answer.GetWordText();
@@ -1726,13 +1551,17 @@ var SceneGame = (function (_super) {
             else if (str.length == this.group_Result.numChildren) {
                 console.log("you lose");
                 this.bingoLayer.visible = true;
-                this.bingoLayer.bg.touchEnabled = true;
-                this.hintBg(true);
-                this.bingoLayer.imgErro.visible = true;
+                this.hintBg(false);
                 SoundManager.getInstance().erroSoundChanel = SoundManager.getInstance().erroSound.play(0, 1);
                 SoundManager.getInstance().erroSoundChanel.volume = 1;
+                //答错后
+                this.answerWordWrong();
             }
         }
+    };
+    SceneGame.prototype.answerWordWrong = function () {
+        //弹界面    重玩还是继续  
+        SceneGame.getInstance().bingoLayer.errGroup.visible = true;
     };
     SceneGame.prototype.hintBg = function (isCan) {
         if (isCan == true) {
@@ -1752,62 +1581,86 @@ var SceneGame = (function (_super) {
             _this.bingoLayer.visible = false;
             _this.bingoLayer.bingoGroup.visible = false;
             _this.bingoLayer.trueGroup.visible = false;
-            _this.bingoLayer.imgErro.visible = false;
-            _this.bingoLayer.daandi.visible = false;
-            _this.bingoLayer.upgradeGroup.visible = false;
-            _this.bingoLayer.erroGroup.visible = false;
+            _this.bingoLayer.comboGroup.visible = false;
+            _this.bingoLayer.errGroup.visible = false;
         });
     };
-    SceneGame.prototype.partAdded = function (partName, instance) {
-        _super.prototype.partAdded.call(this, partName, instance);
+    SceneGame.prototype.xiaoguo = function () {
+        var _this = this;
+        egret.Tween.get(this.caiziBtn).to({ scaleX: 1.2, scaleY: 1.2 }, 1000).to({ scaleX: 0.8, scaleY: 0.8 }, 1000).call(function () {
+            //call方法中使用()=>{}，知道this指向。不然指向window    还可以call(this.xiaoguo,this)
+            _this.xiaoguo();
+        });
     };
-    SceneGame.prototype.childrenCreated = function () {
-        _super.prototype.childrenCreated.call(this);
-        this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
-        this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
-        this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
+    SceneGame.prototype.toCaizi = function () {
+        wx.navigateToMiniProgram({
+            appId: "wx617cbc6f541518e6",
+            path: "",
+            extraData: {},
+            success: function () {
+                console.log("跳转猜字");
+            }
+        });
     };
     SceneGame.prototype.onpaihang = function () {
+      SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
+      SoundManager.getInstance().answerSoundChanel.volume = 1;
+        // let openDataContext = wx.getOpenDataContext();
+        //处理遮罩，避免开放数据域事件影响主域。
+        this.rankingListMask = new egret.Shape();
+        this.rankingListMask.graphics.beginFill(0x000000, 1);
+        this.rankingListMask.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
+        this.rankingListMask.graphics.endFill();
+        this.rankingListMask.alpha = 0.5;
+        this.rankingListMask.touchEnabled = true;
         console.log("点击排行");
-        //   let platform: any = window.platform;
-        //         //主要示例代码开始
-        // this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
-        // this.addChild(this.bitmap);
-        // //主域向子域发送自定义消息
-        // platform.openDataContext.postMessage({
-        //     text: 'hello',
-        //     year: (new Date()).getFullYear(),
-        //     command: "open",
-        //     type:"opendata"
-        // });
-        // 主要示例代码结束            
-        // this.isdisplay = true;
-        var openDataContext = wx.getOpenDataContext();
-        this.bitmap = platform.openDataContext.createDisplayObject(null, this.stage.stageWidth, this.stage.stageHeight);
+        //开放域开始
+        // const bitmapdata = new egret.BitmapData(window["sharedCanvas"]);
+        // bitmapdata.$deleteSource = false;
+        // const texture = new egret.Texture();
+        // texture._setBitmapData(bitmapdata);
+        // this.bitmap = new egret.Bitmap(texture);
+        // this.bitmap.width = this.stage.stageWidth;//节点的大小  也就是sharedCavas作为bitmapdata的这个bitmap的大小。
+        // this.bitmap.height = this.stage.stageHeight;
+        this.openGroup.visible = true;
+        this.closeBtn.visible = true;
+        this.addChild(this.rankingListMask);
+        this.addChild(this.openGroup);
         this.addChild(this.bitmap);
-        openDataContext.postMessage({
-            command: "open",
-            type: "friend"
-        });
+        this.addChild(this.closeBtn);
+        //隐藏广告
+        LevelDataManager.getInstance().getAd().hide();
         console.log("点击了排行榜");
+        //   egret.startTick((timeStarmp: number) => {
+        //         egret.WebGLUtils.deleteWebGLTexture(bitmapdata.webGLTexture);
+        //         bitmapdata.webGLTexture = null;
+        //         return false;
+        //     }, this);
+        //主域向子域发送自定义消息
+        this.isdisplay = true;
+        platform.openDataContext.postMessage({
+            isdisplay: this.isdisplay
+        });
     };
     SceneGame.prototype.onLevel = function () {
         SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
         SoundManager.getInstance().answerSoundChanel.volume = 1;
-        this.levelScene.showLevelIcon(LevelDataManager.getInstance().GetMileStone());
+        var page = this.bingoLayer.getNumCurIndex(LevelDataManager.getInstance().GetCurIndex());
+        this.levelScene.pageIndex = page;
+        this.levelScene.updataName();
+        this.levelScene.updateLabel(this.levelScene.groupLevel, this.levelScene.pageIndex);
+        this.levelScene.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());
         this.levelScene.visible = true;
     };
     SceneGame.prototype.showResult = function (event) {
         egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
             to({ scaleX: 1, scaleY: 1 }, 100);
-        if (LevelDataManager.getInstance().isShare == true) {
-            console.log("开分享，分享开启Scene");
-            // platform.updateShareMenu();
-            // platform.showVideoAD();
+        if (LevelDataManager.getInstance().GetShare() == 1) {
+            console.log("开分享，分享开启Scene GetShare()  " + LevelDataManager.getInstance().GetShare());
             platform.shareAppMessage(); //无差别分享
         }
-        else if (LevelDataManager.getInstance().isShare == false) {
-            console.log("看视频，分享关闭Scene");
+        else if (LevelDataManager.getInstance().GetShare() == 0) {
+            console.log("看视频，分享关闭Scene   GetShare()" + LevelDataManager.getInstance().GetShare());
             platform.showVideoAD();
         }
     };
@@ -1931,17 +1784,18 @@ var AnswerWord = (function (_super) {
     AnswerWord.prototype.onclick_tap = function () {
         SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
         SoundManager.getInstance().answerSoundChanel.volume = 1;
+        //恢复点进来的字
         if (this.selectWord != null) {
-            this.selectWord.visible = true; //利用这个变量来将存储进来的问题字显示。
+            this.selectWord.visible = true;
             this.selectWord = null;
-            this.SetWordText("");
+            this.SetWordText(""); //将自身的字清除
         }
         console.log("答案字被点击");
     };
     AnswerWord.prototype.SetSelectWord = function (word) {
         if (word != null) {
             word.visible = false;
-            this.SetWordText(word.GetWordText()); //这里实现答案字显示问题字
+            this.SetWordText(word.GetWordText()); //这里实现答案字显示问题字.
             this.selectWord = word; //将问题字存储在答案字，一一对应，方便后面恢复显示。
         }
         else {

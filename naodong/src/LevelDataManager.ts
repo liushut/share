@@ -11,12 +11,13 @@ class LevelDataManager//关卡数据管理
     public  static oldADs:any;
     private static levelDataManager:LevelDataManager;
     public  static shareNum:number = 0;//分享次数
-    public   curIcon:number = 1;;//当前关卡
-    public   curIndex:number = 0;//当前段位
+    public   curIcon:number = 1;;//当前题目数
+    private   curIndex:number = 1;//当前关卡数
     public   static tempIndex = 0;//当前页面
-    public    isShare:boolean = true;
+    public   isShare:boolean = false;
     public   static isLogin:boolean = true;
 
+    public  static comboTen:number = 1;
 
     public  static encryptedData:any;
     public  static iv:any;
@@ -41,7 +42,19 @@ class LevelDataManager//关卡数据管理
         this.levelDataItemList = RES.getRes("test_json");
     }
 
-
+    public GetShare()
+    {
+        let milestone = egret.localStorage.getItem("SHARE");
+        if(milestone == "" || milestone == null)
+        {
+            milestone = "0";//默认0关闭  1 为开启
+        }
+        return parseInt(milestone);
+    }
+    public SetShare(share:number)
+    {
+         egret.localStorage.setItem("SHARE",share.toString());
+    }
     //通过关卡号获取数据
     public GetLevelData(level):LevelDataItem
     {
@@ -91,7 +104,7 @@ class LevelDataManager//关卡数据管理
     }
 
     //拉取banner广告
-    public getAd()
+    public getAd():any
     {
         if(LevelDataManager.oldADs)
         {
@@ -151,7 +164,23 @@ class LevelDataManager//关卡数据管理
             console.log(winSize.screenHeight  + "winSize.screenHeight");
             newad.show();
             LevelDataManager.oldADs = newad;
+            return LevelDataManager.oldADs;
     }
+
+    public  SetCurIndex(index:number)
+    {
+         egret.localStorage.setItem("CurIndex",index.toString());
+    }
+    public GetCurIndex()
+    {
+        let index = egret.localStorage.getItem("CurIndex");
+        if(index == "" || index == null)
+        {
+            index = "1";
+        }
+        return parseInt(index);
+    }
+    
 }
 
 window["LevelDataItem"] = LevelDataItem;
