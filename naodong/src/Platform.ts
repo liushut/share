@@ -18,6 +18,7 @@ declare interface Platform {
     showVideoAD():Promise<any>;//看视频
 
     restartVideo():Promise<any>;//复活看视频
+    restShare():Promise<any>;//视频失败的分享
 
 
 

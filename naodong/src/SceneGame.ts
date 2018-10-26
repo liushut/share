@@ -266,6 +266,8 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		})
 	}
 	private onpaihang() {
+		SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
+		SoundManager.getInstance().answerSoundChanel.volume = 1;
 		// let openDataContext = wx.getOpenDataContext();
 		//处理遮罩，避免开放数据域事件影响主域。
 		this.rankingListMask = new egret.Shape();

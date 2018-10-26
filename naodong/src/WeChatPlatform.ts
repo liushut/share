@@ -83,6 +83,21 @@ class WeChatPlatform implements Platform {
             LevelDataManager.oldADs = ad;
         })
     }
+    async restShare()
+    {
+        return new Promise(function(resolve,reject){
+             (wx as any).shareAppMessage({
+                    title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                    imageUrl: "resource/assets/common/title11.png"
+                });
+                egret.Tween.get(this).wait(200).call(() => {
+                    SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+                    SceneGame.getInstance().bingoLayer.visible = false;
+                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                })
+                console.log(" restShare()");
+        })
+    }
     async restartVideo()
     {
         return new Promise(function(resolve,reject){
@@ -90,33 +105,28 @@ class WeChatPlatform implements Platform {
                 adUnitId: 'adunit-597cc618faea8408'
             })
 
-            videoAd.load()
-                .then(() => videoAd.show())
-                .catch(err => {
-                    console.log(err.errMsg);
-                    (wx as any).shareAppMessage({
-                        title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                        imageUrl: "resource/assets/common/title11.png"
+            videoAd.show().then(()=>{
+                console.log("视频成功");
+            }).catch(err=>{
+                console.log("视频失败");
+                platform.restShare();
+               
             });
-            egret.Tween.get(this).wait(200).call(()=>{
-                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon); 
-                    SceneGame.getInstance().bingoLayer.errGroup.visible = false;
-                    SceneGame.getInstance().bingoLayer.visible = false;
-            })
-                });
             videoAd.onClose(res=>{
                    if (res && res.isEnded || res === undefined) {
                     // 正常播放结束，可以下发游戏奖励
                     console.log("正常播放，重新开始");
-                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon); 
                     SceneGame.getInstance().bingoLayer.errGroup.visible = false;
                     SceneGame.getInstance().bingoLayer.visible = false;
+                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon); 
                 }
                 else {
                     // 播放中途退出，不下发游戏奖励
-                    console.log("提前关闭");
-                   
+                    console.log("提前关闭"); 
                 }
+            });
+            videoAd.onError(err=>{
+                console.log("错误信息",err.errMsg,err.errCode);
             })
         })
     }
@@ -128,7 +138,6 @@ class WeChatPlatform implements Platform {
                 console.log("拉取视频成功")
             }).catch(err=>{
                 console.log("视频拉取失败");
-                // video.load().then(() => video.show())
                 platform.testShare();
             });
             video.onClose(res => {
@@ -210,7 +219,7 @@ class WeChatPlatform implements Platform {
                 console.log("sessionKey " + pajson.sessionKey);
                 console.log("iv  " + pajson.iv);
                 console.log("evcryteData   " + pajson.encryptedData);
-                AV.Cloud.run("share",pajson).then(function(data){//用一个对象数组存。每次得到遍历数组中是否有openId相同。
+                AV.Cloud.run("share",pajson).then(function(data){
                 console.log(data + "分享成功data");
                 console.log(data.openId + "分享成功dataOPenID");
                 resole(data);

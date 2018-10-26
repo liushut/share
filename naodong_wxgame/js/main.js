@@ -165,40 +165,52 @@ var WeChatPlatform = (function () {
             });
         });
     };
+    WeChatPlatform.prototype.restShare = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        wx.shareAppMessage({
+                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                            imageUrl: "resource/assets/common/title11.png"
+                        });
+                        egret.Tween.get(this).wait(200).call(function () {
+                            SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+                            SceneGame.getInstance().bingoLayer.visible = false;
+                            SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                        });
+                        console.log(" restShare()");
+                    })];
+            });
+        });
+    };
     WeChatPlatform.prototype.restartVideo = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) {
-                        var _this = this;
                         var videoAd = wx.createRewardedVideoAd({
                             adUnitId: 'adunit-597cc618faea8408'
                         });
-                        videoAd.load()
-                            .then(function () { return videoAd.show(); })
-                            .catch(function (err) {
-                            console.log(err.errMsg);
-                            wx.shareAppMessage({
-                                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                                imageUrl: "resource/assets/common/title11.png"
-                            });
-                            egret.Tween.get(_this).wait(200).call(function () {
-                                SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
-                                SceneGame.getInstance().bingoLayer.errGroup.visible = false;
-                                SceneGame.getInstance().bingoLayer.visible = false;
-                            });
+                        videoAd.show().then(function () {
+                            console.log("视频成功");
+                        }).catch(function (err) {
+                            console.log("视频失败");
+                            platform.restShare();
                         });
                         videoAd.onClose(function (res) {
                             if (res && res.isEnded || res === undefined) {
                                 // 正常播放结束，可以下发游戏奖励
                                 console.log("正常播放，重新开始");
-                                SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
                                 SceneGame.getInstance().bingoLayer.errGroup.visible = false;
                                 SceneGame.getInstance().bingoLayer.visible = false;
+                                SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
                             }
                             else {
                                 // 播放中途退出，不下发游戏奖励
                                 console.log("提前关闭");
                             }
+                        });
+                        videoAd.onError(function (err) {
+                            console.log("错误信息", err.errMsg, err.errCode);
                         });
                     })];
             });
@@ -213,7 +225,6 @@ var WeChatPlatform = (function () {
                             console.log("拉取视频成功");
                         }).catch(function (err) {
                             console.log("视频拉取失败");
-                            // video.load().then(() => video.show())
                             platform.testShare();
                         });
                         video.onClose(function (res) {
@@ -881,7 +892,6 @@ var LevelScene = (function (_super) {
         this.pageIndex = SceneGame.getInstance().bingoLayer.getNumCurIndex(LevelDataManager.getInstance().GetMileStone());
         this.updateLabel(this.groupLevel, this.pageIndex); //更新这一页的icon的label
         this.updataName();
-    
         this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex()); //显示到最远的关卡
     };
     LevelScene.prototype.showLevelIconTween = function (index) {
@@ -898,19 +908,14 @@ var LevelScene = (function (_super) {
     };
     //当前关卡的前面都显示
     LevelScene.prototype.showLevelIcon = function (index) {
-      if (this.pageIndex == 1) {
-        console.log("第一关");
-        this.btn_before.visible = false;
-      }
-      else if (this.pageIndex == 10) {
-        console.log("最后一关");
-        this.btn_next.visible = false;
-      }
-      else 
-      {
-        this.btn_next.visible = true;
-        this.btn_before.visible = true;
-      }
+        if (this.pageIndex == 1) {
+            console.log("第一关");
+            this.btn_before.visible = false;
+        }
+        else if (this.pageIndex == 10) {
+            console.log("最后一关");
+            this.btn_next.visible = false;
+        }
         for (var i = 0; i < this.groupLevel.numChildren; i++) {
             var icon = this.groupLevel.getChildAt(i);
             var num = icon.Level; //开始是1 
@@ -1590,6 +1595,8 @@ var SceneGame = (function (_super) {
         });
     };
     SceneGame.prototype.onpaihang = function () {
+      SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
+      SoundManager.getInstance().answerSoundChanel.volume = 1;
         // let openDataContext = wx.getOpenDataContext();
         //处理遮罩，避免开放数据域事件影响主域。
         this.rankingListMask = new egret.Shape();
