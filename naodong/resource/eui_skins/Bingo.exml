@@ -43,7 +43,7 @@
 				</e:skinName>
 			</e:Button>
 			<e:Label id="guanLabel" text="当前解锁第111关" y="241" scaleX="1" scaleY="1" anchorOffsetX="150" width="300" anchorOffsetY="0" height="55" size="35" textColor="0x0a0909" fontFamily="Microsoft YaHei" horizontalCenter="0" verticalAlign="middle" textAlign="center"/>
-			<e:Button id="chachaBtn" label="" y="34" width="32" height="32" x="339">
+			<e:Button id="chachaBtn" label="" y="34" width="32" height="32" x="339" visible="false">
 				<e:skinName>
 					<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="chacha_png"/>

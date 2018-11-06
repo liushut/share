@@ -140,6 +140,9 @@ class WeChatPlatform implements Platform {
                 console.log("视频拉取失败");
                 platform.testShare();
             });
+              video.onError(err=>{
+                console.log("错误信息",err.errMsg,err.errCode);
+            })
             video.onClose(res => {
                 // 用户点击了【关闭广告】按钮
                 if (res && res.isEnded || res === undefined) {
@@ -305,7 +308,6 @@ class WeChatPlatform implements Platform {
               }
     }
    
-    
 
     
    
