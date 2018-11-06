@@ -1,2 +1,0 @@
-# share
-paihangbang 文件夹是子域项目放在主域项目naodong_wxgame的opendatacontext下面，原来主域的opendatacontext文件夹的asset和index.js记得删除

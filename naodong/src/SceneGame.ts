@@ -4,7 +4,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 
 	}
 	private static scenegame: SceneGame;
-	// private s:string;
+
 	public static getInstance()//静态函数只能访问静态属性，能用this。
 	{
 		if (SceneGame.scenegame == null) {
@@ -49,12 +49,12 @@ class SceneGame extends eui.Component implements eui.UIComponent {
          * 子类覆盖此方法可以执行一些初始化子项操作。此方法仅在组件第一次添加到舞台时回调一次。
          * 请务必调用super.createChildren()以完成父类组件的初始化
          */
-        // protected createChildren(): void;初始化自定义子项(没有在EUI面板上的)操作
-        /**
-         * @private
-         * 子项创建完成,此方法在createChildren()之后执行。
-         */
-        // protected childrenCreated(): void;
+	// protected createChildren(): void;初始化自定义子项(没有在EUI面板上的)操作
+	/**
+	 * @private
+	 * 子项创建完成,此方法在createChildren()之后执行。
+	 */
+	// protected childrenCreated(): void;
 	//  */
 	protected childrenCreated(): void {
 		super.childrenCreated();
@@ -220,8 +220,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			}
 		}
 	}
-	private answerWordWrong()
-	{
+	private answerWordWrong() {
 		//弹界面    重玩还是继续  
 		SceneGame.getInstance().bingoLayer.errGroup.visible = true;
 	}
@@ -286,59 +285,55 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		// this.bitmap = new egret.Bitmap(texture);
 		// this.bitmap.width = this.stage.stageWidth;//节点的大小  也就是sharedCavas作为bitmapdata的这个bitmap的大小。
 		// this.bitmap.height = this.stage.stageHeight;
+	}
 
-<<<<<<< HEAD
-	private  showResult(event:egret.TouchEvent)
-	{
-		egret.Tween.get(event.currentTarget).to({scaleX:1.2,scaleY:1.2},100).
-		to({scaleX:1,scaleY:1},100);
-		if(LevelDataManager.getInstance().isShare== true)
-		{
-			console.log("开分享，分享开启Scene" );
-			// platform.updateShareMenu();
-			// platform.showVideoAD();
+	private showResult(event: egret.TouchEvent) {
+		egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
+			to({ scaleX: 1, scaleY: 1 }, 100);
+		if (LevelDataManager.getInstance().isShare == true) {
+			console.log("开分享，分享开启Scene");
 			platform.shareAppMessage();//无差别分享
 		}
-		else if(LevelDataManager.getInstance().isShare == false)
-		{
-		  console.log("看视频，分享关闭Scene");
-		   platform.showVideoAD();
-=======
+		else if (LevelDataManager.getInstance().isShare == false) {
+			console.log("看视频，分享关闭Scene");
+			platform.showVideoAD();
 
-		this.openGroup.visible = true;
-		this.closeBtn.visible = true;
-		this.addChild(this.rankingListMask);
-		this.addChild(this.openGroup);
-		this.addChild(this.bitmap);
-		this.addChild(this.closeBtn);
 
-		//隐藏广告
-		LevelDataManager.getInstance().getAd().hide();
-		console.log("点击了排行榜");
+			this.openGroup.visible = true;
+			this.closeBtn.visible = true;
+			this.addChild(this.rankingListMask);
+			this.addChild(this.openGroup);
+			this.addChild(this.bitmap);
+			this.addChild(this.closeBtn);
 
-		//   egret.startTick((timeStarmp: number) => {
-		//         egret.WebGLUtils.deleteWebGLTexture(bitmapdata.webGLTexture);
-		//         bitmapdata.webGLTexture = null;
-		//         return false;
-		//     }, this);
-		//主域向子域发送自定义消息
-		this.isdisplay = true;
-		platform.openDataContext.postMessage({
-			isdisplay: this.isdisplay
-		});
+			//隐藏广告
+			LevelDataManager.getInstance().getAd().hide();
+			console.log("点击了排行榜");
+
+			//   egret.startTick((timeStarmp: number) => {
+			//         egret.WebGLUtils.deleteWebGLTexture(bitmapdata.webGLTexture);
+			//         bitmapdata.webGLTexture = null;
+			//         return false;
+			//     }, this);
+			//主域向子域发送自定义消息
+			this.isdisplay = true;
+			platform.openDataContext.postMessage({
+				isdisplay: this.isdisplay
+			});
+		}
 	}
 	private onLevel() {
 		SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
 		SoundManager.getInstance().answerSoundChanel.volume = 1;
-		
+
 		let page = this.bingoLayer.getNumCurIndex(LevelDataManager.getInstance().GetCurIndex());
 		this.levelScene.pageIndex = page;
 		this.levelScene.updataName();
-		this.levelScene.updateLabel(this.levelScene.groupLevel,this.levelScene.pageIndex);
+		this.levelScene.updateLabel(this.levelScene.groupLevel, this.levelScene.pageIndex);
 		this.levelScene.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());
 		this.levelScene.visible = true;
 	}
-	private showResult(event: egret.TouchEvent) {
+	private showResult1(event: egret.TouchEvent) {
 		egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
 			to({ scaleX: 1, scaleY: 1 }, 100);
 		if (LevelDataManager.getInstance().GetShare() == 1) {
@@ -348,7 +343,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		else if (LevelDataManager.getInstance().GetShare() == 0) {
 			console.log("看视频，分享关闭Scene   GetShare()" + LevelDataManager.getInstance().GetShare());
 			platform.showVideoAD();
->>>>>>> liu
+
 		}
 	}
 }
