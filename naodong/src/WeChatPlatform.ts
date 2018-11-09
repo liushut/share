@@ -90,10 +90,11 @@ class WeChatPlatform implements Platform {
                     title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
                     imageUrl: "resource/assets/common/title11.png"
                 });
-                egret.Tween.get(this).wait(200).call(() => {
+                egret.Tween.get(SceneGame.getInstance().bingoLayer).wait(200).call(() => {
                     SceneGame.getInstance().bingoLayer.errGroup.visible = false;
                     SceneGame.getInstance().bingoLayer.visible = false;
                     SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                     console.log("执行了");
                 })
                 console.log(" restShare()");
         })
@@ -104,14 +105,13 @@ class WeChatPlatform implements Platform {
             let videoAd = (wx as any).createRewardedVideoAd({
                 adUnitId: 'adunit-597cc618faea8408'
             })
-
-            videoAd.show().then(()=>{
+        videoAd.load().then(
+              videoAd.show().then(()=>{
                 console.log("视频成功");
             }).catch(err=>{
                 console.log("视频失败");
                 platform.restShare();
-               
-            });
+            }) )
             videoAd.onClose(res=>{
                    if (res && res.isEnded || res === undefined) {
                     // 正常播放结束，可以下发游戏奖励
@@ -127,6 +127,8 @@ class WeChatPlatform implements Platform {
             });
             videoAd.onError(err=>{
                 console.log("错误信息",err.errMsg,err.errCode);
+                console.log("执行了");
+
             })
         })
     }
@@ -134,12 +136,15 @@ class WeChatPlatform implements Platform {
     {
         return new Promise(function(resolve,reject){
             let video = (wx as any).createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });
-            video.show().then(()=>{
-                console.log("拉取视频成功")
-            }).catch(err=>{
-                console.log("视频拉取失败");
-                platform.testShare();
-            });
+            video.load().then(
+                video.show().then(() => {
+                    console.log("拉取视频成功")
+                }).catch(err => {
+                    console.log("视频拉取失败");
+                    platform.testShare();
+                })
+            )
+            
               video.onError(err=>{
                 console.log("错误信息",err.errMsg,err.errCode);
             })
@@ -158,6 +163,46 @@ class WeChatPlatform implements Platform {
                     SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
                     LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
                     console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                }
+                else {
+                    // 播放中途退出，不下发游戏奖励
+                    console.log("提前关闭");
+                }
+            })
+        })
+    }
+    async tiaozhaoVideo() {
+        return new Promise((resolve, reject) => {
+            let videoAd = (wx as any).createRewardedVideoAd({
+                adUnitId: 'adunit-1d0fb93e0bab0a56'
+            });
+             videoAd.load().then(() => videoAd.show().then(() => {
+                console.log("解锁拉取视频成功")
+            }).catch(err => {
+                console.log("解锁视频拉取失败");
+                console.log(err);
+                (wx as any).shareAppMessage({
+                    title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                    imageUrl: "resource/assets/common/title11.png"
+                });
+                egret.Tween.get(SceneGame.getInstance().bingoLayer).wait(200).call(() => {
+                    SceneGame.getInstance().bingoLayer.visible = false;
+                    SceneGame.getInstance().bingoLayer.comboGroup.visible = false;
+                    SceneGame.getInstance().levelScene.visible = false;
+                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                })
+            }))
+            videoAd.onError(err => {
+                console.log(err)
+            })
+            videoAd.onClose(res => {
+                // 用户点击了【关闭广告】按钮
+                if (res && res.isEnded || res === undefined) {
+                    // 正常播放结束，可以下发游戏奖励
+                    SceneGame.getInstance().bingoLayer.visible = false;
+                    SceneGame.getInstance().bingoLayer.comboGroup.visible = false;
+                    SceneGame.getInstance().levelScene.visible = false;
+                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
                 }
                 else {
                     // 播放中途退出，不下发游戏奖励
@@ -240,7 +285,7 @@ class WeChatPlatform implements Platform {
                 title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
                 imageUrl: "resource/assets/common/title11.png"
             });
-               egret.Tween.get(this).wait(200).call(function () {
+               egret.Tween.get(SceneGame.getInstance().bingoLayer).wait(200).call(function () {
                   SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
                   SoundManager.getInstance().windowSoundChanel.volume = 1;
                   SceneGame.getInstance().bingoLayer.visible = true;
@@ -267,7 +312,7 @@ class WeChatPlatform implements Platform {
             resolve();
         });
     }
-
+    
    
     async shareAppMessage(){
         (wx as any).shareAppMessage({
@@ -345,7 +390,7 @@ class WxOpenDataContext{
    
     postMessage(data) {
         // const openDataContext = wx.getOpenDataContext();
-        let openDataContext = wx.getOpenDataContext();
+        let openDataContext = (wx as any).getOpenDataContext();
         openDataContext.postMessage(data);
     }
 }

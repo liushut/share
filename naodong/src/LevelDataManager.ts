@@ -163,6 +163,9 @@ class LevelDataManager//关卡数据管理
             console.log(winSize.screenWidth + "winSize.screenWidth");
             console.log(winSize.screenHeight  + "winSize.screenHeight");
             newad.show();
+            newad.onError(err=>{
+                console.log("错误信息",err.errMsg,err.errCode);
+            })
             LevelDataManager.oldADs = newad;
             return LevelDataManager.oldADs;
     }

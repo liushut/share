@@ -58,7 +58,6 @@ class Main extends eui.UILayer {
         (wx as any).updateShareMenu({
             withShareTicket: true
         });
-        (wx as any).createRewardedVideoAd({ adUnitId: "adunit-be82bc3d51b4e7b9" });//初始化广告
         (wx as any).showShareMenu(); 
         wx.onShareAppMessage(function () {
             // 用户点击了“转发”按钮
@@ -125,6 +124,9 @@ class Main extends eui.UILayer {
 
   private btnOpen:eui.Button;
   protected createGameScene(): void {
+         let videoAd = (wx as any).createRewardedVideoAd({
+                adUnitId: 'adunit-1d0fb93e0bab0a56'
+            });
                 console.log("游戏初始化了");
                 SoundManager.getInstance();
                 LevelDataManager.getInstance();

@@ -8,10 +8,8 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	public groupAll: eui.Group;
 	public trueGroup: eui.Group;
 	public labelresult: eui.Label;
-
 	public bingoGroup: eui.Group;
 	public imgErro: eui.Image;
-
 	public daandi: eui.Image;
 	public labelExplain: eui.Label;//解释
 
@@ -62,41 +60,7 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 	}
 	private tiaozhan() {
-		let videoAd = (wx as any).createRewardedVideoAd({
-			adUnitId: 'adunit-1d0fb93e0bab0a56'
-		});
-		videoAd.onError(err => {
-			console.log(err)
-		})
-		videoAd.show().then(() => {
-			console.log("解锁拉取视频成功")
-		}).catch(err => {
-			console.log("解锁视频拉取失败");
-			    (wx as any).shareAppMessage({
-                title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                imageUrl: "resource/assets/common/title11.png"
-            });
-			egret.Tween.get(this).wait(200).call(()=>{
-				this.visible = false;
-				this.comboGroup.visible = false;
-				SceneGame.getInstance().levelScene.visible = false;
-				SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
-			})
-		});
-		videoAd.onClose(res => {
-			// 用户点击了【关闭广告】按钮
-			if (res && res.isEnded || res === undefined) {
-				// 正常播放结束，可以下发游戏奖励
-				this.visible = false;
-				this.comboGroup.visible = false;
-				SceneGame.getInstance().levelScene.visible = false;
-				SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
-			}
-			else {
-				// 播放中途退出，不下发游戏奖励
-				console.log("提前关闭");
-			}
-		})	
+		platform.tiaozhaoVideo();
 	}
 	private onNext() {
 		console.log("点击下一题");
