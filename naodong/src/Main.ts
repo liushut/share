@@ -76,15 +76,120 @@ class Main extends eui.UILayer {
             }
             catch(ex){}
         await this.loadResource();
+        await this.loadShareCode();
         this.createGameScene();
+           wx.onShow((res?:any)=>{
+            console.log("wx.onShow", res);
+            if (res) {
+                let date = new Date();
+                let time = date.getTime();
+                let beforeTime = parseInt((wx.getStorageSync("nextshareTime") || "1") as string);
+                if(time > beforeTime)
+                {
+                    LevelDataManager.isShareTime = false;
+                   
+                }
+                else 
+                {
+                    LevelDataManager.isShareTime = true;
+                  
+                }
+                if(LevelDataManager.onshowNum == 1)
+                {
+                    this.showViedeoOrShare();
+                }
+                else if(LevelDataManager.onshowNum == 2)
+                {
+                     this.showResult();  
+                }
+                console.log("LevelDataManager.isShareTime" + LevelDataManager.isShareTime);
+            }
+        });
         const result = await RES.getResAsync("description_json");
-        console.log(this.stage.stageWidth);
-        console.log(this.stage.stageHeight);
-        const userInfo = await (platform as any).getAVUserInfo();
+        // const userInfo = await (platform as any).getAVUserInfo();//resolve()
         console.log("游戏初始化");
-        console.log("用户信息" + userInfo);
-        
-        
+        console.log("用户信息没得了");
+      
+    }
+    private showViedeoOrShare()
+    {
+        console.log("showViedeoOrShare  ");
+         if(!LevelDataManager.isShareTime)
+         {
+               if (LevelDataManager.shipinResult == 0) {
+                        SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+                        SceneGame.getInstance().bingoLayer.visible = false;
+                        SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                    }
+                    else if (LevelDataManager.shipinResult == 1) {//主界面红包
+                        if (LevelDataManager.curMoney < 20) {
+                            SceneGame.getInstance().bingoLayer.btnTixian.currentState = "disabled";
+                             SceneGame.getInstance().bingoLayer.btnTixian.touchEnabled = false;
+                            SceneGame.getInstance().bingoLayer.tanImg.visible = true;
+                            setTimeout(() => {
+                                SceneGame.getInstance().bingoLayer.tanImg.visible = false;
+                            }, 500);
+                        }
+                        else {
+                            console.log("onHongBaoTixian() 金额超出！！");
+                        }
+                   }else if(LevelDataManager.shipinResult == 2)//30关红包
+                   {
+                        LevelDataManager.curMoneyNum++;
+                        LevelDataManager.unlockMoneyNum++;
+                        LevelDataManager.curMoney += LevelDataManager.showMoney;
+                        SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
+                        SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
+                        SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
+                        LevelDataManager.SaveHongbaoNum();
+                    }
+         }
+         else 
+         {
+             console.log("showViedeoOrShare()在2s内");
+         }
+    }
+    private showResult()
+    {
+        console.log("sss");
+        if (!LevelDataManager.isShareTime) {
+            if (LevelDataManager.shareNum % 3 == 1) {
+                egret.Tween.get(this).wait(200).call(function () {
+                    SoundManager.getInstance().windowSoundChanel = SoundManager.getInstance().windowSound.play(0, 1);
+                    SoundManager.getInstance().windowSoundChanel.volume = 1;
+                    SceneGame.getInstance().bingoLayer.visible = true;
+                    SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
+                    SceneGame.getInstance().hintBg(true);
+                    SceneGame.getInstance().bingoLayer.labelresult.text =
+                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                    SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
+                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                    LevelDataManager.shareNum++;
+                    console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
+                });
+            }
+            else{
+                egret.Tween.get(this).wait(200).call(function () {
+                    (wx as any).showModal({
+                        title: "提示",
+                        content: "别总骚扰这个群的朋友啦，换个群分享吧~",
+                        showCancel: false,
+                        success: function (res) {
+                            if (res.confirm == true) {
+                                platform.shareMyAppMessage();
+                            }
+                        }
+                    });
+                    LevelDataManager.shareNum++;
+                    console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
+                });
+            }
+        }
+        else {
+            console.log("showResult()在2s内");
+        }
+
     }
     /**
      * await 后面跟的是返回 promise 的函数。这个函数也可以是async   await只能在async函数中用。
@@ -103,7 +208,14 @@ class Main extends eui.UILayer {
             console.error(e);
         }
     }
-
+    private loadShareCode() {
+        return new Promise((resolve, reject) => {
+            Util.req(R.url_code, null, (res: any) => {
+                LevelDataManager.readShareCodeRes(res);
+                resolve();
+            }, this);
+        })
+    }
     private loadTheme() {
         return new Promise((resolve, reject) => {
             // load skin theme configuration file, you can manually modify the file. And replace the default skin.
@@ -144,8 +256,6 @@ class Main extends eui.UILayer {
                 SceneGame.getInstance().InitLevel(data);
                 console.log(data);
                 LevelDataManager.getInstance().getAd();//手动拉AD
-
-           
     }
 
   

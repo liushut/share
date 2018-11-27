@@ -12,6 +12,7 @@ class LevelIcon extends eui.Component implements  eui.UIComponent {
 
 	private toGame()
 	{
+		LevelDataManager.curMoneyNum = 1;//改变钱包次数
 		egret.Tween.get(this.imgGuankadi).to({scaleX:0.8,scaleY:0.8},100).to({scaleX:1,scaleY:1});
 		let index = parseInt(this.bitlabel_levelIndex.text);
 		if(index <= LevelDataManager.getInstance().GetCurIndex())//只能在前往小于最远关卡

@@ -36,6 +36,28 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	public jixuBtn: eui.Button;
 	public chongwanBtn: eui.Button;
 
+	/**
+	 * 红包
+	 */
+	public hongbaoGroup: eui.Group;
+	public hongbaochaBtn: eui.Button;
+	public moneyLabel: eui.Label;
+	public yueLabel: eui.Label;
+	public tixianBtn: eui.Button;
+	public lingquBtn: eui.Button;
+	public tanchuanImg: eui.Image;
+
+	/**
+	 * 主界面展示红包
+	 */
+	public showhongbaoGroup:eui.Group;
+	public btnTixian:eui.Button;
+	public tanImg:eui.Image;
+	public chaHongbao:eui.Button;
+	public showYUELabel:eui.Label;
+
+
+
 
 	protected partAdded(partName: string, instance: any): void {
 		super.partAdded(partName, instance);
@@ -44,14 +66,92 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		super.childrenCreated();
 		this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onNext, this);
 		this.btn_share.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onShare, this);
-
-
+		
+		this.lingquBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLingqu, this);
 		this.Btntiaozhan.addEventListener(egret.TouchEvent.TOUCH_TAP, this.tiaozhan, this);
 		this.chachaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onchacha, this);
-
+		this.tixianBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTixian, this);
 		//重玩和继续的按钮方法
 		this.chongwanBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onreStart, this);
 		this.jixuBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onResume, this);
+		//3o关红包
+		this.hongbaochaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.guanhongbao, this);
+		//主界面红包
+		this.chaHongbao.addEventListener(egret.TouchEvent.TOUCH_TAP, this.guanZhuHongbao, this);
+		this.btnTixian.addEventListener(egret.TouchEvent.TOUCH_TAP,this.tixian,this);
+	}
+	private guanhongbao()
+	{
+		this.visible = false;
+		this.hongbaoGroup.visible = false;
+		this.lingquBtn.currentState = "up";
+		this.lingquBtn.touchEnabled = true;
+	}
+	private tixian()
+	{
+		LevelDataManager.onshowNum = 1;
+		this.showYUELabel.text = LevelDataManager.curMoney.toString();
+		LevelDataManager.shipinResult = 1;
+		//开关
+		if(LevelDataManager.videoOrshare)
+		{
+			platform.restShare();
+		}
+		else 
+		{
+			platform.restartVideo();
+		}
+		
+	}
+	private  guanZhuHongbao()
+	{
+		this.visible = false;
+		this.showhongbaoGroup.visible = false;
+		this.btnTixian.currentState = "up";
+		this.btnTixian.touchEnabled = true;
+	}	
+	private onLingqu() {
+		console.log("lingqu");
+		LevelDataManager.shipinResult = 2;
+		if(LevelDataManager.unlockMoneyNum == 1)
+		{
+			if (LevelDataManager.curMoney < 20) {
+				LevelDataManager.curMoneyNum++;
+				LevelDataManager.unlockMoneyNum++;
+				LevelDataManager.curMoney += LevelDataManager.showMoney;
+				SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
+				SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
+				SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
+				LevelDataManager.SaveHongbaoNum();
+				setTimeout(() => {
+					SceneGame.getInstance().bingoLayer.tanImg.visible = false;
+				}, 1000);
+
+			}
+			else {
+				console.log("onHongBaoTixian() 金额超出！！");
+			}
+		}
+		else 
+		{
+			if (LevelDataManager.videoOrshare) {
+				platform.restShare();
+			}
+			else {
+				platform.restartVideo();
+			}
+		}
+		
+	}
+	private onTixian() {
+		if (LevelDataManager.curMoney <= 20) {
+			this.tanchuanImg.visible = true;
+			egret.Tween.get(this.tanchuanImg).to({ visible: 0 }, 2000);
+		}
+		else 
+		{
+			console.log("onTixian()出错");
+		}
 	}
 	private onchacha(e: TouchEvent) {
 		this.visible = false;
@@ -59,6 +159,7 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		SceneGame.getInstance().levelScene.visible = false;
 		SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 	}
+	
 	private tiaozhan() {
 		platform.tiaozhaoVideo();
 	}
@@ -92,6 +193,7 @@ class Bingo extends eui.Component implements eui.UIComponent {
 
 	public imageUpdate() {
 		//记录的关卡
+		
 		let level = LevelDataManager.getInstance().GetMileStone();
 		this.changeImg(level);
 		if (level > 1 && level % 10 == 1) {  //level 是 存储的 
@@ -137,7 +239,6 @@ class Bingo extends eui.Component implements eui.UIComponent {
 			console.log("直接去下一关");
 			SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 		}
-
 	}
 	public getNumCurIndex(index: number): number {
 		let pageIndex = Math.ceil(index / 9);
@@ -196,7 +297,13 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	}
 	//继续
 	private onResume() {
-		platform.restartVideo();
+		LevelDataManager.shipinResult = 0;
+		if (LevelDataManager.videoOrshare) {
+			platform.restShare();
+		}
+		else {
+			platform.restartVideo();
+		}
 	}
 	//回到 161 重新开始
 	private onreStart() {

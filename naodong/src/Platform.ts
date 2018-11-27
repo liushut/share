@@ -12,7 +12,7 @@ declare interface Platform {
     shareCloud():Promise<any>;
     testShare():Promise<any>;
     getAVUserInfo(): Promise<any>;//得到用户信息
-    shareAppMessage():Promise<any>;//分享功能
+    shareMyAppMessage():Promise<any>;//分享功能
 
     shouAD():Promise<any>;//看广告
     showVideoAD():Promise<any>;//看视频
@@ -21,7 +21,7 @@ declare interface Platform {
     restShare():Promise<any>;//视频拉取失败的分享
 
     tiaozhaoVideo():Promise<any>;
-
+    randomShare();
 }
 
 

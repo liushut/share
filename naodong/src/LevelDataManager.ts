@@ -10,7 +10,7 @@ class LevelDataManager//关卡数据管理
 {
     public  static oldADs:any;
     private static levelDataManager:LevelDataManager;
-    public  static shareNum:number = 0;//分享次数
+    public  static shareNum:number = 1;//分享次数
     public   curIcon:number = 1;;//当前题目数
     private   curIndex:number = 1;//当前关卡数
     public   static tempIndex = 0;//当前页面
@@ -23,6 +23,32 @@ class LevelDataManager//关卡数据管理
     public  static iv:any;
     public  static openId:any;
     public  static sessionKey:any;
+    
+   
+    /**红包要么视频要么分享,默认false视频*/
+    static videoOrshare = false;
+    /**1红包提现 2显示答案 */
+    static onshowNum = 0;
+    /**分享时间是否在2s内  是则不显示答案*/  
+    static  isShareTime = false;
+    /**红包次数 */
+	static curMoneyNum = 1;
+	/**已经解锁红包次数 */
+	static unlockMoneyNum = 1;
+    /**每个红包的数值 */
+	static showMoney  = 0;
+    /**红包余额 */
+	static curMoney = 0;
+    /**随机分享文案 */
+    static shareTitles:string[] = [];
+    /**随机分享图片 */
+	static shareImgs:string[] = [];
+    /**看视频结果 */
+    static shipinResult = 0;
+    /**视频开关 */
+    static isshipin = false;
+    /**是否打开红包功能 */
+	static enableHongBao = false;
     public static getInstance()
     {
         if(LevelDataManager.levelDataManager == null)
@@ -31,15 +57,22 @@ class LevelDataManager//关卡数据管理
         }
         return LevelDataManager.levelDataManager;
     }
-
-   
+   static SaveHongbaoNum(){
+        wx.setStorageSync("curMoneyNum", LevelDataManager.curMoneyNum);
+        wx.setStorageSync("unlockMoneyNum", LevelDataManager.unlockMoneyNum);
+        wx.setStorageSync("curMoney",LevelDataManager.curMoney);
+    }
     //关卡数据的数据组
     private levelDataItemList:LevelDataItem[] = [];
-
     public constructor()
     {
         //使用RES读取和构建JSON数据。Json数据可以直接解析到目标结构
         this.levelDataItemList = RES.getRes("test_json");
+        LevelDataManager.curMoneyNum = parseInt((wx.getStorageSync("curMoneyNum") || "1") as string);
+		LevelDataManager.unlockMoneyNum = parseInt((wx.getStorageSync("unlockMoneyNum") || "1")as string);
+        LevelDataManager.curMoney = parseInt((wx.getStorageSync("curMoney") || "0") as string);
+        LevelDataManager.shipinResult = 0;
+        
     }
 
     public GetShare()
@@ -63,9 +96,8 @@ class LevelDataManager//关卡数据管理
             console.log("关卡<0");
             return ;
         }
-        
-        if(level >= this.levelDataItemList.length)
-        {
+      
+        if (level >= this.levelDataItemList.length) {
             level = this.levelDataItemList.length - 1;
         }
         return this.levelDataItemList[level];
@@ -184,6 +216,25 @@ class LevelDataManager//关卡数据管理
         return parseInt(index);
     }
     
+    static readShareCodeRes(res:any){
+		LevelDataManager.shareTitles = res ? res.sTitles : [];
+		LevelDataManager.shareImgs = res ? res.sImgs : [];
+        LevelDataManager.enableHongBao = res?res.hb:false;
+        LevelDataManager.isshipin = res?res.cv:false;   
+        LevelDataManager.videoOrshare = res?res.hbcv:false;
+        console.log("res", res);
+	}
+    	/**创建一个分享信息对象，用于拉起分享 */
+	static getShareToInfo(baseQuery?:string){
+		let index = Math.floor(Math.random()*LevelDataManager.shareImgs.length);
+		let title = LevelDataManager.shareTitles[index];
+		let imgName = LevelDataManager.shareImgs[index];
+		let imgURL = R.webPath + "imgs/" + imgName;
+		//往微信分享参数里加入一个sImg，表示本次分享用的是第几张分享图
+		let query = (baseQuery && baseQuery.length > 0 ? baseQuery + "&" : "") + `sImg=${imgName}`;
+		let info = { title:title, imgURL:imgURL};
+		return info;
+	}
 }
 
 window["LevelDataItem"] = LevelDataItem;

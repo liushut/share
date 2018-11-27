@@ -4,8 +4,8 @@
 	<e:Group anchorOffsetX="360" anchorOffsetY="640" right="0" left="0" bottom="0" top="0">
 		<e:Group width="720" height="1280" anchorOffsetX="360" x="360" y="640" anchorOffsetY="640">
 			<e:Image id="levelBg" width="720" height="1280" x="360" y="640" alpha="0.5" anchorOffsetX="360" anchorOffsetY="640" source="levelBg_png"/>
-			<e:Image id="ditu" width="648" height="846" source="ditu_png" anchorOffsetX="324" anchorOffsetY="423" x="360" y="640"/>
-			<e:Button id="btn_next" label="" x="644" y="714" enabled="true" width="54">
+			<e:Image id="ditu" width="648" height="846" source="ditu_png" anchorOffsetX="324" anchorOffsetY="423" x="360" y="540"/>
+			<e:Button id="btn_next" label="" x="644" y="614" enabled="true" width="54">
 				<e:skinName>
 					<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="jiantou_png"/>
@@ -13,7 +13,7 @@
 					</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Button id="btn_before" label="" x="58" y="714" enabled="true" width="54" scaleY="1" scaleX="-1" alpha="1" height="77" visible="false">
+			<e:Button id="btn_before" label="" x="58" y="614" enabled="true" width="54" scaleY="1" scaleX="-1" alpha="1" height="77" visible="false">
 				<e:skinName>
 					<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="jiantou_png"/>
@@ -21,7 +21,7 @@
 					</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Button id="closeBtn" label="" x="624" y="373" enabled="true">
+			<e:Button id="closeBtn" label="" x="624" y="273" enabled="true">
 				<e:skinName>
 				<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="cha_png"/>
@@ -29,9 +29,9 @@
 				</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Image id="ImgName" width="87" height="37" y="381" anchorOffsetY="0" anchorOffsetX="43" source="1_png" horizontalCenter="0"/>
+			<e:Image id="ImgName" width="87" height="37" y="281" anchorOffsetY="0" anchorOffsetX="43" source="1_png" horizontalCenter="0"/>
 
-			<e:Group id="groupLevel" width="580" height="578" y="452" anchorOffsetX="0" x="62" anchorOffsetY="0">
+			<e:Group id="groupLevel" width="580" height="578" y="352" anchorOffsetX="0" x="62" anchorOffsetY="0">
 				<ns1:LevelIcon width="175" height="185" x="192" y="114"/>
 				<ns1:LevelIcon width="175" height="185" x="202" y="124"/>
 				<ns1:LevelIcon width="175" height="185" x="212" y="134"/>

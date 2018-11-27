@@ -285,7 +285,7 @@ declare const wx: {
     /**
      * 主动拉起转发，进入选择通讯录界面。
      */
-    shareAppMessage(object: {title:string,imageUrl:string,query:string,success:(res:any)=>void,fail:(res:any)=>void,complete:(res:any)=>void}): void;
+    shareAppMessage(object: {title:string,imageUrl:string,query:string}):void;
     updateShareMenu(object: {withShareTicket:boolean,success:(res:any)=>void,fail:(res:any)=>void,complete:(res:any)=>void}): void;
     setEnableDebug(object: {enableDebug:boolean,success:(res:any)=>void,fail:(res:any)=>void,complete:(res:any)=>void}): void;
     /**

@@ -87,7 +87,7 @@
 
 			</e:Group>
 			<e:Label id="labelLevel" text="999" y="248" width="100" height="100" verticalAlign="middle" size="32" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="353" bold="true"/>
-			<e:Button id="caiziBtn" label="" x="72" enabled="true" width="100" anchorOffsetX="60" anchorOffsetY="60" y="580" height="100">
+			<e:Button id="caiziBtn" label="" x="72" enabled="true" width="100" anchorOffsetX="60" anchorOffsetY="60" y="580" height="100" visible="false">
 				<e:skinName>
 				<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="caizi_png"/>
@@ -104,6 +104,14 @@
 				</e:skinName>
 			</e:Button>
 			<e:Image id="dianImg" width="30" height="30" x="665" y="512" source="dian_png"/>
+			<e:Button id="hongbaoBtn" label="" x="644" y="413.15" anchorOffsetX="36" anchorOffsetY="40">
+				<e:skinName>
+					<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="hongbaoicon_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+					</e:Skin>
+				</e:skinName>
+			</e:Button>
 			<ns1:LevelScene id="levelScene" width="720" height="1280" x="0" y="0" enabled="true" visible="false"/>
 			<ns1:Bingo id="bingoLayer" width="720" height="1280" x="0" y="0" alpha="1" enabled="true" visible="false"/>
 

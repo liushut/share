@@ -16,6 +16,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 	protected partAdded(partName: string, instance: any): void {
 		super.partAdded(partName, instance);
 	}
+	public hongbaoBtn:eui.Button;
 
 	private isdisplay = false;
 	public btn_paihang: eui.Button;//排行榜按钮
@@ -63,6 +64,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		this.btn_result.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showResult, this);
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
+		this.hongbaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onHongbao, this);
 		this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
 			this.openGroup.visible = false;
 			this.closeBtn.visible = false;
@@ -78,17 +80,31 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		this.caiziBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.toCaizi, this);
 		this.xiaoguo();
 		this.xiaorenBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-			(wx as any).shareAppMessage({
-				title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-				imageUrl: "resource/assets/common/title11.png"
-			});
+			platform.randomShare();
 			egret.Tween.get(this.dianImg).wait(200).call(() => {
 				this.dianImg.visible = false;
 			}).wait(300000).call(() => { this.dianImg.visible = true; })//1000ms = 1s   3000 0  0 3s00
 		}, this);
+		this.showHongBaoIcon();
 
 	}
-
+	private onHongbao()
+	{
+		this.bingoLayer.visible = true;
+		this.bingoLayer.showhongbaoGroup.visible = true;
+		this.bingoLayer.showYUELabel.text = LevelDataManager.curMoney.toString();
+	}
+	private showHongBaoIcon() {
+		if (LevelDataManager.enableHongBao) {
+			this.hongbaoBtn.visible = true;
+			egret.Tween.get(this.hongbaoBtn).to({ scaleX: 1.2, scaleY: 1.2 }, 1000).to({ scaleX: 1, scaleY: 1 }, 1000).call(() => {
+				this.showHongBaoIcon();
+			})
+		}
+		else {
+			this.hongbaoBtn.visible = false;
+		}
+	}
 	public InitLevel(index: number)//初始化关卡
 	{
 		this.levelIndex = index;
@@ -135,6 +151,37 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 
 		//显示问题
 		this.label_Question.text = levelData.question;
+		if (LevelDataManager.enableHongBao){
+			let max = LevelDataManager.getInstance().GetMileStone();
+			if (max % 7 == 0)//恢复
+			{
+				LevelDataManager.curMoneyNum = LevelDataManager.unlockMoneyNum;
+				console.log("重新来");
+			}
+			//领红包逻辑
+			if (max % 30 == 6 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum)//35 65 95
+			{
+				let layer = SceneGame.getInstance().bingoLayer;
+				if (LevelDataManager.curMoneyNum <= 16) {
+					//出现红包弹窗
+					this.bingoLayer.visible = true;
+					layer.hongbaoGroup.visible = true;
+					if (LevelDataManager.curMoneyNum == 1) {
+						//出现红包
+						LevelDataManager.showMoney = 3;
+					}
+					else if (LevelDataManager.curMoneyNum == 2 || LevelDataManager.curMoneyNum == 3) {
+						LevelDataManager.showMoney = 2;
+					}
+					else {
+						LevelDataManager.showMoney = 1;
+					}
+					layer.yueLabel.text = LevelDataManager.curMoney.toString();
+					layer.moneyLabel.text = LevelDataManager.showMoney.toString();
+				}
+			}
+			LevelDataManager.SaveHongbaoNum();
+		} 
 	}
 	private changeWord() {
 		if (this.levelIndex < 150) {
@@ -248,7 +295,6 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			});
 	}
 	private xiaoguo() {
-
 		egret.Tween.get(this.caiziBtn).to({ scaleX: 1.2, scaleY: 1.2 }, 1000).to({ scaleX: 0.8, scaleY: 0.8 }, 1000).call(() => {
 			//call方法中使用()=>{}，知道this指向。不然指向window    还可以call(this.xiaoguo,this)
 			this.xiaoguo();
@@ -256,11 +302,11 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 	}
 	private toCaizi() {
 		(wx as any).navigateToMiniProgram({
-			appId: "wx617cbc6f541518e6",
+			appId: "wxab572c5d0cc3dd54",
 			path: "",
 			extraData: {},
 			success: () => {
-				console.log("跳转猜字");
+				console.log("跳转新猜字");
 			}
 
 		})
@@ -322,15 +368,17 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		this.levelScene.visible = true;
 	}
 	private showResult(event: egret.TouchEvent) {
+		LevelDataManager.onshowNum = 2;
 		egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
 			to({ scaleX: 1, scaleY: 1 }, 100);
 		if (LevelDataManager.getInstance().GetShare() == 1) {
 			console.log("开分享，分享开启Scene GetShare()  " + LevelDataManager.getInstance().GetShare());
-			platform.shareAppMessage();//无差别分享
+			platform.shareMyAppMessage();//无差别分享
 		}
 		else if (LevelDataManager.getInstance().GetShare() == 0) {
 			console.log("看视频，分享关闭Scene   GetShare()" + LevelDataManager.getInstance().GetShare());
 			platform.showVideoAD();
+			// platform.shareMyAppMessage();
 		}
 	}
 }
