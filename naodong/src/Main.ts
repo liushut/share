@@ -118,11 +118,11 @@ class Main extends eui.UILayer {
     {
            if (LevelDataManager.isshipin == true) {//1 true
                     LevelDataManager.getInstance().SetShare(1);
-                  console.log("开关开启" + LevelDataManager.isshipin); 
+                  console.log("isshipin" + LevelDataManager.isshipin); 
                 }
                 else if (LevelDataManager.isshipin== false) {//0 false
                     LevelDataManager.getInstance().SetShare(0);
-                    console.log("开关关闭，分享关闭" + LevelDataManager.isshipin);
+                    console.log("isshipin" + LevelDataManager.isshipin);
                 };
     }
     private showViedeoOrShare()
@@ -133,6 +133,8 @@ class Main extends eui.UILayer {
                if (LevelDataManager.shipinResult == 0) {
                         SceneGame.getInstance().bingoLayer.errGroup.visible = false;
                         SceneGame.getInstance().bingoLayer.visible = false;
+                        SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
+                        SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
                         SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
                     }
                     else if (LevelDataManager.shipinResult == 1) {//主界面红包
@@ -151,7 +153,10 @@ class Main extends eui.UILayer {
                    {
                         LevelDataManager.curMoneyNum++;
                         LevelDataManager.unlockMoneyNum++;
+                        console.log("LevelDataManager.curMoney",LevelDataManager.curMoney);
+                        console.log("LevelDataManager.showMoney",LevelDataManager.showMoney);
                         LevelDataManager.curMoney += LevelDataManager.showMoney;
+                        console.log("相加后LevelDataManager.curMoney",LevelDataManager.curMoney)
                         SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
                         SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
                         SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();

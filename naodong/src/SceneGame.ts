@@ -180,7 +180,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 						//出现红包
 						LevelDataManager.showMoney = 3;
 					}
-					else if (LevelDataManager.curMoneyNum == 2 || LevelDataManager.curMoneyNum == 3) {
+					else if (LevelDataManager.curMoneyNum == 2) {
 						LevelDataManager.showMoney = 2;
 					}
 					else {
@@ -282,6 +282,8 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		//弹界面    重玩还是继续  
 		SceneGame.getInstance().bingoLayer.errGroup.visible = true;
 	}
+	
+
 
 	public hintBg(isCan) {
 		if (isCan == true) {
@@ -381,12 +383,12 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		LevelDataManager.onshowNum = 2;
 		egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
 			to({ scaleX: 1, scaleY: 1 }, 100);
-		if (LevelDataManager.getInstance().GetShare() == 1) {
-			console.log("视频开启Scene GetShare()  " + LevelDataManager.getInstance().GetShare());
+		if (LevelDataManager.isshipin) {
+			console.log("视频开启LevelDataManager.isshipin  " + LevelDataManager.getInstance().GetShare());
 			platform.showVideoAD();
 		}
-		else if (LevelDataManager.getInstance().GetShare() == 0) {
-			console.log("，分享开启Scene   GetShare()" + LevelDataManager.getInstance().GetShare());
+		else if (!LevelDataManager.isshipin) {
+			console.log("分享开启LevelDataManager.isshipin" + LevelDataManager.getInstance().GetShare());
 			platform.shareMyAppMessage();//无差别分享
 		}
 	}

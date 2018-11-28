@@ -19,13 +19,13 @@ class WeChatPlatform implements Platform {
    public async shareCloud():Promise<any>
     {
         return new Promise(async function (resolve, reject) {
-           if (LevelDataManager.isshipin == true) {
+           if (LevelDataManager.isshipin == true) {//1看视频
                     LevelDataManager.getInstance().SetShare(1);
-                  console.log("开关开启" + LevelDataManager.isshipin); 
+                  console.log("shareCloud isshipin" + LevelDataManager.isshipin); 
                 }
-                else if (LevelDataManager.isshipin== false) {
+                else if (LevelDataManager.isshipin== false) {//0 分享
                     LevelDataManager.getInstance().SetShare(0);
-                    console.log("开关关闭，分享关闭" + LevelDataManager.isshipin);
+                    console.log("shareCloud isshipin" + LevelDataManager.isshipin);
                 };
                 resolve();
         })
@@ -92,6 +92,8 @@ class WeChatPlatform implements Platform {
                     if (LevelDataManager.shipinResult == 0) {
                         SceneGame.getInstance().bingoLayer.errGroup.visible = false;
                         SceneGame.getInstance().bingoLayer.visible = false;
+                        SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
+                        SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
                         SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
                     }
                     else if (LevelDataManager.shipinResult == 1) {//主界面红包
@@ -108,9 +110,12 @@ class WeChatPlatform implements Platform {
                         }
                    }else if(LevelDataManager.shipinResult == 2)//30关红包
                    {
-                        LevelDataManager.curMoneyNum++;
+                       LevelDataManager.curMoneyNum++;
                         LevelDataManager.unlockMoneyNum++;
+                        console.log("LevelDataManager.curMoney",LevelDataManager.curMoney);
+                        console.log("LevelDataManager.showMoney",LevelDataManager.showMoney);
                         LevelDataManager.curMoney += LevelDataManager.showMoney;
+                        console.log("相加后LevelDataManager.curMoney",LevelDataManager.curMoney)
                         SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
                         SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
                         SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
@@ -184,9 +189,11 @@ class WeChatPlatform implements Platform {
                     imageUrl: "resource/assets/common/title11.png"
                 });
                 egret.Tween.get(SceneGame.getInstance().bingoLayer).wait(200).call(() => {
-                    SceneGame.getInstance().bingoLayer.visible = false;
+                     SceneGame.getInstance().bingoLayer.visible = false;
                     SceneGame.getInstance().bingoLayer.comboGroup.visible = false;
                     SceneGame.getInstance().levelScene.visible = false;
+                    SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
+                    SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
                     SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
                 })
             }))
@@ -200,6 +207,8 @@ class WeChatPlatform implements Platform {
                     SceneGame.getInstance().bingoLayer.visible = false;
                     SceneGame.getInstance().bingoLayer.comboGroup.visible = false;
                     SceneGame.getInstance().levelScene.visible = false;
+                    SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
+                    SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
                     SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
                 }
                 else {

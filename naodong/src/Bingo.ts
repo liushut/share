@@ -55,10 +55,6 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	public tanImg:eui.Image;
 	public chaHongbao:eui.Button;
 	public showYUELabel:eui.Label;
-
-
-
-
 	protected partAdded(partName: string, instance: any): void {
 		super.partAdded(partName, instance);
 	}
@@ -120,17 +116,16 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		if(LevelDataManager.unlockMoneyNum == 1)
 		{
 			if (LevelDataManager.curMoney < 20) {
-				LevelDataManager.curMoneyNum++;
-				LevelDataManager.unlockMoneyNum++;
-				LevelDataManager.curMoney += LevelDataManager.showMoney;
-				SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
-				SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
-				SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
-				LevelDataManager.SaveHongbaoNum();
-				setTimeout(() => {
-					SceneGame.getInstance().bingoLayer.tanImg.visible = false;
-				}, 1000);
-
+				  LevelDataManager.curMoneyNum++;
+                        LevelDataManager.unlockMoneyNum++;
+                        console.log("LevelDataManager.curMoney",LevelDataManager.curMoney);
+                        console.log("LevelDataManager.showMoney",LevelDataManager.showMoney);
+                        LevelDataManager.curMoney += LevelDataManager.showMoney;
+                        console.log("相加后LevelDataManager.curMoney",LevelDataManager.curMoney)
+                        SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
+                        SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
+                        SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
+                        LevelDataManager.SaveHongbaoNum();
 			}
 			else {
 				console.log("onHongBaoTixian() 金额超出！！");
@@ -166,6 +161,7 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	}
 	
 	private tiaozhan() {
+	
 		platform.tiaozhaoVideo();
 	}
 	private onNext() {
