@@ -95,11 +95,12 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		//开关
 		if(LevelDataManager.videoOrshare)
 		{
-			platform.restShare();
+			platform.restartVideo();
 		}
 		else 
 		{
-			platform.restartVideo();
+		
+			platform.restShare();
 		}
 		
 	}
@@ -112,6 +113,9 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	}	
 	private onLingqu() {
 		console.log("lingqu");
+		LevelDataManager.beforeUnlockMoneyNum = LevelDataManager.unlockMoneyNum;
+		wx.setStorageSync("beforeUnlockMoneyNum",LevelDataManager.beforeUnlockMoneyNum);
+		LevelDataManager.onshowNum = 1
 		LevelDataManager.shipinResult = 2;
 		if(LevelDataManager.unlockMoneyNum == 1)
 		{
@@ -135,10 +139,11 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		else 
 		{
 			if (LevelDataManager.videoOrshare) {
-				platform.restShare();
+				platform.restartVideo();
 			}
 			else {
-				platform.restartVideo();
+
+				platform.restShare();
 			}
 		}
 		
@@ -297,12 +302,13 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	}
 	//继续
 	private onResume() {
+		LevelDataManager.onshowNum = 1;
 		LevelDataManager.shipinResult = 0;
-		if (LevelDataManager.videoOrshare) {
-			platform.restShare();
+		if (LevelDataManager.isshipin) {
+			platform.restartVideo();
 		}
 		else {
-			platform.restartVideo();
+			platform.restShare();
 		}
 	}
 	//回到 161 重新开始

@@ -75,12 +75,14 @@ class Main extends eui.UILayer {
                 updateManager.onUpdateFailed(function(){})}
             }
             catch(ex){}
-        await this.loadResource();
         await this.loadShareCode();
+        await this.loadResource();
         this.createGameScene();
            wx.onShow((res?:any)=>{
             console.log("wx.onShow", res);
             if (res) {
+                this.loadShareCode();
+                this.checkShipin();
                 let date = new Date();
                 let time = date.getTime();
                 let beforeTime = parseInt((wx.getStorageSync("nextshareTime") || "1") as string);
@@ -104,12 +106,24 @@ class Main extends eui.UILayer {
                 }
                 console.log("LevelDataManager.isShareTime" + LevelDataManager.isShareTime);
             }
+            
         });
         const result = await RES.getResAsync("description_json");
         // const userInfo = await (platform as any).getAVUserInfo();//resolve()
         console.log("游戏初始化");
         console.log("用户信息没得了");
       
+    }
+    private checkShipin()
+    {
+           if (LevelDataManager.isshipin == true) {//1 true
+                    LevelDataManager.getInstance().SetShare(1);
+                  console.log("开关开启" + LevelDataManager.isshipin); 
+                }
+                else if (LevelDataManager.isshipin== false) {//0 false
+                    LevelDataManager.getInstance().SetShare(0);
+                    console.log("开关关闭，分享关闭" + LevelDataManager.isshipin);
+                };
     }
     private showViedeoOrShare()
     {
@@ -124,11 +138,11 @@ class Main extends eui.UILayer {
                     else if (LevelDataManager.shipinResult == 1) {//主界面红包
                         if (LevelDataManager.curMoney < 20) {
                             SceneGame.getInstance().bingoLayer.btnTixian.currentState = "disabled";
-                             SceneGame.getInstance().bingoLayer.btnTixian.touchEnabled = false;
+                            SceneGame.getInstance().bingoLayer.btnTixian.touchEnabled = false;
                             SceneGame.getInstance().bingoLayer.tanImg.visible = true;
                             setTimeout(() => {
                                 SceneGame.getInstance().bingoLayer.tanImg.visible = false;
-                            }, 500);
+                            }, 1000);
                         }
                         else {
                             console.log("onHongBaoTixian() 金额超出！！");
@@ -148,6 +162,7 @@ class Main extends eui.UILayer {
          {
              console.log("showViedeoOrShare()在2s内");
          }
+         LevelDataManager.onshowNum = 0;
     }
     private showResult()
     {
@@ -189,7 +204,7 @@ class Main extends eui.UILayer {
         else {
             console.log("showResult()在2s内");
         }
-
+        LevelDataManager.onshowNum = 0;
     }
     /**
      * await 后面跟的是返回 promise 的函数。这个函数也可以是async   await只能在async函数中用。

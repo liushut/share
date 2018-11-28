@@ -25,7 +25,7 @@ class LevelDataManager//关卡数据管理
     public  static sessionKey:any;
     
    
-    /**红包要么视频要么分享,默认false视频*/
+    /**红包的视频开关,true视频,false分享*/
     static videoOrshare = false;
     /**1红包提现 2显示答案 */
     static onshowNum = 0;
@@ -49,6 +49,10 @@ class LevelDataManager//关卡数据管理
     static isshipin = false;
     /**是否打开红包功能 */
 	static enableHongBao = false;
+    /**
+     * 没有点击领取按钮之前的红包次数
+     */
+    static beforeUnlockMoneyNum = 0;
     public static getInstance()
     {
         if(LevelDataManager.levelDataManager == null)
@@ -72,7 +76,7 @@ class LevelDataManager//关卡数据管理
 		LevelDataManager.unlockMoneyNum = parseInt((wx.getStorageSync("unlockMoneyNum") || "1")as string);
         LevelDataManager.curMoney = parseInt((wx.getStorageSync("curMoney") || "0") as string);
         LevelDataManager.shipinResult = 0;
-        
+        LevelDataManager.beforeUnlockMoneyNum = parseInt((wx.getStorageSync("beforeUnlockMoneyNum") || "1") as string);
     }
 
     public GetShare()

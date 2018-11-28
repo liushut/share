@@ -80,13 +80,13 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		this.caiziBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.toCaizi, this);
 		this.xiaoguo();
 		this.xiaorenBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+			LevelDataManager.onshowNum = 0;
 			platform.randomShare();
 			egret.Tween.get(this.dianImg).wait(200).call(() => {
 				this.dianImg.visible = false;
 			}).wait(300000).call(() => { this.dianImg.visible = true; })//1000ms = 1s   3000 0  0 3s00
 		}, this);
 		this.showHongBaoIcon();
-
 	}
 	private onHongbao()
 	{
@@ -101,9 +101,14 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 				this.showHongBaoIcon();
 			})
 		}
-		else {
+		else if(!LevelDataManager.enableHongBao){
 			this.hongbaoBtn.visible = false;
+			egret.Tween.get(this.hongbaoBtn).call(() => {
+					this.showHongBaoIcon();
+			})
+			
 		}
+		
 	}
 	public InitLevel(index: number)//初始化关卡
 	{
@@ -151,15 +156,20 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 
 		//显示问题
 		this.label_Question.text = levelData.question;
+		this.hongbao30();
+	}
+	private hongbao30()
+	{
 		if (LevelDataManager.enableHongBao){
 			let max = LevelDataManager.getInstance().GetMileStone();
 			if (max % 7 == 0)//恢复
 			{
 				LevelDataManager.curMoneyNum = LevelDataManager.unlockMoneyNum;
+				LevelDataManager.beforeUnlockMoneyNum = LevelDataManager.unlockMoneyNum;
 				console.log("重新来");
 			}
 			//领红包逻辑
-			if (max % 30 == 6 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum)//35 65 95
+			if (max % 30 == 6 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
 			{
 				let layer = SceneGame.getInstance().bingoLayer;
 				if (LevelDataManager.curMoneyNum <= 16) {
@@ -372,13 +382,12 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		egret.Tween.get(event.currentTarget).to({ scaleX: 1.2, scaleY: 1.2 }, 100).
 			to({ scaleX: 1, scaleY: 1 }, 100);
 		if (LevelDataManager.getInstance().GetShare() == 1) {
-			console.log("开分享，分享开启Scene GetShare()  " + LevelDataManager.getInstance().GetShare());
-			platform.shareMyAppMessage();//无差别分享
+			console.log("视频开启Scene GetShare()  " + LevelDataManager.getInstance().GetShare());
+			platform.showVideoAD();
 		}
 		else if (LevelDataManager.getInstance().GetShare() == 0) {
-			console.log("看视频，分享关闭Scene   GetShare()" + LevelDataManager.getInstance().GetShare());
-			platform.showVideoAD();
-			// platform.shareMyAppMessage();
+			console.log("，分享开启Scene   GetShare()" + LevelDataManager.getInstance().GetShare());
+			platform.shareMyAppMessage();//无差别分享
 		}
 	}
 }
