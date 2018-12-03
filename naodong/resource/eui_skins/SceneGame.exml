@@ -87,14 +87,7 @@
 
 			</e:Group>
 			<e:Label id="labelLevel" text="999" y="248" width="100" height="100" verticalAlign="middle" size="32" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="353" bold="true"/>
-			<e:Button id="caiziBtn" label="" x="72" enabled="true" width="100" anchorOffsetX="60" anchorOffsetY="60" y="580" height="100" visible="false">
-				<e:skinName>
-				<e:Skin states="up,down,disabled">
-					<e:Image width="100%" height="100%" source="caizi_png"/>
-					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-				</e:Skin>
-				</e:skinName>
-			</e:Button>
+			<e:Image id="caiziBtn" x="72" width="100" anchorOffsetX="60" anchorOffsetY="60" y="580" height="100" />
 			<e:Button id="xiaorenBtn" label="" x="656" y="567" enabled="true" anchorOffsetX="44" anchorOffsetY="48">
 				<e:skinName>
 				<e:Skin states="up,down,disabled">

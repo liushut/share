@@ -162,7 +162,27 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	
 	private tiaozhan() {
 	
-		platform.tiaozhaoVideo();
+		if(LevelDataManager.isJiesuoshipin == 1)
+		{
+			console.log("挑战视频开关  开启");
+			platform.tiaozhaoVideo();
+		}
+		else 
+		{
+			 console.log("挑战视频开关  关闭");
+                (wx as any).shareAppMessage({
+                    title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                    imageUrl: "resource/assets/common/title11.png"
+                });
+                egret.Tween.get(SceneGame.getInstance().bingoLayer).wait(200).call(() => {
+                     SceneGame.getInstance().bingoLayer.visible = false;
+                    SceneGame.getInstance().bingoLayer.comboGroup.visible = false;
+                    SceneGame.getInstance().levelScene.visible = false;
+                    SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
+                    SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
+                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                })
+		}
 	}
 	private onNext() {
 		console.log("点击下一题");

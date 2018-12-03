@@ -41,7 +41,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 	public openScroller: eui.Scroller;
 	public ToOpenGroup: eui.Group;
 	private isFirst: boolean = false;
-	public caiziBtn: eui.Button;
+	public caiziBtn: eui.Image;
 
 
 	/**
@@ -80,13 +80,13 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		this.caiziBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.toCaizi, this);
 		this.xiaoguo();
 		this.xiaorenBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-			LevelDataManager.onshowNum = 0;
+			LevelDataManager.onshowNum = 3;
 			platform.randomShare();
-			egret.Tween.get(this.dianImg).wait(200).call(() => {
-				this.dianImg.visible = false;
-			}).wait(300000).call(() => { this.dianImg.visible = true; })//1000ms = 1s   3000 0  0 3s00
 		}, this);
 		this.showHongBaoIcon();
+		this.tickid = setInterval(() => {
+			this.updatePanel();
+		}, 1000);
 	}
 	private onHongbao()
 	{
@@ -97,15 +97,15 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 	private showHongBaoIcon() {
 		if (LevelDataManager.enableHongBao) {
 			this.hongbaoBtn.visible = true;
-			egret.Tween.get(this.hongbaoBtn).to({ scaleX: 1.2, scaleY: 1.2 }, 1000).to({ scaleX: 1, scaleY: 1 }, 1000).call(() => {
-				this.showHongBaoIcon();
-			})
+			// egret.Tween.get(this.hongbaoBtn).to({ scaleX: 1.2, scaleY: 1.2 }, 1000).to({ scaleX: 1, scaleY: 1 }, 1000).call(() => {
+			// 	this.showHongBaoIcon();
+			// })
 		}
 		else if(!LevelDataManager.enableHongBao){
 			this.hongbaoBtn.visible = false;
-			egret.Tween.get(this.hongbaoBtn).call(() => {
-					this.showHongBaoIcon();
-			})
+			// egret.Tween.get(this.hongbaoBtn).call(() => {
+			// 		this.showHongBaoIcon();
+			// })
 			
 		}
 		
@@ -312,17 +312,44 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			this.xiaoguo();
 		});
 	}
+	private jumpToAppDict = {
+		"wxd101b6b8f64db085":{path:"pages/index/index?from=wxcps&tag=U84Sv-g2td",extraData:{},envVersion:""}
+	};
 	private toCaizi() {
-		(wx as any).navigateToMiniProgram({
-			appId: "wxab572c5d0cc3dd54",
-			path: "",
-			extraData: {},
-			success: () => {
-				console.log("跳转新猜字");
-			}
-
-		})
+		if(!wx.navigateToMiniProgram){
+			wx.showModal({title:"",content:"当前微信版本不支持跳转小程序，请升级",showCancel:false,cancelText:"",cancelColor:"",confirmText:"确定",confirmColor:"",success:r=>{},fail:r=>{},complete:r=>{}});
+			return;
+		}
+		let toAppid = LevelDataManager.moreGamesAppIDs[0];
+		let info = this.jumpToAppDict[toAppid];
+		let toPath = info ? info.path : "";
+		let extraData = info ? info.extraData : "";
+		let envVersion = info ? info.envVersion : "";
+		wx.navigateToMiniProgram({
+			appId:toAppid,
+			path:toPath,
+			extraData:extraData,
+			envVersion:envVersion,
+			success:()=>{},
+			fail:()=>{},
+			complete:()=>{}
+		});
 	}
+	private moreGameCount = 0;
+	private updatePanel(){
+		this.moreGameCount++;
+		if(this.moreGameCount % 8 == 0){
+			this.moreGameCount = 0;
+			LevelDataManager.moreGamesIcons.push(LevelDataManager.moreGamesIcons.shift());
+			LevelDataManager.moreGamesAppIDs.push(LevelDataManager.moreGamesAppIDs.shift());
+		}
+		let icon = LevelDataManager.moreGamesIcons[0];
+		if(icon){
+			this.caiziBtn.source = R.webPath + "imgs/" + icon;
+		}
+
+	}
+	private tickid = 0;
 	private onpaihang() {
 		SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
 		SoundManager.getInstance().answerSoundChanel.volume = 1;

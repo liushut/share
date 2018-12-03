@@ -104,6 +104,12 @@ class Main extends eui.UILayer {
                 {
                      this.showResult();  
                 }
+                else if(LevelDataManager.onshowNum == 3)
+                {
+                    egret.Tween.get(SceneGame.getInstance().dianImg).wait(200).call(() => {
+                        SceneGame.getInstance().dianImg.visible = false;
+                    }).wait(300000).call(() => { SceneGame.getInstance().dianImg.visible = true; })//1000ms = 1s   3000 0  0 3s00
+                }
                 console.log("LevelDataManager.isShareTime" + LevelDataManager.isShareTime);
             }
             

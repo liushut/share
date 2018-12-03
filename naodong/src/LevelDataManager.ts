@@ -24,10 +24,11 @@ class LevelDataManager//关卡数据管理
     public  static openId:any;
     public  static sessionKey:any;
     
-   
+    /**解锁开关 其余0false分享，1true视频*/
+    static isJiesuoshipin = 3;
     /**红包的视频开关,true视频,false分享*/
     static videoOrshare = false;
-    /**1红包提现 2显示答案 */
+    /**1红包提现 2显示答案 3红点*/
     static onshowNum = 0;
     /**分享时间是否在2s内  是则不显示答案*/  
     static  isShareTime = false;
@@ -49,6 +50,10 @@ class LevelDataManager//关卡数据管理
     static isshipin = false;
     /**是否打开红包功能 */
 	static enableHongBao = false;
+  	/**更多游戏按钮的图标配置 */
+	static moreGamesIcons:string[] = [];
+	/**更多游戏按钮的跳转appid配置 */
+	static moreGamesAppIDs:string[] = [];
     /**
      * 没有点击领取按钮之前的红包次数
      */
@@ -77,6 +82,7 @@ class LevelDataManager//关卡数据管理
         LevelDataManager.curMoney = parseInt((wx.getStorageSync("curMoney") || "0") as string);
         LevelDataManager.shipinResult = 0;
         LevelDataManager.beforeUnlockMoneyNum = parseInt((wx.getStorageSync("beforeUnlockMoneyNum") || "1") as string);
+        
     }
 
     public GetShare()
@@ -148,54 +154,55 @@ class LevelDataManager//关卡数据管理
             LevelDataManager.oldADs.destroy();
             console.log("销毁");
         }
-            let winSize = wx.getSystemInfoSync();
-            console.log(winSize);
-            let bannerHeight = 100;
-            let bannerWidth = 300;
             let newad:any;
-             if(winSize.model == "iPhone X")
-            {
-            newad = (wx as any).createBannerAd({
+            let winSize = (wx as any).getSystemInfoSync();
+            console.log(winSize);
+            let pixelRatio = winSize.pixelRatio;
+            let screenWidth = winSize.screenWidth*pixelRatio;
+            let screenHeight = winSize.screenHeight*pixelRatio;
+            let bannerHeight = 100;
+            let bannerWidth = 320;
+            let ad:any;
+            let bi = screenHeight / screenWidth;
+            let adleft = 35;
+             if (bi == (1334 / 750)) {
+            bannerWidth = 300;
+            bannerHeight = 90;
+            adleft = 45;
+            console.log("111111");
+        }
+        else if (bi == (2208 / 1242)) {
+            bannerWidth = 325;
+            bannerHeight = 106;
+            adleft = 50;
+            console.log("2222222");
+        }
+        else if (bi == (2436 / 1125)) {
+            bannerWidth = 500;
+            bannerHeight = 142;
+            adleft = 0;
+            console.log("33333333");
+        }
+        else if (bi < (2208 / 1242)){
+            bannerWidth = 300;
+            bannerHeight = 100;
+            adleft = 40;
+            console.log("55555");
+        }
+        else if (bi > (2436 / 1125)) {
+          bannerWidth = 300;
+          bannerHeight = 100;
+          adleft = 30;
+          console.log("6666");
+        }
+              newad = (wx as any).createBannerAd({
             adUnitId:"adunit-a57340565a6e2881",
             style:{
-                left:0,
-                top: winSize.screenHeight - bannerHeight - 40,
-                width: bannerWidth + 300,
-                
-            }});
-            }
-            else if(winSize.model == "iPhone 7 Plus" || winSize.model == "iPhone 6 Plus")
-            {
-                newad = (wx as any).createBannerAd({
-                adUnitId:"adunit-a57340565a6e2881",
-                style:{
-                    left:30,
-                    top: winSize.screenHeight - bannerHeight - 15,
-                    width: bannerWidth + 50
-                }});
-            }
-               else if(winSize.model == "iPhone 6S Plus")
-            {
-             newad = (wx as any).createBannerAd({
-            adUnitId:"adunit-a57340565a6e2881",
-            style:{
-                left:15,
-                top: winSize.screenHeight - bannerHeight - 20,
-                width: bannerWidth + 150
-            }});
-            }
-            else 
-            {
-            newad = (wx as any).createBannerAd({
-            adUnitId:"adunit-a57340565a6e2881",
-            style:{
-                left:35,
+                left:adleft,
                 top: winSize.screenHeight - bannerHeight,
                 width: bannerWidth
             }});
-            }
-            console.log(newad.style.top + "top");
-            console.log(newad.style.left + "left");
+           
             console.log(winSize.screenWidth + "winSize.screenWidth");
             console.log(winSize.screenHeight  + "winSize.screenHeight");
             newad.show();
@@ -226,6 +233,10 @@ class LevelDataManager//关卡数据管理
         LevelDataManager.enableHongBao = res?res.hb:false;
         LevelDataManager.isshipin = res?res.cv:false;   
         LevelDataManager.videoOrshare = res?res.hbcv:false;
+        LevelDataManager.moreGamesIcons = res ? res.mgics || [] : [];
+        LevelDataManager.moreGamesAppIDs = res ? res.mgids || [] : [];
+		LevelDataManager.moreGamesAppIDs.length = LevelDataManager.moreGamesIcons.length;
+        LevelDataManager.isJiesuoshipin = res ? res.ulevelNum : 3;
         console.log("res", res);
 	}
     	/**创建一个分享信息对象，用于拉起分享 */

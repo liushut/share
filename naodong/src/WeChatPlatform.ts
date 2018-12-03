@@ -35,29 +35,48 @@ class WeChatPlatform implements Platform {
         return new Promise(function(resolve,reject){
             let winSize = (wx as any).getSystemInfoSync();
             console.log(winSize);
+            let pixelRatio = winSize.pixelRatio;
+            let screenWidth = winSize.screenWidth*pixelRatio;
+            let screenHeight = winSize.screenHeight*pixelRatio;
             let bannerHeight = 100;
             let bannerWidth = 320;
             let ad:any;
-            if(winSize.model == "iPhone X")
+            let bi = screenHeight / screenWidth;
+            let adleft = 35;
+            if( bi == (1334 / 750) )//6 7 8    6s
             {
-             ad = (wx as any).createBannerAd({
-            adUnitId:"adunit-a57340565a6e2881",
-            style:{
-                left:50,
-                top: winSize.screenHeight - bannerHeight,
-                width: bannerWidth + 200
-            }});
+                bannerWidth = 320;
+                bannerHeight = 100;
+                adleft = 35;
+                  console.log("111111");
             }
-            else 
+            else if(bi == (2208 / 1242))//678+
             {
-             ad = (wx as any).createBannerAd({
+                bannerWidth = 320;
+                bannerHeight = 100;
+                adleft = 35;
+                  console.log("2222222");
+            }
+            else if (bi == (2436 / 1125))//x
+            {
+                bannerWidth = 320;
+                bannerHeight = 100;
+                adleft = 35;
+                  console.log("33333333");
+            }
+            else {
+                bannerWidth = 320;
+                bannerHeight = 100;
+                adleft = 35;
+                  console.log("4444444");
+            }
+              ad = (wx as any).createBannerAd({
             adUnitId:"adunit-a57340565a6e2881",
             style:{
-                left:35,
+                left:adleft,
                 top: winSize.screenHeight - bannerHeight,
                 width: bannerWidth
             }});
-            }
             console.log(ad.style.top + "top");
             console.log(ad.style.left + "left");
             console.log(winSize.screenWidth + "winSize.screenWidth");
