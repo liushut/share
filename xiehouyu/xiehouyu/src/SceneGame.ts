@@ -17,7 +17,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		super.partAdded(partName, instance);
 	}
 	public hongbaoBtn:eui.Button;
-
+	public xuanyaoBtn:eui.Button;
 	private isdisplay = false;
 	public btn_paihang: eui.Button;//排行榜按钮
 	public bingoLayer: Bingo;//层
@@ -65,6 +65,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		this.btn_Level.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLevel, this);
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
 		this.hongbaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onHongbao, this);
+		this.xuanyaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onxuanyao,this);
 		this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
 			this.openGroup.visible = false;
 			this.closeBtn.visible = false;
@@ -88,6 +89,11 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			this.updatePanel();
 		}, 1000);
 	}
+	private onxuanyao()
+	{
+		LevelDataManager.onshowNum = 5;
+		platform.randomShare();
+	}
 	private onHongbao()
 	{
 		this.bingoLayer.visible = true;
@@ -110,6 +116,30 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		}
 		
 	}
+	private getSelectWords(index:number)
+	{
+		let oldstr = "";
+		for(let i = 0;i < 20;i++)
+		{
+			 oldstr += LevelDataManager.getInstance().GetLevelData(index + i + 1).word[1];//取到后面20关的答案
+		}
+		let myreult = "";
+		//本关的答案
+		myreult += LevelDataManager.getInstance().GetLevelData(index).answer;
+		//筛选8个字出来
+		let newstr = "";
+		for(let i = 0;i < 10 - myreult.length;i++)
+		{
+			let p = Math.floor(Math.random()* oldstr.length);
+			//检索不到在相加
+			if(myreult.indexOf(oldstr.charAt(p)) == -1 && oldstr.indexOf(oldstr.charAt(p)))
+			{
+				newstr += oldstr.charAt(p)
+			}
+		}
+		myreult += newstr;
+		return myreult;
+	}
 	public InitLevel(index: number)//初始化关卡
 	{
 		this.levelIndex = index;
@@ -117,17 +147,17 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		let levelData = LevelDataManager.getInstance().GetLevelData(index);//得到关卡数据
 		//将字段接起来
 		//要展示的数据
-		let showData = levelData.chaotic;
+		let showData = this.getSelectWords(index);
 		//对字段重新排列
 		let wordList: string[] = [];//["","",]代表这是字符串数组。
 		for (let i = 0; i < showData.length; i++) {
 			wordList.push(showData.charAt(i));
 		}
-		//  wordList = this.randomList(wordList);
+		 wordList = this.randomList(wordList,index);
 
 		//内容区域赋值  大于150关   变为15字
 
-		this.changeWord();//改变选择区域字数
+		// this.changeWord();//改变选择区域字数  统一两行
 
 		for (let i = 0; i < this.group_Chaotic.numChildren; i++) {
 			let wordRect = <Word>this.group_Chaotic.getChildAt(i);
@@ -137,7 +167,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 
 		//添加答案区
 		this.group_Result.removeChildren();
-		let len = levelData.result.length;
+		let len = levelData.word[1].length;
 		while (len) {
 			let temp = new AnswerWord();
 			temp.width = 75;
@@ -145,52 +175,86 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			this.group_Result.addChild(temp);
 			len--;
 		}
-
 		//答案区域重置一些状态
+		let resultArray = [];
+		for(let i = 0;i < levelData.word[1].length;i++)
+		{
+			resultArray.push(levelData.word[1].charAt(i));
+		}
 		for (let i = 0; i < this.group_Result.numChildren; i++) {
 			let answerRect = <AnswerWord>this.group_Result.getChildAt(i);
 			answerRect.visible = true;
-			answerRect.SetSelectWord(null);
-			answerRect.selectWord = null;
+			answerRect.SetSelectWord(resultArray[i]);
+			answerRect.selectWord = resultArray[i];
 		}
-
 		//显示问题
-		this.label_Question.text = levelData.question;
-		this.hongbao30();
+		this.label_Question.text = this.chatAtQuestion(levelData.word[0]);
+		this.hongbao20();
 	}
-	private hongbao30()
+	/**将原字符串改为自己想要的样子 */
+	private chatAtQuestion(str:string):string
+	{
+		let strArr = "    ";
+		for(let i = 0;i < str.length;i++)
+		{
+			if(i == str.length - 1)
+			{
+				strArr += str.charAt(i);
+				break;
+			}
+			strArr += str.charAt(i) + " ";
+			
+		}
+		return strArr;
+	}
+	private hongbao20()
 	{
 		if (LevelDataManager.enableHongBao){
 			let max = LevelDataManager.getInstance().GetMileStone();
-			if (max % 7 == 0)//恢复
+			if (max % 5 == 0 || max % 7 == 0)//恢复
 			{
 				LevelDataManager.curMoneyNum = LevelDataManager.unlockMoneyNum;
 				LevelDataManager.beforeUnlockMoneyNum = LevelDataManager.unlockMoneyNum;
 				console.log("重新来");
 			}
-			//领红包逻辑
-			if (max % 30 == 6 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
+			if(LevelDataManager.curMoneyNum <= 5)
 			{
-				let layer = SceneGame.getInstance().bingoLayer;
-				if (LevelDataManager.curMoneyNum <= 16) {
-					//出现红包弹窗
-					this.bingoLayer.visible = true;
-					layer.hongbaoGroup.visible = true;
-					if (LevelDataManager.curMoneyNum == 1) {
-						//出现红包
-						LevelDataManager.showMoney = 3;
+				if (max == 3 || max == 6 || max == 12 || max == 18 || max == 25) {
+					//领红包逻辑
+					if (LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
+					{
+						let layer = SceneGame.getInstance().bingoLayer;
+						if (LevelDataManager.curMoney <= 19.5) {
+							//出现红包弹窗
+							this.bingoLayer.visible = true;
+							layer.hongbaoGroup.visible = true;
+							//出现红包
+							LevelDataManager.showMoney = 0.5;
+							layer.yueLabel.text = LevelDataManager.curMoney.toString();
+							layer.moneyLabel.text = LevelDataManager.showMoney.toString();
+						}
 					}
-					else if (LevelDataManager.curMoneyNum == 2) {
-						LevelDataManager.showMoney = 2;
-					}
-					else {
-						LevelDataManager.showMoney = 1;
-					}
-					layer.yueLabel.text = LevelDataManager.curMoney.toString();
-					layer.moneyLabel.text = LevelDataManager.showMoney.toString();
+					LevelDataManager.SaveHongbaoNum();
 				}
 			}
-			LevelDataManager.SaveHongbaoNum();
+			else {
+				//领红包逻辑
+				if (max % 20 == 5 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
+				{
+					let layer = SceneGame.getInstance().bingoLayer;
+					if (LevelDataManager.curMoney <= 19.5) {
+						//出现红包弹窗
+						this.bingoLayer.visible = true;
+						layer.hongbaoGroup.visible = true;
+						//出现红包
+						LevelDataManager.showMoney = 0.5;
+						layer.yueLabel.text = LevelDataManager.curMoney.toString();
+						layer.moneyLabel.text = LevelDataManager.showMoney.toString();
+					}
+				}
+				LevelDataManager.SaveHongbaoNum();
+			}
+
 		} 
 	}
 	private changeWord() {
@@ -228,14 +292,22 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			}
 		}
 	}
-	private randomList(list: any[]): any[] {
+	private randomList(list: any[], index: number): any[] {
 		let arr = [];
-		while (list.length > 0) {
-			let i = Math.floor(Math.random() * list.length);
-			arr.push(list[i]);
-			list.splice(i, 1);//删除i位置
-		}
+		if (index >= 150) {
+			while (list.length > 0) {
+				let i = Math.floor(Math.random() * list.length);
+				arr.push(list[i]);
+				list.splice(i, 1);//删除i位置
+			}
 		return arr;
+		}
+		else 
+		{
+			return list;
+		}
+		
+	
 	}
 	//点击字块发生逻辑  由当前字自己抛出
 	public onclick_Word(word: Word) {
@@ -258,7 +330,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 				let answer = <AnswerWord>this.group_Result.getChildAt(i);
 				str += answer.GetWordText();
 			}
-			if (str == LevelDataManager.getInstance().GetLevelData(this.levelIndex).result) {
+			if (str == LevelDataManager.getInstance().GetLevelData(this.levelIndex).word[1]) {
 				console.log("你赢了");
 				this.bingoLayer.visible = true;
 				this.bingoLayer.bingoGroup.visible = true;

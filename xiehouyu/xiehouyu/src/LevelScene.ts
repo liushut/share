@@ -18,10 +18,12 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 		this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onClose,this);
 	}
 		
-
-
+	private maxPageNum = 57;
+	private minPageNum = 1;
+	/**等级称呼数组 */
+	public gradeStringArray = ["小书生","童生","附生秀才","增生秀才","禀生秀才","监生","贡生","举人","解元","贡士","会元","三甲进士","二甲进士","一甲进士","探花","榜眼","状元","大学士","翰林文圣"]
 	//称呼数组
-	public chenghuArray = ["1_png","2_png","3_png","4_png","5_png","6_png","7_png","8_png","9_png","10_png"];
+	public chenghuImgArray = ["1_png","2_png","3_png","4_png","5_png","6_png","7_png","8_png","9_png","10_png"];
 	public ImgName:eui.Image;
 
 
@@ -91,15 +93,12 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 	{
 		if (this.pageIndex == 1) {
 			console.log("第一关");
-			this.btn_before.visible = false;
-			
+			this.btn_before.visible = false;	
 		}
-		else if(this.pageIndex == 10)
+		else if(this.pageIndex == 513)
 		{
-			
 			console.log("最后一关");
 			this.btn_next.visible = false;
-			
 		}
 		for(let i = 0;i < this.groupLevel.numChildren;i++)//numChildren  9 个
 		{
@@ -130,7 +129,7 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 		this.updateLabel(this.groupLevel, this.pageIndex);//更新这一页的icon的label
 		this.updataName();
 		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());//小于最远的就更新
-		if (this.pageIndex == 1) {
+		if (this.pageIndex == this.minPageNum) {
 			console.log("第一关");
 			this.btn_before.visible = false;
 			return;
@@ -148,71 +147,23 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 		this.updateLabel(this.groupLevel,this.pageIndex);//更新关卡
 		this.updataName();
 		this.showLevelIcon(LevelDataManager.getInstance().GetCurIndex());//显示关卡和头像
-		if(this.pageIndex == 10)
+		if(this.pageIndex == this.maxPageNum)
 		{
-			
 			console.log("最后一关");
 			this.btn_next.visible = false;
-			
 		}
-		else if(this.pageIndex < 10)
+		else if(this.pageIndex < this.maxPageNum)
 		{
 			this.btn_before.visible = true;
 		}
 	}
+	/** 每3页换一个 每一页一颗星 */
 	public updataName()
 	{
-		if(this.pageIndex == 1)
-		{
-			this.ImgName.source = this.chenghuArray[0];
-			this.ImgName.width = 86;
-			
-		}
-		else if(this.pageIndex == 2)
-		{
-			this.ImgName.source = this.chenghuArray[1];
-			this.ImgName.width = 86;
-		}
-		else if(this.pageIndex == 3)
-		{
-			this.ImgName.source = this.chenghuArray[2];
-			this.ImgName.width = 86;
-		}
-		else if(this.pageIndex == 4)
-		{
-			this.ImgName.source = this.chenghuArray[3];
-			this.ImgName.width = 86;
-		}
-		else if(this.pageIndex == 5)
-		{
-			this.ImgName.source = this.chenghuArray[4];
-			this.ImgName.width = 86;
-		}
-		else if(this.pageIndex == 6)
-		{
-			this.ImgName.source = this.chenghuArray[5];
-			this.ImgName.width = 86;
-		}
-		else if(this.pageIndex == 7)
-		{
-			this.ImgName.source = this.chenghuArray[6];
-			this.ImgName.width = 86;
-		}
-		else if(this.pageIndex == 8)
-		{
-			this.ImgName.source = this.chenghuArray[7];
-			this.ImgName.width = 147;
-		}
-		else if(this.pageIndex == 9)
-		{
-			this.ImgName.source = this.chenghuArray[8];
-			this.ImgName.width = 147;
-		}
-		else if(this.pageIndex == 10)
-		{
-			this.ImgName.source = this.chenghuArray[9];
-			this.ImgName.width = 147;
-		}
+		let chenghuNum = this.pageIndex / 3;
+		let num = this.pageIndex % 3;
+		// xxx.text = this.gradeStringArray[num];
+		// xxx.source = this. chenghuImgArray[num];
 	}
 	//替换label显示。
 	public updateLabel(group:eui.Group,num:number)//num从1开始  1- 9 numChildren  9 个

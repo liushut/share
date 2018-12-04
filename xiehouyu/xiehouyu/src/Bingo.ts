@@ -116,16 +116,16 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		if(LevelDataManager.unlockMoneyNum == 1)
 		{
 			if (LevelDataManager.curMoney < 20) {
-				  LevelDataManager.curMoneyNum++;
-                        LevelDataManager.unlockMoneyNum++;
-                        console.log("LevelDataManager.curMoney",LevelDataManager.curMoney);
-                        console.log("LevelDataManager.showMoney",LevelDataManager.showMoney);
-                        LevelDataManager.curMoney += LevelDataManager.showMoney;
-                        console.log("相加后LevelDataManager.curMoney",LevelDataManager.curMoney)
-                        SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
-                        SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
-                        SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
-                        LevelDataManager.SaveHongbaoNum();
+				LevelDataManager.curMoneyNum++;
+				LevelDataManager.unlockMoneyNum++;
+				console.log("LevelDataManager.curMoney", LevelDataManager.curMoney);
+				console.log("LevelDataManager.showMoney", LevelDataManager.showMoney);
+				LevelDataManager.curMoney += LevelDataManager.showMoney;
+				console.log("相加后LevelDataManager.curMoney", LevelDataManager.curMoney)
+				SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
+				SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
+				SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
+				LevelDataManager.SaveHongbaoNum();
 			}
 			else {
 				console.log("onHongBaoTixian() 金额超出！！");
@@ -137,7 +137,6 @@ class Bingo extends eui.Component implements eui.UIComponent {
 				platform.restartVideo();
 			}
 			else {
-
 				platform.restShare();
 			}
 		}
@@ -270,44 +269,44 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	}
 	private changeImg(index: number) {
 		if (index >= 1 && index <= 90) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[0];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[0];
 			SceneGame.getInstance().levelScene.ImgName.width = 86;
 
 		}
 		else if (index >= 91 && index <= 180) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[1];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[1];
 			SceneGame.getInstance().levelScene.ImgName.width = 86;
 		}
 		else if (index >= 181 && index <= 270) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[2];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[2];
 			SceneGame.getInstance().levelScene.ImgName.width = 86;
 		}
 		else if (index >= 271 && index <= 360) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[3];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[3];
 			SceneGame.getInstance().levelScene.ImgName.width = 86;
 		}
 		else if (index >= 361 && index <= 450) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[4];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[4];
 			SceneGame.getInstance().levelScene.ImgName.width = 86;
 		}
 		else if (index >= 451 && index <= 540) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[5];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[5];
 			SceneGame.getInstance().levelScene.ImgName.width = 86;
 		}
 		else if (index >= 541 && index <= 630) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[6];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[6];
 			SceneGame.getInstance().levelScene.ImgName.width = 86;
 		}
 		else if (index >= 631 && index <= 720) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[7];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[7];
 			SceneGame.getInstance().levelScene.ImgName.width = 147;
 		}
 		else if (index >= 721 && index <= 810) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[8];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[8];
 			SceneGame.getInstance().levelScene.ImgName.width = 147;
 		}
 		else if (index >= 811 && index <= 900) {
-			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuArray[9];
+			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[9];
 			SceneGame.getInstance().levelScene.ImgName.width = 147;
 			if (index == 900) {
 				(wx as any).showModal({

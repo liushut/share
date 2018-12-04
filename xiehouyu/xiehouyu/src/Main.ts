@@ -101,7 +101,28 @@ class Main extends eui.UILayer {
                     this.showResult();
                 }
                 else if (LevelDataManager.onshowNum == 3) {
-                    if (LevelDataManager.isShareTime == false) {
+                    this.dian();
+                }
+                else if(LevelDataManager.onshowNum == 4)
+                {
+                    this.jiesuo();
+                }else if(LevelDataManager.onshowNum == 5)
+                {
+                    this.xuaoyao();
+                }
+                console.log("LevelDataManager.isShareTime" + LevelDataManager.isShareTime);
+            }
+
+        });
+        const result = await RES.getResAsync("description_json");
+        // const userInfo = await (platform as any).getAVUserInfo();//resolve()
+        console.log("游戏初始化");
+        console.log("用户信息没得了");
+
+    }
+    private dian()
+    {
+            if (LevelDataManager.isShareTime == false) {
                         egret.Tween.get(SceneGame.getInstance().dianImg).wait(200).call(() => {
                             SceneGame.getInstance().dianImg.visible = false;
                         }).wait(300000).call(() => { SceneGame.getInstance().dianImg.visible = true; })//1000ms = 1s   3000 0  0 3s00
@@ -125,20 +146,31 @@ class Main extends eui.UILayer {
                         });
                     }
 
+    }
+    private xuaoyao()
+    {
+        if(LevelDataManager.isShareTime)
+        {
+            (wx as any).showModal({
+                title: "提示",
+                content: "分享失败",
+                showCancel: false,
+                success: function (res) {
+                    if (res.confirm == true) {
+                        (wx as any).shareAppMessage({
+                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                            imageUrl: "resource/assets/common/title11.png"
+                        });
+                        platform.randomShare();
+                        LevelDataManager.onshowNum = 5;
+                    }
                 }
-                else if(LevelDataManager.onshowNum == 4)
-                {
-                    this.jiesuo();
-                }
-                console.log("LevelDataManager.isShareTime" + LevelDataManager.isShareTime);
-            }
-
-        });
-        const result = await RES.getResAsync("description_json");
-        // const userInfo = await (platform as any).getAVUserInfo();//resolve()
-        console.log("游戏初始化");
-        console.log("用户信息没得了");
-
+            });
+        }
+        else 
+        {
+             LevelDataManager.onshowNum = 0;
+        }
     }
     private checkShipin() {
         if (LevelDataManager.isshipin == true) {//1 true
@@ -201,11 +233,16 @@ class Main extends eui.UILayer {
                     SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
                     SceneGame.getInstance().hintBg(true);
                     SceneGame.getInstance().bingoLayer.labelresult.text =
-                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).answer;
+                    if(LevelDataManager.getInstance().curIcon > 902)
+                    {
+                        SceneGame.getInstance().bingoLayer.labelExplain.visible = false;
+                    }
                     SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                        LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
-                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).answer + "   ";
+                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).answer);
                     LevelDataManager.shareNum++;
+                    LevelDataManager.onshowNum = 0;
                     console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
                 });
             }
@@ -218,10 +255,12 @@ class Main extends eui.UILayer {
                         success: function (res) {
                             if (res.confirm == true) {
                                 platform.shareMyAppMessage();
+                                 LevelDataManager.onshowNum = 2;
+                                 LevelDataManager.shareNum++;
                             }
                         }
                     });
-                    LevelDataManager.shareNum++;
+                    
                     console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
                 });
             }
@@ -245,7 +284,6 @@ class Main extends eui.UILayer {
                 })
                 LevelDataManager.shareNum++;
                 LevelDataManager.onshowNum = 0;
-                
             }
             else {
                 (wx as any).showModal({

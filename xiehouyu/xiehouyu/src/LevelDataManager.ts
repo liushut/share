@@ -1,9 +1,14 @@
-class  LevelDataItem
+// class  LevelDataItem
+// {
+//     public result:string;//答案
+//     public question:string;//题目
+//     public chaotic:string;//选择内容  固定14
+//     public explain:string;
+// }
+class LevelDataItemXie
 {
-    public result:string;//答案
-    public question:string;//题目
-    public chaotic:string;//选择内容  固定14
-    public explain:string;
+    public word:string[];
+    public answer:string
 }
 
 class LevelDataManager//关卡数据管理 
@@ -73,11 +78,11 @@ class LevelDataManager//关卡数据管理
         wx.setStorageSync("curMoney",LevelDataManager.curMoney);
     }
     //关卡数据的数据组
-    private levelDataItemList:LevelDataItem[] = [];
+    private levelDataItemList:LevelDataItemXie[] = [];
     public constructor()
     {
         //使用RES读取和构建JSON数据。Json数据可以直接解析到目标结构
-        this.levelDataItemList = RES.getRes("test_json");
+        this.levelDataItemList = RES.getRes("xietiku_json");
         LevelDataManager.curMoneyNum = parseInt((wx.getStorageSync("curMoneyNum") || "1") as string);
 		LevelDataManager.unlockMoneyNum = parseInt((wx.getStorageSync("unlockMoneyNum") || "1")as string);
         LevelDataManager.curMoney = parseInt((wx.getStorageSync("curMoney") || "0") as string);
@@ -100,7 +105,7 @@ class LevelDataManager//关卡数据管理
          egret.localStorage.setItem("SHARE",share.toString());
     }
     //通过关卡号获取数据
-    public GetLevelData(level):LevelDataItem
+    public GetLevelData(level):LevelDataItemXie
     {
         if(level < 0)
         {
@@ -253,5 +258,5 @@ class LevelDataManager//关卡数据管理
 	}
 }
 
-window["LevelDataItem"] = LevelDataItem;
+window["LevelDataItemXie"] = LevelDataItemXie;
 window["LevelDataManager"] = LevelDataManager;

@@ -180,10 +180,10 @@ class WeChatPlatform implements Platform {
                     SceneGame.getInstance().bingoLayer.trueGroup.visible = true;
                     SceneGame.getInstance().hintBg(true);
                     SceneGame.getInstance().bingoLayer.labelresult.text =
-                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).answer;
                     SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
-                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
+                    LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).answer + "   ";
+                    console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).answer);
                 }
                 else {
                     // 播放中途退出，不下发游戏奖励
@@ -320,9 +320,9 @@ class WeChatPlatform implements Platform {
                   SceneGame.getInstance().bingoLayer.daandi.visible = true;
                   SceneGame.getInstance().hintBg(true);
                   SceneGame.getInstance().bingoLayer.labelresult.text =
-                  LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                  LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).answer;
                   SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
-                  LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
+                  LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).answer + "   ";
                 });
         
     })
