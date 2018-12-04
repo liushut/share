@@ -1,0 +1,30 @@
+{
+	"initial": [
+		"libs/modules/egret/egret.js",
+		"libs/modules/egret/egret.web.js",
+		"libs/modules/eui/eui.js",
+		"libs/modules/assetsmanager/assetsmanager.js",
+		"libs/modules/tween/tween.js",
+		"libs/modules/game/game.js",
+		"libs/modules/promise/promise.js",
+		"leancloud/leancloud_storage.js"
+	],
+	"game": [
+		"bin-debug/Word.js",
+		"bin-debug/AnswerWord.js",
+		"bin-debug/Bingo.js",
+		"bin-debug/LevelDataManager.js",
+		"bin-debug/LevelIcon.js",
+		"bin-debug/LevelScene.js",
+		"bin-debug/LoadingUI.js",
+		"bin-debug/Main.js",
+		"bin-debug/AssetAdapter.js",
+		"bin-debug/PlayerData.js",
+		"bin-debug/SceneGame.js",
+		"bin-debug/SoundManager.js",
+		"bin-debug/testWord.js",
+		"bin-debug/ThemeAdapter.js",
+		"bin-debug/WeChatPlatform.js",
+		"bin-debug/Platform.js"
+	]
+}

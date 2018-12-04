@@ -1,0 +1,49 @@
+{
+  "165c792cab5": {
+    "path": "SceneGame.ts",
+    "class": "SceneGame",
+    "parentPath": "",
+    "guideLines": [
+      {
+        "type": "h",
+        "pos": 572
+      }
+    ]
+  },
+  "165c7a19b5f": {
+    "path": "Word.ts",
+    "class": "Word",
+    "parentPath": ""
+  },
+  "165cb97a163": {
+    "path": "testWord.ts",
+    "class": "testWord",
+    "parentPath": ""
+  },
+  "165cb9a0abb": {
+    "path": "AnswerWord.ts",
+    "class": "AnswerWord",
+    "parentPath": ""
+  },
+  "global": {
+    "globalAutoLayerMarkEnable": false
+  },
+  "165d0e18a6d": {
+    "path": "LevelIcon.ts",
+    "class": "LevelIcon",
+    "parentPath": ""
+  },
+  "165d099c9b9": {
+    "guideLines": [
+      {
+        "type": "v",
+        "pos": 38
+      }
+    ]
+  },
+  "165d63d0eb0": {
+    "path": "Bingo.ts",
+    "class": "Bingo",
+    "parentPath": ""
+  }
+}

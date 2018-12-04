@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="LevelIconSkin" width="171" height="185" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="165d0e18a6d" ></w:Config>
+	<e:Image id="imgGuankadi" width="171" height="185" x="0" y="0" source="guankadi_png"/>
+	<e:BitmapLabel id="bitlabel_levelIndex" width="146" height="62" font="number_fnt" text="999" textAlign="center" anchorOffsetY="0" anchorOffsetX="0" alpha="0" y="85" x="13"/>
+	<e:Image id="imgLock" width="65" height="81" x="52" y="72" alpha="1" source="suo_png"/>
+</e:Skin>
