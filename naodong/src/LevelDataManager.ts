@@ -23,7 +23,8 @@ class LevelDataManager//关卡数据管理
     public  static iv:any;
     public  static openId:any;
     public  static sessionKey:any;
-    
+    /**是否返回前面的关数了 */
+    static isBack = false;
     /**解锁开关 其余0false分享，1true视频*/
     static isJiesuoshipin = 3;
     /**红包的视频开关,true视频,false分享*/

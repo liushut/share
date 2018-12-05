@@ -11,20 +11,22 @@
 	],
 	"game": [
 		"bin-debug/Word.js",
-		"bin-debug/AnswerWord.js",
+		"bin-debug/WeChatPlatform.js",
 		"bin-debug/Bingo.js",
 		"bin-debug/LevelDataManager.js",
 		"bin-debug/LevelIcon.js",
 		"bin-debug/LevelScene.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
+		"bin-debug/Platform.js",
 		"bin-debug/AssetAdapter.js",
-		"bin-debug/PlayerData.js",
+		"bin-debug/R.js",
 		"bin-debug/SceneGame.js",
 		"bin-debug/SoundManager.js",
 		"bin-debug/testWord.js",
 		"bin-debug/ThemeAdapter.js",
-		"bin-debug/WeChatPlatform.js",
-		"bin-debug/Platform.js"
+		"bin-debug/Util.js",
+		"bin-debug/AnswerWord.js",
+		"bin-debug/PlayerData.js"
 	]
 }

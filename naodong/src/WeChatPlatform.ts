@@ -208,7 +208,7 @@ class WeChatPlatform implements Platform {
                     imageUrl: "resource/assets/common/title11.png"
                 });
                 egret.Tween.get(SceneGame.getInstance().bingoLayer).wait(200).call(() => {
-                     SceneGame.getInstance().bingoLayer.visible = false;
+                    SceneGame.getInstance().bingoLayer.visible = false;
                     SceneGame.getInstance().bingoLayer.comboGroup.visible = false;
                     SceneGame.getInstance().levelScene.visible = false;
                     SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;

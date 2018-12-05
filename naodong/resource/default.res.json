@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "description_json,test_json,number_fnt,number_png,word_mp3,window_wav,answer1_mp3,gameBg_jpg,guanka_png,zidi_png,daandi_png,close_png,dashi_png,guankadi_png,hengfu_png,huihengfu_png,jiantou_png,levelBg_png,tanchuandaandi_png,daduidi_png,daduile_png,next_png,share_png,surebtn_png,title11_png,erroSound_mp3,trueSound_mp3,paihangbang_png,dibang_png,cha_png,caizi_png,dian_png,xiaoren_png,daan_png,ten_png,xuangxiangdi_png,panel_bg_png,panel_shop_01_png,chacha_png,tiaozhan_png,touxiangkuang_png,ditu_png,suo_png,1_png,2_png,3_png,4_png,5_png,6_png,7_png,8_png,9_png,10_png,cuoledi_png,jixu_png,chongwan_png,hongbaocha_png,hongbaodi_png,hongbaodi1_png,hongbaoicon_png,hongbaotixian_png,hongbaoyue_png,lingqu_png,qutixian_png,tanchuang_png,yilingqu_png,yuan_png,hongbaoicon2_png,meitixian_png",
+			"keys": "description_json,test_json,number_fnt,number_png,word_mp3,window_wav,answer1_mp3,gameBg_jpg,guanka_png,zidi_png,daandi_png,close_png,dashi_png,guankadi_png,hengfu_png,huihengfu_png,jiantou_png,levelBg_png,tanchuandaandi_png,daduidi_png,daduile_png,next_png,share_png,surebtn_png,title11_png,erroSound_mp3,trueSound_mp3,paihangbang_png,dibang_png,cha_png,caizi_png,dian_png,xiaoren_png,daan_png,ten_png,xuangxiangdi_png,panel_bg_png,panel_shop_01_png,chacha_png,tiaozhan_png,touxiangkuang_png,ditu_png,suo_png,1_png,2_png,3_png,4_png,5_png,6_png,7_png,8_png,9_png,10_png,cuoledi_png,jixu_png,chongwan_png,hongbaocha_png,hongbaodi_png,hongbaodi1_png,hongbaoicon_png,hongbaotixian_png,hongbaoyue_png,lingqu_png,qutixian_png,tanchuang_png,yilingqu_png,yuan_png,hongbaoicon2_png,meitixian_png,xuanyao_png",
 			"name": "preload"
 		}
 	],
@@ -350,6 +350,11 @@
 			"name": "meitixian_png",
 			"type": "image",
 			"url": "assets/hongbao/meitixian.png"
+		},
+		{
+			"name": "xuanyao_png",
+			"type": "image",
+			"url": "assets/common/xuanyao.png"
 		}
 	]
 }

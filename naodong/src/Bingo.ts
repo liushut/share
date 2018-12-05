@@ -116,16 +116,16 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		if(LevelDataManager.unlockMoneyNum == 1)
 		{
 			if (LevelDataManager.curMoney < 20) {
-				  LevelDataManager.curMoneyNum++;
-                        LevelDataManager.unlockMoneyNum++;
-                        console.log("LevelDataManager.curMoney",LevelDataManager.curMoney);
-                        console.log("LevelDataManager.showMoney",LevelDataManager.showMoney);
-                        LevelDataManager.curMoney += LevelDataManager.showMoney;
-                        console.log("相加后LevelDataManager.curMoney",LevelDataManager.curMoney)
-                        SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
-                        SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
-                        SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
-                        LevelDataManager.SaveHongbaoNum();
+				LevelDataManager.curMoneyNum++;
+				LevelDataManager.unlockMoneyNum++;
+				console.log("LevelDataManager.curMoney", LevelDataManager.curMoney);
+				console.log("LevelDataManager.showMoney", LevelDataManager.showMoney);
+				LevelDataManager.curMoney += LevelDataManager.showMoney;
+				console.log("相加后LevelDataManager.curMoney", LevelDataManager.curMoney)
+				SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
+				SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
+				SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
+				LevelDataManager.SaveHongbaoNum();
 			}
 			else {
 				console.log("onHongBaoTixian() 金额超出！！");
@@ -137,7 +137,6 @@ class Bingo extends eui.Component implements eui.UIComponent {
 				platform.restartVideo();
 			}
 			else {
-
 				platform.restShare();
 			}
 		}
@@ -161,7 +160,6 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	}
 	
 	private tiaozhan() {
-	
 		if(LevelDataManager.isJiesuoshipin == 1)
 		{
 			console.log("挑战视频开关  开启");
@@ -169,19 +167,13 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		}
 		else 
 		{
+			LevelDataManager.onshowNum = 4;
+			platform.randomShare();
 			 console.log("挑战视频开关  关闭");
                 (wx as any).shareAppMessage({
                     title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
                     imageUrl: "resource/assets/common/title11.png"
                 });
-                egret.Tween.get(SceneGame.getInstance().bingoLayer).wait(200).call(() => {
-                     SceneGame.getInstance().bingoLayer.visible = false;
-                    SceneGame.getInstance().bingoLayer.comboGroup.visible = false;
-                    SceneGame.getInstance().levelScene.visible = false;
-                    SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
-                    SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
-                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
-                })
 		}
 	}
 	private onNext() {
@@ -195,6 +187,7 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		LevelDataManager.getInstance().curIcon++;
 		if (LevelDataManager.getInstance().curIcon > LevelDataManager.getInstance().GetMileStone())//如果大于最远
 		{
+			LevelDataManager.isBack = false;
 			let level = LevelDataManager.getInstance().curIcon;
 			LevelDataManager.getInstance().SetMileStone(level);//存储  	{key:"myscore",value:level.toString()}
 			(wx as any).setUserCloudStorage({
@@ -214,7 +207,13 @@ class Bingo extends eui.Component implements eui.UIComponent {
 
 	public imageUpdate() {
 		//记录的关卡
-		
+		if(LevelDataManager.isBack)
+		{
+			console.log("在前面关卡");
+			SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+		}
+		else
+		{
 		let level = LevelDataManager.getInstance().GetMileStone();
 		this.changeImg(level);
 		if (level > 1 && level % 10 == 1) {  //level 是 存储的 
@@ -260,6 +259,8 @@ class Bingo extends eui.Component implements eui.UIComponent {
 			console.log("直接去下一关");
 			SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
 		}
+		}
+		
 	}
 	public getNumCurIndex(index: number): number {
 		let pageIndex = Math.ceil(index / 9);

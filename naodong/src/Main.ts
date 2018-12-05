@@ -54,31 +54,32 @@ class Main extends eui.UILayer {
             console.log(e);
         })
     }
-    private async runGame(){
+    private async runGame() {
+        await this.loadShareCode();
+        try {
+            if (wx.getUpdateManager()) {
+                var updateManager = wx.getUpdateManager();
+                updateManager.onCheckForUpdate(function (res) { console.warn("onCheckForUpdate", res.hasUpdate) });
+                updateManager.onUpdateReady(function () { updateManager.applyUpdate() });
+                updateManager.onUpdateFailed(function () { })
+            }
+        }
+        catch (ex) { }
+        await this.loadResource();
+        this.createGameScene();
         (wx as any).updateShareMenu({
             withShareTicket: true
         });
-        (wx as any).showShareMenu(); 
+        (wx as any).showShareMenu();
         wx.onShareAppMessage(function () {
+            let sinfo = LevelDataManager.getShareToInfo();
             // 用户点击了“转发”按钮
             return {
-                 title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                 imageUrl: "resource/assets/common/title11.png"
+                title: sinfo.title,
+                imageUrl: sinfo.imgURL
             }
         })
-        try{
-            if(wx.getUpdateManager())
-            {
-                var updateManager = wx.getUpdateManager();
-                updateManager.onCheckForUpdate(function(res){console.warn("onCheckForUpdate",res.hasUpdate)});
-                updateManager.onUpdateReady(function(){updateManager.applyUpdate()});
-                updateManager.onUpdateFailed(function(){})}
-            }
-            catch(ex){}
-        await this.loadShareCode();
-        await this.loadResource();
-        this.createGameScene();
-           wx.onShow((res?:any)=>{
+        wx.onShow((res?: any) => {
             console.log("wx.onShow", res);
             if (res) {
                 this.loadShareCode();
@@ -86,98 +87,150 @@ class Main extends eui.UILayer {
                 let date = new Date();
                 let time = date.getTime();
                 let beforeTime = parseInt((wx.getStorageSync("nextshareTime") || "1") as string);
-                if(time > beforeTime)
-                {
+                if (time > beforeTime) {
                     LevelDataManager.isShareTime = false;
-                   
+
                 }
-                else 
-                {
+                else {
                     LevelDataManager.isShareTime = true;
-                  
+
                 }
-                if(LevelDataManager.onshowNum == 1)
-                {
+                if (LevelDataManager.onshowNum == 1) {
                     this.showViedeoOrShare();
                 }
-                else if(LevelDataManager.onshowNum == 2)
-                {
-                     this.showResult();  
+                else if (LevelDataManager.onshowNum == 2) {
+                    this.showResult();
                 }
-                else if(LevelDataManager.onshowNum == 3)
-                {
-                    egret.Tween.get(SceneGame.getInstance().dianImg).wait(200).call(() => {
-                        SceneGame.getInstance().dianImg.visible = false;
-                    }).wait(300000).call(() => { SceneGame.getInstance().dianImg.visible = true; })//1000ms = 1s   3000 0  0 3s00
+                else if (LevelDataManager.onshowNum == 3) {
+                    this.dian();
+                }
+                else if (LevelDataManager.onshowNum == 4) {
+                    this.jiesuo();
+                } else if (LevelDataManager.onshowNum == 5) {
+                    this.xuaoyao();
                 }
                 console.log("LevelDataManager.isShareTime" + LevelDataManager.isShareTime);
             }
-            
+
         });
         const result = await RES.getResAsync("description_json");
         // const userInfo = await (platform as any).getAVUserInfo();//resolve()
         console.log("游戏初始化");
         console.log("用户信息没得了");
-      
+
     }
-    private checkShipin()
-    {
-           if (LevelDataManager.isshipin == true) {//1 true
-                    LevelDataManager.getInstance().SetShare(1);
-                  console.log("isshipin" + LevelDataManager.isshipin); 
+    private dian() {//3
+        if (LevelDataManager.isShareTime == false) {
+            egret.Tween.get(SceneGame.getInstance().dianImg).wait(200).call(() => {
+                SceneGame.getInstance().dianImg.visible = false;
+            }).wait(300000).call(() => { SceneGame.getInstance().dianImg.visible = true; })//1000ms = 1s   3000 0  0 3s00
+            LevelDataManager.onshowNum = 0;
+        }
+        else {
+            (wx as any).showModal({
+                title: "提示",
+                content: "请分享到群",
+                showCancel: false,
+                success: function (res) {
+                    if (res.confirm == true) {
+                        (wx as any).shareAppMessage({
+                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                            imageUrl: "resource/assets/common/title11.png"
+                        });
+                        platform.randomShare();
+                        LevelDataManager.onshowNum = 3;
+                    }
                 }
-                else if (LevelDataManager.isshipin== false) {//0 false
-                    LevelDataManager.getInstance().SetShare(0);
-                    console.log("isshipin" + LevelDataManager.isshipin);
-                };
+            });
+        }
+
     }
-    private showViedeoOrShare()
-    {
+    private xuaoyao() {//5
+        if (LevelDataManager.isShareTime) {
+            (wx as any).showModal({
+                title: "提示",
+                content: "请分享到群",
+                showCancel: false,
+                success: function (res) {
+                    if (res.confirm == true) {
+                        (wx as any).shareAppMessage({
+                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
+                            imageUrl: "resource/assets/common/title11.png"
+                        });
+                        platform.randomShare();
+                        LevelDataManager.onshowNum = 5;
+                    }
+                }
+            });
+        }
+        else {
+            LevelDataManager.onshowNum = 0;
+        }
+    }
+    private checkShipin() {
+        if (LevelDataManager.isshipin == true) {//1 true
+            LevelDataManager.getInstance().SetShare(1);
+            console.log("isshipin" + LevelDataManager.isshipin);
+        }
+        else if (LevelDataManager.isshipin == false) {//0 false
+            LevelDataManager.getInstance().SetShare(0);
+            console.log("isshipin" + LevelDataManager.isshipin);
+        };
+    }
+    private showViedeoOrShare() {//1
         console.log("showViedeoOrShare  ");
-         if(!LevelDataManager.isShareTime)
-         {
-               if (LevelDataManager.shipinResult == 0) {
-                        SceneGame.getInstance().bingoLayer.errGroup.visible = false;
-                        SceneGame.getInstance().bingoLayer.visible = false;
-                        SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
-                        SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
-                        SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
-                    }
-                    else if (LevelDataManager.shipinResult == 1) {//主界面红包
-                        if (LevelDataManager.curMoney < 20) {
-                            SceneGame.getInstance().bingoLayer.btnTixian.currentState = "disabled";
-                            SceneGame.getInstance().bingoLayer.btnTixian.touchEnabled = false;
-                            SceneGame.getInstance().bingoLayer.tanImg.visible = true;
-                            setTimeout(() => {
-                                SceneGame.getInstance().bingoLayer.tanImg.visible = false;
-                            }, 1000);
+        if (!LevelDataManager.isShareTime) {
+            if (LevelDataManager.shipinResult == 0) {
+                SceneGame.getInstance().bingoLayer.errGroup.visible = false;
+                SceneGame.getInstance().bingoLayer.visible = false;
+                SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
+                SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
+                SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+            }
+            else if (LevelDataManager.shipinResult == 1) {//主界面红包
+                if (LevelDataManager.curMoney < 20) {
+                    SceneGame.getInstance().bingoLayer.btnTixian.currentState = "disabled";
+                    SceneGame.getInstance().bingoLayer.btnTixian.touchEnabled = false;
+                    SceneGame.getInstance().bingoLayer.tanImg.visible = true;
+                    setTimeout(() => {
+                        SceneGame.getInstance().bingoLayer.tanImg.visible = false;
+                    }, 1000);
+                }
+                else {
+                    console.log("onHongBaoTixian() 金额超出！！");
+                }
+            } else if (LevelDataManager.shipinResult == 2)//30关红包
+            {
+                LevelDataManager.curMoneyNum++;
+                LevelDataManager.unlockMoneyNum++;
+                console.log("LevelDataManager.curMoney", LevelDataManager.curMoney);
+                console.log("LevelDataManager.showMoney", LevelDataManager.showMoney);
+                LevelDataManager.curMoney += LevelDataManager.showMoney;
+                console.log("相加后LevelDataManager.curMoney", LevelDataManager.curMoney)
+                SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
+                SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
+                SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
+                LevelDataManager.SaveHongbaoNum();
+            }
+            LevelDataManager.onshowNum = 0;
+        }
+        else {
+                (wx as any).showModal({
+                    title: "提示",
+                    content: "请分享到群",
+                    showCancel: false,
+                    success: function (res) {
+                        if (res.confirm == true) {
+                            platform.randomShare();
+                            LevelDataManager.onshowNum = 1;
                         }
-                        else {
-                            console.log("onHongBaoTixian() 金额超出！！");
-                        }
-                   }else if(LevelDataManager.shipinResult == 2)//30关红包
-                   {
-                        LevelDataManager.curMoneyNum++;
-                        LevelDataManager.unlockMoneyNum++;
-                        console.log("LevelDataManager.curMoney",LevelDataManager.curMoney);
-                        console.log("LevelDataManager.showMoney",LevelDataManager.showMoney);
-                        LevelDataManager.curMoney += LevelDataManager.showMoney;
-                        console.log("相加后LevelDataManager.curMoney",LevelDataManager.curMoney)
-                        SceneGame.getInstance().bingoLayer.lingquBtn.currentState = "disabled";
-                        SceneGame.getInstance().bingoLayer.lingquBtn.touchEnabled = false;
-                        SceneGame.getInstance().bingoLayer.yueLabel.text = LevelDataManager.curMoney.toString();
-                        LevelDataManager.SaveHongbaoNum();
                     }
-         }
-         else 
-         {
-             console.log("showViedeoOrShare()在2s内");
-         }
-         LevelDataManager.onshowNum = 0;
+                });
+            console.log("showViedeoOrShare()在2s内");
+        }
+       
     }
-    private showResult()
-    {
-        console.log("sss");
+    private showResult() {//2
         if (!LevelDataManager.isShareTime) {
             if (LevelDataManager.shareNum % 3 == 1) {
                 egret.Tween.get(this).wait(200).call(function () {
@@ -188,14 +241,18 @@ class Main extends eui.UILayer {
                     SceneGame.getInstance().hintBg(true);
                     SceneGame.getInstance().bingoLayer.labelresult.text =
                         LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result;
+                    if (LevelDataManager.getInstance().curIcon > 902) {
+                        SceneGame.getInstance().bingoLayer.labelExplain.visible = false;
+                    }
                     SceneGame.getInstance().bingoLayer.labelExplain.text = "解释:   " +
                         LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).explain + "   ";
                     console.log("result" + LevelDataManager.getInstance().GetLevelData(LevelDataManager.getInstance().curIcon).result);
                     LevelDataManager.shareNum++;
+                    LevelDataManager.onshowNum = 0;
                     console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
                 });
             }
-            else{
+            else {
                 egret.Tween.get(this).wait(200).call(function () {
                     (wx as any).showModal({
                         title: "提示",
@@ -204,18 +261,79 @@ class Main extends eui.UILayer {
                         success: function (res) {
                             if (res.confirm == true) {
                                 platform.shareMyAppMessage();
+                                LevelDataManager.onshowNum = 2;
+                                LevelDataManager.shareNum++;
                             }
                         }
                     });
-                    LevelDataManager.shareNum++;
+
                     console.log(" LevelDataManager.shareNum" + LevelDataManager.shareNum);
                 });
             }
         }
         else {
-            console.log("showResult()在2s内");
+            (wx as any).showModal({
+                    title: "提示",
+                    content: "请分享到群",
+                    showCancel: false,
+                    success: function (res) {
+                        if (res.confirm == true) {
+                            platform.randomShare();
+                            LevelDataManager.onshowNum = 2;
+                            LevelDataManager.shareNum++;
+                        }
+                    }
+                });
+
         }
-        LevelDataManager.onshowNum = 0;
+        
+    }
+    private jiesuo()//4
+    {
+        if (!LevelDataManager.isShareTime) {
+            if (LevelDataManager.shareNum % 3 == 1) {
+                egret.Tween.get(SceneGame.getInstance().bingoLayer).wait(200).call(() => {
+                    SceneGame.getInstance().bingoLayer.visible = false;
+                    SceneGame.getInstance().bingoLayer.comboGroup.visible = false;
+                    SceneGame.getInstance().levelScene.visible = false;
+                    SceneGame.getInstance().bingoLayer.bingoGroup.visible = false;
+                    SceneGame.getInstance().bingoLayer.trueGroup.visible = false;
+                    SceneGame.getInstance().InitLevel(LevelDataManager.getInstance().curIcon);
+                })
+                LevelDataManager.shareNum++;
+                LevelDataManager.onshowNum = 0;
+            }
+            else {
+                (wx as any).showModal({
+                    title: "提示",
+                    content: "请分享到群",
+                    showCancel: false,
+                    success: function (res) {
+                        if (res.confirm == true) {
+                            platform.randomShare();
+                            LevelDataManager.onshowNum = 4;
+                            LevelDataManager.shareNum++;
+                        }
+                    }
+                });
+
+            }
+        }
+        else {
+                (wx as any).showModal({
+                    title: "提示",
+                    content: "请分享到群",
+                    showCancel: false,
+                    success: function (res) {
+                        if (res.confirm == true) {
+                            platform.randomShare();
+                            LevelDataManager.onshowNum = 4;
+                            LevelDataManager.shareNum++;
+                        }
+                    }
+                });
+        }
+
     }
     /**
      * await 后面跟的是返回 promise 的函数。这个函数也可以是async   await只能在async函数中用。
@@ -225,7 +343,7 @@ class Main extends eui.UILayer {
         try {
             const loadingView = new LoadingUI();
             this.addChild(loadingView);
-            await RES.loadConfig("resource/default.res.json", "resource/");  
+            await RES.loadConfig("resource/default.res.json", "resource/");
             await this.loadTheme();
             await RES.loadGroup("preload", 0, loadingView);
             this.removeChild(loadingView);
@@ -253,38 +371,37 @@ class Main extends eui.UILayer {
 
         })
     }
-  
+
     private textfield: egret.TextField;
     /**
      * 创建场景界面
      * Create scene interface
      */
 
-  private btnOpen:eui.Button;
-  protected createGameScene(): void {
-         let videoAd = (wx as any).createRewardedVideoAd({
-                adUnitId: 'adunit-1d0fb93e0bab0a56'
-            });
-                console.log("游戏初始化了");
-                SoundManager.getInstance();
-                LevelDataManager.getInstance();
-                SceneGame.getInstance();
-                this.addChild(SceneGame.getInstance());
-                let data =  LevelDataManager.getInstance().GetMileStone();//218 8
-                if(data > 1)
-                {       
-                    let mod = data % 10;//8
-                    let num = data + (10 - mod);//218 + (10 - 8) = 220
-                    let curindex = num / 10;//220 / 10 22
-                    LevelDataManager.getInstance().SetCurIndex(curindex);
-                }
-                LevelDataManager.getInstance().curIcon = data;
-                SceneGame.getInstance().InitLevel(data);
-                console.log(data);
-                LevelDataManager.getInstance().getAd();//手动拉AD
+    private btnOpen: eui.Button;
+    protected createGameScene(): void {
+        let videoAd = (wx as any).createRewardedVideoAd({
+            adUnitId: 'adunit-1d0fb93e0bab0a56'
+        });
+        console.log("游戏初始化了");
+        SoundManager.getInstance();
+        LevelDataManager.getInstance();
+        SceneGame.getInstance();
+        this.addChild(SceneGame.getInstance());
+        let data = LevelDataManager.getInstance().GetMileStone();//218 8
+        if (data > 1) {
+            let mod = data % 10;//8
+            let num = data + (10 - mod);//218 + (10 - 8) = 220
+            let curindex = num / 10;//220 / 10 22
+            LevelDataManager.getInstance().SetCurIndex(curindex);
+        }
+        LevelDataManager.getInstance().curIcon = data;
+        SceneGame.getInstance().InitLevel(data);
+        console.log(data);
+        LevelDataManager.getInstance().getAd();//手动拉AD
     }
 
-  
+
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
@@ -299,7 +416,7 @@ class Main extends eui.UILayer {
      * 描述文件加载成功，开始播放动画
      * Description file loading is successful, start to play the animation
      */
-    
+
     /**
      * 点击按钮
      * Click the button
@@ -308,7 +425,7 @@ class Main extends eui.UILayer {
     private bitmap: egret.Bitmap;
     private isdisplay = false;
     private onButtonClick(e: egret.TouchEvent) {
-            console.log('点击btnClose按钮');
+        console.log('点击btnClose按钮');
         let platform: any = window.platform;
         if (this.isdisplay) {
             this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
@@ -319,7 +436,7 @@ class Main extends eui.UILayer {
                 text: 'hello',
                 year: (new Date()).getFullYear(),
                 command: "close",
-                type:"closedata"
+                type: "closedata"
             });
         } else {
             //处理遮罩，避免开放数据域事件影响主域。
@@ -342,11 +459,11 @@ class Main extends eui.UILayer {
                 text: 'hello',
                 year: (new Date()).getFullYear(),
                 command: "open",
-                type:"opendata"
+                type: "opendata"
             });
             //主要示例代码结束            
             this.isdisplay = true;
         }
- 
+
     }
 }
