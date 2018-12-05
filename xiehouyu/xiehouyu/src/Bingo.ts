@@ -216,7 +216,7 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		{
 		let level = LevelDataManager.getInstance().GetMileStone();
 		this.changeImg(level);
-		if (level > 1 && level % 10 == 1) {  //level 是 存储的 
+		if (level > 1 && level % 5 == 1) {  //level 是 存储的 
 			let curIndex = LevelDataManager.getInstance().GetCurIndex();
 			curIndex++;//每十个题目 增加一关。 1  11 2  21 3  31  4  41  5   81 9  91 10
 			let replaceIndex = curIndex; //11 第2关  子元素 1
@@ -240,10 +240,10 @@ class Bingo extends eui.Component implements eui.UIComponent {
 			let index = (replaceIndex - 1) % 9;//数组元素  所以要-1
 			let element = SceneGame.getInstance().levelScene.groupLevel.getChildAt(index) as any; //子元素  0 8   
 			let img: eui.Image = element.imgLock;
-			let label: eui.BitmapLabel = element.bitlabel_levelIndex;
+			let imgGuankadi: eui.Image = element.imgGuankadi;
 			//解锁关卡的标签动画   关卡界面消失后弹出发起挑战界面
 			egret.Tween.get(img).to({ alpha: 0 }, 1000).call(() => {
-				egret.Tween.get(label).to({ alpha: 1 }, 1000).call(() => {
+				egret.Tween.get(imgGuankadi).to({ alpha: 1 }, 1000).call(() => {
 				})
 			}).wait(1000).call(() => {
 				//界面出来后进入发起挑战界面去下一题
@@ -268,6 +268,10 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		return pageIndex;
 	}
 	private changeImg(index: number) {
+
+		let sw = Math.floor(index / 90);
+		SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[sw];
+		
 		if (index >= 1 && index <= 90) {
 			SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[0];
 			SceneGame.getInstance().levelScene.ImgName.width = 86;

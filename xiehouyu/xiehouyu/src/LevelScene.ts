@@ -22,8 +22,9 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 	private minPageNum = 1;
 	/**等级称呼数组 */
 	public gradeStringArray = ["小书生","童生","附生秀才","增生秀才","禀生秀才","监生","贡生","举人","解元","贡士","会元","三甲进士","二甲进士","一甲进士","探花","榜眼","状元","大学士","翰林文圣"]
-	//称呼数组
-	public chenghuImgArray = ["1_png","2_png","3_png","4_png","5_png","6_png","7_png","8_png","9_png","10_png"];
+	//等级称呼图片数组
+	public chenghuImgArray = ["1_png","2_png","3_png","4_png","5_png","6_png","7_png","8_png","9_png","10_png","11_png","12_png","13_png","14_png","15_png",
+								"16_png","17_png","18_png","19_png"];
 	public ImgName:eui.Image;
 
 
@@ -39,6 +40,10 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 	public groupStars:eui.Group;//星星数组
 	public levelBg:eui.Image;
 	
+	public xingBtn1: eui.Button;
+	public xingBtn2: eui.Button;
+	public xingBtn3: eui.Button;
+
 
 	public pageIndex:number = 1;//当前关卡页数。  1 - 10
 
@@ -95,7 +100,7 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 			console.log("第一关");
 			this.btn_before.visible = false;	
 		}
-		else if(this.pageIndex == 513)
+		else if(this.pageIndex == this.maxPageNum)
 		{
 			console.log("最后一关");
 			this.btn_next.visible = false;
@@ -160,10 +165,17 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 	/** 每3页换一个 每一页一颗星 */
 	public updataName()
 	{
-		let chenghuNum = this.pageIndex / 3;
-		let num = this.pageIndex % 3;
+		//1开始  012 0   345 1 
+		let chenghuNum = Math.floor((this.pageIndex - 1) / 3);
+		let num = (this.pageIndex - 1) % 3;
 		// xxx.text = this.gradeStringArray[num];
-		// xxx.source = this. chenghuImgArray[num];
+		this.ImgName.source = this. chenghuImgArray[chenghuNum];
+		// xingxing1.group.getchildat(num).visible = true;
+		// else false;
+		this.xingBtn1.currentState = num >= 0?"up":"down";
+		this.xingBtn2.currentState = num >= 1?"up":"down";
+		this.xingBtn3.currentState = num >= 2?"up":"down";
+	
 	}
 	//替换label显示。
 	public updateLabel(group:eui.Group,num:number)//num从1开始  1- 9 numChildren  9 个

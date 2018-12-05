@@ -666,7 +666,7 @@ var Bingo = (function (_super) {
         else {
             var level = LevelDataManager.getInstance().GetMileStone();
             this.changeImg(level);
-            if (level > 1 && level % 10 == 1) {
+            if (level > 1 && level % 5 == 1) {
                 var curIndex = LevelDataManager.getInstance().GetCurIndex();
                 curIndex++; //每十个题目 增加一关。 1  11 2  21 3  31  4  41  5   81 9  91 10
                 var replaceIndex = curIndex; //11 第2关  子元素 1
@@ -689,10 +689,10 @@ var Bingo = (function (_super) {
                 var index = (replaceIndex - 1) % 9; //数组元素  所以要-1
                 var element = SceneGame.getInstance().levelScene.groupLevel.getChildAt(index); //子元素  0 8   
                 var img = element.imgLock;
-                var label_1 = element.bitlabel_levelIndex;
+                var imgGuankadi_1 = element.imgGuankadi;
                 //解锁关卡的标签动画   关卡界面消失后弹出发起挑战界面
                 egret.Tween.get(img).to({ alpha: 0 }, 1000).call(function () {
-                    egret.Tween.get(label_1).to({ alpha: 1 }, 1000).call(function () {
+                    egret.Tween.get(imgGuankadi_1).to({ alpha: 1 }, 1000).call(function () {
                     });
                 }).wait(1000).call(function () {
                     //界面出来后进入发起挑战界面去下一题
@@ -716,6 +716,8 @@ var Bingo = (function (_super) {
         return pageIndex;
     };
     Bingo.prototype.changeImg = function (index) {
+        var sw = Math.floor(index / 90);
+        SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[sw];
         if (index >= 1 && index <= 90) {
             SceneGame.getInstance().levelScene.ImgName.source = LevelScene.getInstance().chenghuImgArray[0];
             SceneGame.getInstance().levelScene.ImgName.width = 86;
@@ -1024,15 +1026,21 @@ var LevelIcon = (function (_super) {
     function LevelIcon() {
         var _this = _super.call(this) || this;
         _this.skinName = "resource/eui_skins/LevelIcon.exml"; //这里如果不指定就会出现构建错误。
-        _this.imgGuankadi.touchEnabled = true;
-        _this.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.toGame, _this);
         return _this;
     }
+    LevelIcon.prototype.partAdded = function (partName, instance) {
+        _super.prototype.partAdded.call(this, partName, instance);
+    };
+    LevelIcon.prototype.childrenCreated = function () {
+        _super.prototype.childrenCreated.call(this);
+        this.imgGuankadi.touchEnabled = true;
+        this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.toGame, this);
+    };
     LevelIcon.prototype.toGame = function () {
         LevelDataManager.isBack = true;
         LevelDataManager.curMoneyNum = 1; //改变钱包次数
         egret.Tween.get(this.imgGuankadi).to({ scaleX: 0.8, scaleY: 0.8 }, 100).to({ scaleX: 1, scaleY: 1 });
-        var index = parseInt(this.bitlabel_levelIndex.text);
+        var index = parseInt(this.levelLabel.text);
         if (index <= LevelDataManager.getInstance().GetCurIndex()) {
             index--;
             var icon = index * 10 + 1;
@@ -1044,10 +1052,10 @@ var LevelIcon = (function (_super) {
     };
     Object.defineProperty(LevelIcon.prototype, "Level", {
         get: function () {
-            return parseInt(this.bitlabel_levelIndex.text);
+            return parseInt(this.levelLabel.text);
         },
         set: function (value) {
-            this.bitlabel_levelIndex.text = value.toString();
+            this.levelLabel.text = value.toString();
         },
         enumerable: true,
         configurable: true
@@ -1056,13 +1064,13 @@ var LevelIcon = (function (_super) {
     LevelIcon.prototype.isCanShow = function (status) {
         if (status == false) {
             this.imgLock.alpha = 1; //锁
-            this.bitlabel_levelIndex.alpha = 0;
             this.touchEnabled = false;
+            this.imgGuankadi.alpha = 0;
         }
         else if (status == true) {
             this.imgLock.alpha = 0; //锁
-            this.bitlabel_levelIndex.alpha = 1;
             this.touchEnabled = true;
+            this.imgGuankadi.alpha = 1;
         }
     };
     return LevelIcon;
@@ -1077,8 +1085,9 @@ var LevelScene = (function (_super) {
         _this.minPageNum = 1;
         /**等级称呼数组 */
         _this.gradeStringArray = ["小书生", "童生", "附生秀才", "增生秀才", "禀生秀才", "监生", "贡生", "举人", "解元", "贡士", "会元", "三甲进士", "二甲进士", "一甲进士", "探花", "榜眼", "状元", "大学士", "翰林文圣"];
-        //称呼数组
-        _this.chenghuImgArray = ["1_png", "2_png", "3_png", "4_png", "5_png", "6_png", "7_png", "8_png", "9_png", "10_png"];
+        //等级称呼图片数组
+        _this.chenghuImgArray = ["1_png", "2_png", "3_png", "4_png", "5_png", "6_png", "7_png", "8_png", "9_png", "10_png", "11_png", "12_png", "13_png", "14_png", "15_png",
+            "16_png", "17_png", "18_png", "19_png"];
         _this.pageIndex = 1; //当前关卡页数。  1 - 10
         return _this;
         // this.skinName =  "resource/eui_skins/LevelScene.exml"
@@ -1135,7 +1144,7 @@ var LevelScene = (function (_super) {
             console.log("第一关");
             this.btn_before.visible = false;
         }
-        else if (this.pageIndex == 513) {
+        else if (this.pageIndex == this.maxPageNum) {
             console.log("最后一关");
             this.btn_next.visible = false;
         }
@@ -1189,10 +1198,16 @@ var LevelScene = (function (_super) {
     };
     /** 每3页换一个 每一页一颗星 */
     LevelScene.prototype.updataName = function () {
-        var chenghuNum = this.pageIndex / 3;
-        var num = this.pageIndex % 3;
+        //1开始  012 0   345 1 
+        var chenghuNum = Math.floor((this.pageIndex - 1) / 3);
+        var num = (this.pageIndex - 1) % 3;
         // xxx.text = this.gradeStringArray[num];
-        // xxx.source = this. chenghuImgArray[num];
+        this.ImgName.source = this.chenghuImgArray[chenghuNum];
+        // xingxing1.group.getchildat(num).visible = true;
+        // else false;
+        this.xingBtn1.currentState = num >= 0 ? "up" : "down";
+        this.xingBtn2.currentState = num >= 1 ? "up" : "down";
+        this.xingBtn3.currentState = num >= 2 ? "up" : "down";
     };
     //替换label显示。
     LevelScene.prototype.updateLabel = function (group, num) {
@@ -1783,6 +1798,8 @@ var SceneGame = (function (_super) {
         var _this = _super.call(this) || this;
         _this.isdisplay = false;
         _this.isFirst = false;
+        _this.resultStr = "";
+        _this.tiStr = "";
         _this.jumpToAppDict = {
             "wxd101b6b8f64db085": { path: "pages/index/index?from=wxcps&tag=U84Sv-g2td", extraData: {}, envVersion: "" }
         };
@@ -1892,6 +1909,7 @@ var SceneGame = (function (_super) {
         this.levelIndex = index;
         this.labelLevel.text = this.levelIndex.toString();
         var levelData = LevelDataManager.getInstance().GetLevelData(index); //得到关卡数据
+        console.log(levelData.word[0]);
         //将字段接起来
         //要展示的数据
         var showData = this.getSelectWords(index);
@@ -1922,20 +1940,26 @@ var SceneGame = (function (_super) {
         var resultArray = [];
         for (var i = 0; i < levelData.word[1].length; i++) {
             resultArray.push(levelData.word[1].charAt(i));
+            console.log(resultArray[i]);
         }
         for (var i = 0; i < this.group_Result.numChildren; i++) {
             var answerRect = this.group_Result.getChildAt(i);
-            answerRect.visible = true;
             answerRect.SetSelectWord(resultArray[i]);
-            answerRect.selectWord = resultArray[i];
+            if (resultArray[i] == levelData.answer) {
+                answerRect.daanImg.visible = true;
+                this.answerWord = answerRect;
+            }
+            else {
+                answerRect.daanImg.visible = false;
+            }
         }
         //显示问题
-        this.label_Question.text = this.chatAtQuestion(levelData.word[0]);
+        this.label_Question.text = this.chatAtQuestion(levelData.word[0]) + "，_________";
         this.hongbao20();
     };
     /**将原字符串改为自己想要的样子 */
     SceneGame.prototype.chatAtQuestion = function (str) {
-        var strArr = "    ";
+        var strArr = "";
         for (var i = 0; i < str.length; i++) {
             if (i == str.length - 1) {
                 strArr += str.charAt(i);
@@ -2012,10 +2036,10 @@ var SceneGame = (function (_super) {
             }
             this.group_Chaotic.removeChildren();
             //加布局类。   eui正确设置一次就可以不变了。除非想改变布局才改。
-            var tLayout = new eui.TileLayout();
-            tLayout.horizontalGap = 20;
-            tLayout.verticalGap = 10;
-            this.group_Chaotic.layout = tLayout;
+            // let tLayout: eui.TileLayout = new eui.TileLayout();
+            // tLayout.horizontalGap = 20;
+            // tLayout.verticalGap = 10;
+            // this.group_Chaotic.layout = tLayout;
             for (var i = 0; i < 15; i++) {
                 var word = new Word();
                 word.width = 89; //要设置  不然group中布局以子元素中最大的做基础。默认为20
@@ -2038,35 +2062,47 @@ var SceneGame = (function (_super) {
             return list;
         }
     };
+    SceneGame.prototype.isWin = function () {
+        var str = LevelDataManager.getInstance().GetLevelData(this.levelIndex).word[1];
+        if (str.length >= 6) {
+            for (var i = 0; i < 2; i++) {
+                var random = Math.random() * 50;
+                this.resultStr += str.charAt(random);
+            }
+        }
+        //判断点击后的答案是否与此答案相同
+    };
     //点击字块发生逻辑  由当前字自己抛出
     SceneGame.prototype.onclick_Word = function (word) {
         //找到一个合适的位置
-        var rect = null;
-        for (var i = 0; i < this.group_Result.numChildren; i++) {
-            var temp = this.group_Result.getChildAt(i); //找到空位置
-            if (temp.selectWord == null) {
-                rect = temp; //此时赋值后rect代表空的那个答案字块
-                break;
-            }
-        }
+        // let rect: AnswerWord = null;
+        // for (let i = 0; i < this.group_Result.numChildren; i++) {
+        // 	let temp = <AnswerWord>this.group_Result.getChildAt(i);//找到空位置
+        // 	if (temp.selectWord == null) {
+        // 		rect = temp;//此时赋值后rect代表空的那个答案字块
+        // 		break;
+        // 	}
+        // }
+        var str = word.label_answer.text;
         //找到位置后填充
-        if (rect != null) {
-            rect.SetSelectWord(word); //显示问题字
-            //判断是否胜利   点击一次判断一次
-            var str = ""; //每点击一次把答案都加上来判断一次。
-            for (var i = 0; i < this.group_Result.numChildren; i++) {
-                var answer = this.group_Result.getChildAt(i);
-                str += answer.GetWordText();
-            }
-            if (str == LevelDataManager.getInstance().GetLevelData(this.levelIndex).word[1]) {
+        if (str != null) {
+            // rect.SetSelectWord(word);//显示问题字
+            // //判断是否胜利   点击一次判断一次
+            // let str: string = "";//每点击一次把答案都加上来判断一次。
+            // for (let i = 0; i < this.group_Result.numChildren; i++) {//答案数组
+            // 	let answer = <AnswerWord>this.group_Result.getChildAt(i);
+            // 	str += answer.GetWordText();
+            // }
+            if (str == LevelDataManager.getInstance().GetLevelData(this.levelIndex).answer) {
                 console.log("你赢了");
                 this.bingoLayer.visible = true;
                 this.bingoLayer.bingoGroup.visible = true;
                 this.hintBg(false);
                 SoundManager.getInstance().trueSoundChanel = SoundManager.getInstance().trueSound.play(0, 1);
                 SoundManager.getInstance().trueSoundChanel.volume = 1;
+                this.answerWord.daanImg.visible = false;
             }
-            else if (str.length == this.group_Result.numChildren) {
+            else if (str != LevelDataManager.getInstance().GetLevelData(this.levelIndex).answer) {
                 console.log("you lose");
                 this.bingoLayer.visible = true;
                 this.hintBg(false);
@@ -2462,31 +2498,31 @@ __reflect(Util.prototype, "Util");
 var AnswerWord = (function (_super) {
     __extends(AnswerWord, _super);
     function AnswerWord() {
-        var _this = _super.call(this) || this;
-        _this.selectWord = null; //用一个变量来保存点击到的字
-        return _this;
-        // this.skinName = "resource/eui_skins/AnswerWord.exml";
+        return _super.call(this) || this;
     }
-    AnswerWord.prototype.onclick_tap = function () {
-        SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0, 1);
-        SoundManager.getInstance().answerSoundChanel.volume = 1;
-        //恢复点进来的字
-        if (this.selectWord != null) {
-            this.selectWord.visible = true;
-            this.selectWord = null;
-            this.SetWordText(""); //将自身的字清除
-        }
-        console.log("答案字被点击");
-    };
+    // public selectWord:Word = null;//用一个变量来保存点击到的字
+    // protected onclick_tap()//不同的点击逻辑
+    // {
+    // 	SoundManager.getInstance().answerSoundChanel = SoundManager.getInstance().answerSound.play(0,1);
+    // 	SoundManager.getInstance().answerSoundChanel.volume = 1;
+    // 	//恢复点进来的字
+    // 	if(this.selectWord != null)//这里是恢复
+    // 	{
+    // 		this.selectWord.visible = true;  
+    // 		this.selectWord = null;
+    // 		this.SetWordText("");//将自身的字清除
+    // 	}
+    // 	console.log("答案字被点击")
+    // }
     AnswerWord.prototype.SetSelectWord = function (word) {
         if (word != null) {
-            word.visible = false;
-            this.SetWordText(word.GetWordText()); //这里实现答案字显示问题字.
-            this.selectWord = word; //将问题字存储在答案字，一一对应，方便后面恢复显示。
+            // word.visible = false;
+            this.label_answer.text = word; //这里实现答案字显示问题字.
+            // this.selectWord = word;//将问题字存储在答案字，一一对应，方便后面恢复显示。
         }
         else {
             this.SetWordText("");
-            this.selectWord = null;
+            // this.selectWord = null;
         }
     };
     AnswerWord.prototype.partAdded = function (partName, instance) {
@@ -2494,6 +2530,7 @@ var AnswerWord = (function (_super) {
     };
     AnswerWord.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
+        this.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onclick_tap, this);
     };
     return AnswerWord;
 }(Word));

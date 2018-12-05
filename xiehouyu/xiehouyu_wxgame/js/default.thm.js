@@ -14,41 +14,48 @@ var egret = window.egret;window.skins={};
 	__extends(AnswerWordSkin, _super);
 	function AnswerWordSkin() {
 		_super.call(this);
-		this.skinParts = ["label_answer"];
+		this.skinParts = ["label_answer","daanImg"];
 		
-		this.height = 75;
-		this.width = 75;
-		this.elementsContent = [this._Image1_i(),this.label_answer_i()];
+		this.height = 90;
+		this.width = 90;
+		this.elementsContent = [this._Image1_i(),this.label_answer_i(),this.daanImg_i()];
 	}
 	var _proto = AnswerWordSkin.prototype;
 
 	_proto._Image1_i = function () {
 		var t = new eui.Image();
-		t.anchorOffsetX = 32;
-		t.anchorOffsetY = 32;
-		t.height = 75;
+		t.anchorOffsetX = 45;
+		t.anchorOffsetY = 45;
 		t.source = "daandi_png";
-		t.width = 75;
-		t.x = 32;
-		t.y = 32;
+		t.x = 45;
+		t.y = 45;
 		return t;
 	};
 	_proto.label_answer_i = function () {
 		var t = new eui.Label();
 		this.label_answer = t;
-		t.anchorOffsetX = 32;
-		t.anchorOffsetY = 32;
+		t.anchorOffsetX = 45;
+		t.anchorOffsetY = 45;
 		t.bold = true;
 		t.fontFamily = "SimHei";
-		t.height = 75;
+		t.height = 90;
 		t.size = 42;
 		t.text = "答";
 		t.textAlign = "center";
-		t.textColor = 0x070000;
+		t.textColor = 0xfffefd;
 		t.verticalAlign = "middle";
-		t.width = 75;
-		t.x = 32;
-		t.y = 32;
+		t.width = 90;
+		t.x = 45;
+		t.y = 45;
+		return t;
+	};
+	_proto.daanImg_i = function () {
+		var t = new eui.Image();
+		this.daanImg = t;
+		t.source = "kongge_png";
+		t.visible = false;
+		t.x = 0;
+		t.y = 0;
 		return t;
 	};
 	return AnswerWordSkin;
@@ -551,11 +558,9 @@ var egret = window.egret;window.skins={};
 		t.anchorOffsetX = 115;
 		t.anchorOffsetY = 43;
 		t.enabled = true;
-		t.height = 96;
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
-		t.width = 230;
 		t.x = 260;
 		t.y = 400;
 		t.skinName = BingoSkin$Skin1;
@@ -567,11 +572,9 @@ var egret = window.egret;window.skins={};
 		t.anchorOffsetX = 115;
 		t.anchorOffsetY = 46;
 		t.enabled = true;
-		t.height = 96;
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
-		t.width = 230;
 		t.x = -60;
 		t.y = 400;
 		t.skinName = BingoSkin$Skin2;
@@ -580,13 +583,11 @@ var egret = window.egret;window.skins={};
 	_proto.ditu_i = function () {
 		var t = new eui.Image();
 		this.ditu = t;
-		t.height = 447;
 		t.horizontalCenter = 0;
 		t.scaleX = 1;
 		t.scaleY = 1;
 		t.source = "daduidi_png";
 		t.verticalCenter = 0;
-		t.width = 561;
 		t.x = -180;
 		t.y = -122.99999999999994;
 		return t;
@@ -614,12 +615,10 @@ var egret = window.egret;window.skins={};
 	_proto.daandi_i = function () {
 		var t = new eui.Image();
 		this.daandi = t;
-		t.height = 290;
 		t.horizontalCenter = 0;
 		t.scaleX = 1;
 		t.scaleY = 1;
 		t.source = "tanchuandaandi_png";
-		t.width = 494;
 		t.y = -45;
 		return t;
 	};
@@ -670,11 +669,9 @@ var egret = window.egret;window.skins={};
 	_proto.diImg_i = function () {
 		var t = new eui.Image();
 		this.diImg = t;
-		t.height = 477;
 		t.horizontalCenter = 0;
 		t.source = "daduidi_png";
 		t.verticalCenter = 0;
-		t.width = 561;
 		return t;
 	};
 	_proto.tenImg_i = function () {
@@ -682,10 +679,8 @@ var egret = window.egret;window.skins={};
 		this.tenImg = t;
 		t.anchorOffsetX = 77;
 		t.anchorOffsetY = 0;
-		t.height = 55;
 		t.horizontalCenter = 0;
 		t.source = "ten_png";
-		t.width = 154;
 		t.y = 127;
 		return t;
 	};
@@ -693,11 +688,9 @@ var egret = window.egret;window.skins={};
 		var t = new eui.Button();
 		this.Btntiaozhan = t;
 		t.enabled = true;
-		t.height = 96;
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
-		t.width = 230;
 		t.x = -15;
 		t.y = 358;
 		t.skinName = BingoSkin$Skin3;
@@ -719,7 +712,7 @@ var egret = window.egret;window.skins={};
 		t.textColor = 0x0a0909;
 		t.verticalAlign = "middle";
 		t.width = 300;
-		t.y = 241;
+		t.y = 221;
 		return t;
 	};
 	_proto.chachaBtn_i = function () {
@@ -727,10 +720,12 @@ var egret = window.egret;window.skins={};
 		this.chachaBtn = t;
 		t.height = 32;
 		t.label = "";
+		t.scaleX = 1;
+		t.scaleY = 1;
 		t.visible = false;
 		t.width = 32;
-		t.x = 339;
-		t.y = 34;
+		t.x = 355;
+		t.y = -66;
 		t.skinName = BingoSkin$Skin4;
 		return t;
 	};
@@ -748,11 +743,9 @@ var egret = window.egret;window.skins={};
 	_proto.imgErrodi_i = function () {
 		var t = new eui.Image();
 		this.imgErrodi = t;
-		t.height = 477;
 		t.scaleX = 1;
 		t.scaleY = 1;
 		t.source = "cuoledi_png";
-		t.width = 561;
 		t.x = -180;
 		t.y = -138;
 		return t;
@@ -761,11 +754,9 @@ var egret = window.egret;window.skins={};
 		var t = new eui.Button();
 		this.jixuBtn = t;
 		t.enabled = true;
-		t.height = 96;
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
-		t.width = 230;
 		t.x = 148;
 		t.y = 358;
 		t.skinName = BingoSkin$Skin5;
@@ -775,11 +766,9 @@ var egret = window.egret;window.skins={};
 		var t = new eui.Button();
 		this.chongwanBtn = t;
 		t.enabled = true;
-		t.height = 96;
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
-		t.width = 230;
 		t.x = -167;
 		t.y = 358;
 		t.skinName = BingoSkin$Skin6;
@@ -1221,48 +1210,43 @@ var egret = window.egret;window.skins={};
 	__extends(LevelIconSkin, _super);
 	function LevelIconSkin() {
 		_super.call(this);
-		this.skinParts = ["imgGuankadi","bitlabel_levelIndex","imgLock"];
+		this.skinParts = ["imgGuankadi","levelLabel","imgLock"];
 		
-		this.height = 185;
-		this.width = 171;
-		this.elementsContent = [this.imgGuankadi_i(),this.bitlabel_levelIndex_i(),this.imgLock_i()];
+		this.height = 179;
+		this.width = 152;
+		this.elementsContent = [this.imgGuankadi_i(),this.levelLabel_i(),this.imgLock_i()];
 	}
 	var _proto = LevelIconSkin.prototype;
 
 	_proto.imgGuankadi_i = function () {
 		var t = new eui.Image();
 		this.imgGuankadi = t;
-		t.height = 185;
 		t.source = "guankadi_png";
-		t.width = 171;
 		t.x = 0;
 		t.y = 0;
 		return t;
 	};
-	_proto.bitlabel_levelIndex_i = function () {
-		var t = new eui.BitmapLabel();
-		this.bitlabel_levelIndex = t;
-		t.alpha = 0;
-		t.anchorOffsetX = 0;
-		t.anchorOffsetY = 0;
-		t.font = "number_fnt";
-		t.height = 62;
+	_proto.levelLabel_i = function () {
+		var t = new eui.Label();
+		this.levelLabel = t;
+		t.bold = true;
+		t.fontFamily = "Arial";
+		t.size = 48;
 		t.text = "999";
 		t.textAlign = "center";
-		t.width = 146;
-		t.x = 13;
-		t.y = 85;
+		t.textColor = 0x010000;
+		t.verticalAlign = "middle";
+		t.x = 56;
+		t.y = 71;
 		return t;
 	};
 	_proto.imgLock_i = function () {
 		var t = new eui.Image();
 		this.imgLock = t;
 		t.alpha = 1;
-		t.height = 81;
 		t.source = "suo_png";
-		t.width = 65;
-		t.x = 52;
-		t.y = 72;
+		t.x = 0;
+		t.y = 18;
 		return t;
 	};
 	return LevelIconSkin;
@@ -1388,17 +1372,143 @@ var egret = window.egret;window.skins={};
 		return LevelSceneSkin$Skin14;
 	})(eui.Skin);
 
+	var LevelSceneSkin$Skin15 = 	(function (_super) {
+		__extends(LevelSceneSkin$Skin15, _super);
+		function LevelSceneSkin$Skin15() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+						new eui.SetProperty("_Image1","source","xing2_png")
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = LevelSceneSkin$Skin15.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			this._Image1 = t;
+			t.percentHeight = 100;
+			t.source = "xing1_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return LevelSceneSkin$Skin15;
+	})(eui.Skin);
+
+	var LevelSceneSkin$Skin16 = 	(function (_super) {
+		__extends(LevelSceneSkin$Skin16, _super);
+		function LevelSceneSkin$Skin16() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+						new eui.SetProperty("_Image1","source","xing2_png")
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = LevelSceneSkin$Skin16.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			this._Image1 = t;
+			t.percentHeight = 100;
+			t.source = "xing1_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return LevelSceneSkin$Skin16;
+	})(eui.Skin);
+
+	var LevelSceneSkin$Skin17 = 	(function (_super) {
+		__extends(LevelSceneSkin$Skin17, _super);
+		function LevelSceneSkin$Skin17() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+						new eui.SetProperty("_Image1","source","xing2_png")
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = LevelSceneSkin$Skin17.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			this._Image1 = t;
+			t.percentHeight = 100;
+			t.source = "xing1_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return LevelSceneSkin$Skin17;
+	})(eui.Skin);
+
 	function LevelSceneSkin() {
 		_super.call(this);
-		this.skinParts = ["levelBg","ditu","btn_next","btn_before","closeBtn","ImgName","groupLevel"];
+		this.skinParts = ["levelBg","ditu","btn_next","btn_before","closeBtn","ImgName","groupLevel","xingBtn1","xingBtn2","xingBtn3"];
 		
 		this.height = 1280;
 		this.width = 720;
-		this.elementsContent = [this._Group2_i()];
+		this.elementsContent = [this._Group3_i()];
 	}
 	var _proto = LevelSceneSkin.prototype;
 
-	_proto._Group2_i = function () {
+	_proto._Group3_i = function () {
 		var t = new eui.Group();
 		t.anchorOffsetX = 360;
 		t.anchorOffsetY = 640;
@@ -1406,10 +1516,10 @@ var egret = window.egret;window.skins={};
 		t.left = 0;
 		t.right = 0;
 		t.top = 0;
-		t.elementsContent = [this._Group1_i()];
+		t.elementsContent = [this._Group2_i()];
 		return t;
 	};
-	_proto._Group1_i = function () {
+	_proto._Group2_i = function () {
 		var t = new eui.Group();
 		t.anchorOffsetX = 360;
 		t.anchorOffsetY = 640;
@@ -1417,7 +1527,7 @@ var egret = window.egret;window.skins={};
 		t.width = 720;
 		t.x = 360;
 		t.y = 640;
-		t.elementsContent = [this.levelBg_i(),this.ditu_i(),this.btn_next_i(),this.btn_before_i(),this.closeBtn_i(),this.ImgName_i(),this.groupLevel_i()];
+		t.elementsContent = [this.levelBg_i(),this.ditu_i(),this.btn_next_i(),this.btn_before_i(),this.closeBtn_i(),this.ImgName_i(),this.groupLevel_i(),this._Group1_i()];
 		return t;
 	};
 	_proto.levelBg_i = function () {
@@ -1426,9 +1536,7 @@ var egret = window.egret;window.skins={};
 		t.alpha = 0.5;
 		t.anchorOffsetX = 360;
 		t.anchorOffsetY = 640;
-		t.height = 1280;
 		t.source = "levelBg_png";
-		t.width = 720;
 		t.x = 360;
 		t.y = 640;
 		return t;
@@ -1438,10 +1546,8 @@ var egret = window.egret;window.skins={};
 		this.ditu = t;
 		t.anchorOffsetX = 324;
 		t.anchorOffsetY = 423;
-		t.height = 846;
 		t.source = "ditu_png";
-		t.width = 648;
-		t.x = 360;
+		t.x = 313;
 		t.y = 540;
 		return t;
 	};
@@ -1477,21 +1583,21 @@ var egret = window.egret;window.skins={};
 		this.closeBtn = t;
 		t.enabled = true;
 		t.label = "";
-		t.x = 624;
-		t.y = 273;
+		t.x = 579;
+		t.y = 130;
 		t.skinName = LevelSceneSkin$Skin14;
 		return t;
 	};
 	_proto.ImgName_i = function () {
 		var t = new eui.Image();
 		this.ImgName = t;
-		t.anchorOffsetX = 43;
+		t.anchorOffsetX = 90;
 		t.anchorOffsetY = 0;
-		t.height = 37;
+		t.height = 40;
 		t.horizontalCenter = 0;
 		t.source = "1_png";
-		t.width = 87;
-		t.y = 281;
+		t.width = 180;
+		t.y = 146;
 		return t;
 	};
 	_proto.groupLevel_i = function () {
@@ -1501,7 +1607,7 @@ var egret = window.egret;window.skins={};
 		t.anchorOffsetY = 0;
 		t.height = 578;
 		t.width = 580;
-		t.x = 62;
+		t.x = 80;
 		t.y = 352;
 		t.layout = this._TileLayout1_i();
 		t.elementsContent = [this._LevelIcon1_i(),this._LevelIcon2_i(),this._LevelIcon3_i(),this._LevelIcon4_i(),this._LevelIcon5_i(),this._LevelIcon6_i(),this._LevelIcon7_i()];
@@ -1509,7 +1615,9 @@ var egret = window.egret;window.skins={};
 	};
 	_proto._TileLayout1_i = function () {
 		var t = new eui.TileLayout();
-		t.horizontalGap = 25;
+		t.columnAlign = "justifyUsingWidth";
+		t.horizontalGap = 27;
+		t.paddingLeft = 0;
 		t.verticalGap = 15;
 		return t;
 	};
@@ -1569,10 +1677,50 @@ var egret = window.egret;window.skins={};
 		t.y = 174;
 		return t;
 	};
+	_proto._Group1_i = function () {
+		var t = new eui.Group();
+		t.anchorOffsetY = 0;
+		t.x = 269;
+		t.y = 251;
+		t.layout = this._HorizontalLayout1_i();
+		t.elementsContent = [this.xingBtn1_i(),this.xingBtn2_i(),this.xingBtn3_i()];
+		return t;
+	};
+	_proto._HorizontalLayout1_i = function () {
+		var t = new eui.HorizontalLayout();
+		return t;
+	};
+	_proto.xingBtn1_i = function () {
+		var t = new eui.Button();
+		this.xingBtn1 = t;
+		t.label = "";
+		t.x = 17;
+		t.y = 20;
+		t.skinName = LevelSceneSkin$Skin15;
+		return t;
+	};
+	_proto.xingBtn2_i = function () {
+		var t = new eui.Button();
+		this.xingBtn2 = t;
+		t.label = "";
+		t.x = 27;
+		t.y = 30;
+		t.skinName = LevelSceneSkin$Skin16;
+		return t;
+	};
+	_proto.xingBtn3_i = function () {
+		var t = new eui.Button();
+		this.xingBtn3 = t;
+		t.label = "";
+		t.x = 37;
+		t.y = 40;
+		t.skinName = LevelSceneSkin$Skin17;
+		return t;
+	};
 	return LevelSceneSkin;
-})(eui.Skin);generateEUI.paths['resource/eui_skins/list.exml'] = window.$exmlClass15 = (function (_super) {
-	__extends($exmlClass15, _super);
-	function $exmlClass15() {
+})(eui.Skin);generateEUI.paths['resource/eui_skins/list.exml'] = window.$exmlClass18 = (function (_super) {
+	__extends($exmlClass18, _super);
+	function $exmlClass18() {
 		_super.call(this);
 		this.skinParts = ["testlist"];
 		
@@ -1580,7 +1728,7 @@ var egret = window.egret;window.skins={};
 		this.width = 400;
 		this.elementsContent = [this._Scroller1_i()];
 	}
-	var _proto = $exmlClass15.prototype;
+	var _proto = $exmlClass18.prototype;
 
 	_proto._Scroller1_i = function () {
 		var t = new eui.Scroller();
@@ -1596,7 +1744,7 @@ var egret = window.egret;window.skins={};
 		this.testlist = t;
 		return t;
 	};
-	return $exmlClass15;
+	return $exmlClass18;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/PanelSkin.exml'] = window.skins.PanelSkin = (function (_super) {
 	__extends(PanelSkin, _super);
 	function PanelSkin() {
@@ -1826,126 +1974,6 @@ var egret = window.egret;window.skins={};
 	return RadioButtonSkin;
 })(eui.Skin);generateEUI.paths['resource/eui_skins/SceneGame.exml'] = window.SceneGameSkin = (function (_super) {
 	__extends(SceneGameSkin, _super);
-	var SceneGameSkin$Skin16 = 	(function (_super) {
-		__extends(SceneGameSkin$Skin16, _super);
-		function SceneGameSkin$Skin16() {
-			_super.call(this);
-			this.skinParts = ["labelDisplay"];
-			
-			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
-			this.states = [
-				new eui.State ("up",
-					[
-					])
-				,
-				new eui.State ("down",
-					[
-					])
-				,
-				new eui.State ("disabled",
-					[
-					])
-			];
-		}
-		var _proto = SceneGameSkin$Skin16.prototype;
-
-		_proto._Image1_i = function () {
-			var t = new eui.Image();
-			t.percentHeight = 100;
-			t.source = "guanka_png";
-			t.percentWidth = 100;
-			return t;
-		};
-		_proto.labelDisplay_i = function () {
-			var t = new eui.Label();
-			this.labelDisplay = t;
-			t.horizontalCenter = 0;
-			t.verticalCenter = 0;
-			return t;
-		};
-		return SceneGameSkin$Skin16;
-	})(eui.Skin);
-
-	var SceneGameSkin$Skin17 = 	(function (_super) {
-		__extends(SceneGameSkin$Skin17, _super);
-		function SceneGameSkin$Skin17() {
-			_super.call(this);
-			this.skinParts = ["labelDisplay"];
-			
-			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
-			this.states = [
-				new eui.State ("up",
-					[
-					])
-				,
-				new eui.State ("down",
-					[
-					])
-				,
-				new eui.State ("disabled",
-					[
-					])
-			];
-		}
-		var _proto = SceneGameSkin$Skin17.prototype;
-
-		_proto._Image1_i = function () {
-			var t = new eui.Image();
-			t.percentHeight = 100;
-			t.source = "daan_png";
-			t.percentWidth = 100;
-			return t;
-		};
-		_proto.labelDisplay_i = function () {
-			var t = new eui.Label();
-			this.labelDisplay = t;
-			t.horizontalCenter = 0;
-			t.verticalCenter = 0;
-			return t;
-		};
-		return SceneGameSkin$Skin17;
-	})(eui.Skin);
-
-	var SceneGameSkin$Skin18 = 	(function (_super) {
-		__extends(SceneGameSkin$Skin18, _super);
-		function SceneGameSkin$Skin18() {
-			_super.call(this);
-			this.skinParts = ["labelDisplay"];
-			
-			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
-			this.states = [
-				new eui.State ("up",
-					[
-					])
-				,
-				new eui.State ("down",
-					[
-					])
-				,
-				new eui.State ("disabled",
-					[
-					])
-			];
-		}
-		var _proto = SceneGameSkin$Skin18.prototype;
-
-		_proto._Image1_i = function () {
-			var t = new eui.Image();
-			t.percentHeight = 100;
-			t.source = "paihangbang_png";
-			t.percentWidth = 100;
-			return t;
-		};
-		_proto.labelDisplay_i = function () {
-			var t = new eui.Label();
-			this.labelDisplay = t;
-			t.horizontalCenter = 0;
-			t.verticalCenter = 0;
-			return t;
-		};
-		return SceneGameSkin$Skin18;
-	})(eui.Skin);
-
 	var SceneGameSkin$Skin19 = 	(function (_super) {
 		__extends(SceneGameSkin$Skin19, _super);
 		function SceneGameSkin$Skin19() {
@@ -1972,7 +2000,7 @@ var egret = window.egret;window.skins={};
 		_proto._Image1_i = function () {
 			var t = new eui.Image();
 			t.percentHeight = 100;
-			t.source = "xiaoren_png";
+			t.source = "guanka_png";
 			t.percentWidth = 100;
 			return t;
 		};
@@ -2012,7 +2040,7 @@ var egret = window.egret;window.skins={};
 		_proto._Image1_i = function () {
 			var t = new eui.Image();
 			t.percentHeight = 100;
-			t.source = "hongbaoicon_png";
+			t.source = "daan_png";
 			t.percentWidth = 100;
 			return t;
 		};
@@ -2052,7 +2080,7 @@ var egret = window.egret;window.skins={};
 		_proto._Image1_i = function () {
 			var t = new eui.Image();
 			t.percentHeight = 100;
-			t.source = "xuanyao_png";
+			t.source = "paihangbang_png";
 			t.percentWidth = 100;
 			return t;
 		};
@@ -2092,7 +2120,7 @@ var egret = window.egret;window.skins={};
 		_proto._Image1_i = function () {
 			var t = new eui.Image();
 			t.percentHeight = 100;
-			t.source = "close_png";
+			t.source = "hongbaoicon_png";
 			t.percentWidth = 100;
 			return t;
 		};
@@ -2106,9 +2134,129 @@ var egret = window.egret;window.skins={};
 		return SceneGameSkin$Skin22;
 	})(eui.Skin);
 
+	var SceneGameSkin$Skin23 = 	(function (_super) {
+		__extends(SceneGameSkin$Skin23, _super);
+		function SceneGameSkin$Skin23() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = SceneGameSkin$Skin23.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "xuanyao_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return SceneGameSkin$Skin23;
+	})(eui.Skin);
+
+	var SceneGameSkin$Skin24 = 	(function (_super) {
+		__extends(SceneGameSkin$Skin24, _super);
+		function SceneGameSkin$Skin24() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = SceneGameSkin$Skin24.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "xiaoren_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return SceneGameSkin$Skin24;
+	})(eui.Skin);
+
+	var SceneGameSkin$Skin25 = 	(function (_super) {
+		__extends(SceneGameSkin$Skin25, _super);
+		function SceneGameSkin$Skin25() {
+			_super.call(this);
+			this.skinParts = ["labelDisplay"];
+			
+			this.elementsContent = [this._Image1_i(),this.labelDisplay_i()];
+			this.states = [
+				new eui.State ("up",
+					[
+					])
+				,
+				new eui.State ("down",
+					[
+					])
+				,
+				new eui.State ("disabled",
+					[
+					])
+			];
+		}
+		var _proto = SceneGameSkin$Skin25.prototype;
+
+		_proto._Image1_i = function () {
+			var t = new eui.Image();
+			t.percentHeight = 100;
+			t.source = "close_png";
+			t.percentWidth = 100;
+			return t;
+		};
+		_proto.labelDisplay_i = function () {
+			var t = new eui.Label();
+			this.labelDisplay = t;
+			t.horizontalCenter = 0;
+			t.verticalCenter = 0;
+			return t;
+		};
+		return SceneGameSkin$Skin25;
+	})(eui.Skin);
+
 	function SceneGameSkin() {
 		_super.call(this);
-		this.skinParts = ["gameBg","btn_Level","btn_result","btn_paihang","group_Help","label_Question","group_Result","group_Chaotic","labelLevel","caiziBtn","xiaorenBtn","dianImg","hongbaoBtn","xuanyaoBtn","levelScene","bingoLayer","imgDibang","openGroup","closeBtn"];
+		this.skinParts = ["gameBg","labelLevel","group_Help","label_Question","group_Result","group_Chaotic","caiziBtn","btn_Level","btn_result","btn_paihang","hongbaoBtn","xuanyaoBtn","xiaorenBtn","dianImg","levelScene","bingoLayer","imgDibang","openGroup","closeBtn"];
 		
 		this.height = 1280;
 		this.width = 720;
@@ -2133,7 +2281,7 @@ var egret = window.egret;window.skins={};
 		t.scaleY = 1;
 		t.verticalCenter = 0;
 		t.width = 720;
-		t.elementsContent = [this.gameBg_i(),this.group_Help_i(),this.label_Question_i(),this.group_Result_i(),this.group_Chaotic_i(),this.labelLevel_i(),this.caiziBtn_i(),this.xiaorenBtn_i(),this.dianImg_i(),this.hongbaoBtn_i(),this.xuanyaoBtn_i(),this.levelScene_i(),this.bingoLayer_i(),this.openGroup_i(),this.closeBtn_i()];
+		t.elementsContent = [this.gameBg_i(),this.group_Help_i(),this.label_Question_i(),this.group_Result_i(),this.group_Chaotic_i(),this.caiziBtn_i(),this.btn_Level_i(),this.btn_result_i(),this.btn_paihang_i(),this.hongbaoBtn_i(),this.xuanyaoBtn_i(),this.xiaorenBtn_i(),this.dianImg_i(),this.levelScene_i(),this.bingoLayer_i(),this.openGroup_i(),this.closeBtn_i()];
 		return t;
 	};
 	_proto.gameBg_i = function () {
@@ -2155,241 +2303,7 @@ var egret = window.egret;window.skins={};
 		t.horizontalCenter = 0;
 		t.width = 720;
 		t.y = 0;
-		t.elementsContent = [this.btn_Level_i(),this.btn_result_i(),this.btn_paihang_i()];
-		return t;
-	};
-	_proto.btn_Level_i = function () {
-		var t = new eui.Button();
-		this.btn_Level = t;
-		t.anchorOffsetX = 0;
-		t.anchorOffsetY = 0;
-		t.enabled = true;
-		t.height = 101;
-		t.label = "";
-		t.width = 89;
-		t.x = 22;
-		t.y = 138;
-		t.skinName = SceneGameSkin$Skin16;
-		return t;
-	};
-	_proto.btn_result_i = function () {
-		var t = new eui.Button();
-		this.btn_result = t;
-		t.anchorOffsetX = 103;
-		t.anchorOffsetY = 38;
-		t.enabled = true;
-		t.height = 76;
-		t.label = "";
-		t.width = 207;
-		t.x = 360;
-		t.y = 578;
-		t.skinName = SceneGameSkin$Skin17;
-		return t;
-	};
-	_proto.btn_paihang_i = function () {
-		var t = new eui.Button();
-		this.btn_paihang = t;
-		t.enabled = true;
-		t.height = 100;
-		t.label = "";
-		t.scaleX = 1;
-		t.scaleY = 1;
-		t.width = 90;
-		t.x = 20;
-		t.y = 25;
-		t.skinName = SceneGameSkin$Skin18;
-		return t;
-	};
-	_proto.label_Question_i = function () {
-		var t = new eui.Label();
-		this.label_Question = t;
-		t.anchorOffsetX = 0;
-		t.anchorOffsetY = 0;
-		t.fontFamily = "Microsoft YaHei";
-		t.height = 256.3;
-		t.horizontalCenter = 11.5;
-		t.lineSpacing = 15;
-		t.size = 35;
-		t.text = "小明上班时间吃红豆汤圆，经理看见后生气的说，太闲了是不是，小明回答了什么话把经理气的差点晕倒??";
-		t.textAlign = "left";
-		t.textColor = 0xf7f7f7;
-		t.verticalAlign = "top";
-		t.width = 472.67;
-		t.y = 280;
-		return t;
-	};
-	_proto.group_Result_i = function () {
-		var t = new eui.Group();
-		this.group_Result = t;
-		t.anchorOffsetX = 0;
-		t.anchorOffsetY = 0;
-		t.height = 85.75;
-		t.width = 620;
-		t.x = 53;
-		t.y = 633;
-		t.layout = this._HorizontalLayout1_i();
-		t.elementsContent = [this._AnswerWord1_i(),this._AnswerWord2_i(),this._AnswerWord3_i(),this._AnswerWord4_i(),this._AnswerWord5_i(),this._AnswerWord6_i(),this._AnswerWord7_i()];
-		return t;
-	};
-	_proto._HorizontalLayout1_i = function () {
-		var t = new eui.HorizontalLayout();
-		t.gap = 9;
-		t.horizontalAlign = "center";
-		return t;
-	};
-	_proto._AnswerWord1_i = function () {
-		var t = new AnswerWord();
-		t.height = 75;
-		t.width = 75;
-		t.x = 0;
-		t.y = 37;
-		return t;
-	};
-	_proto._AnswerWord2_i = function () {
-		var t = new AnswerWord();
-		t.height = 75;
-		t.width = 75;
-		t.x = 10;
-		t.y = 47;
-		return t;
-	};
-	_proto._AnswerWord3_i = function () {
-		var t = new AnswerWord();
-		t.height = 75;
-		t.width = 75;
-		t.x = 20;
-		t.y = 57;
-		return t;
-	};
-	_proto._AnswerWord4_i = function () {
-		var t = new AnswerWord();
-		t.height = 75;
-		t.width = 75;
-		t.x = 30;
-		t.y = 67;
-		return t;
-	};
-	_proto._AnswerWord5_i = function () {
-		var t = new AnswerWord();
-		t.height = 75;
-		t.width = 75;
-		t.x = 40;
-		t.y = 77;
-		return t;
-	};
-	_proto._AnswerWord6_i = function () {
-		var t = new AnswerWord();
-		t.height = 75;
-		t.width = 75;
-		t.x = 50;
-		t.y = 87;
-		return t;
-	};
-	_proto._AnswerWord7_i = function () {
-		var t = new AnswerWord();
-		t.height = 75;
-		t.width = 75;
-		t.x = 60;
-		t.y = 97;
-		return t;
-	};
-	_proto.group_Chaotic_i = function () {
-		var t = new eui.Group();
-		this.group_Chaotic = t;
-		t.anchorOffsetX = 0;
-		t.anchorOffsetY = 0;
-		t.height = 400;
-		t.horizontalCenter = 0;
-		t.width = 555;
-		t.y = 725;
-		t.layout = this._TileLayout1_i();
-		t.elementsContent = [this._Word1_i(),this._Word2_i(),this._Word3_i(),this._Word4_i(),this._Word5_i(),this._Word6_i(),this._Word7_i(),this._Word8_i(),this._Word9_i(),this._Word10_i()];
-		return t;
-	};
-	_proto._TileLayout1_i = function () {
-		var t = new eui.TileLayout();
-		t.horizontalGap = 20;
-		t.verticalGap = 10;
-		return t;
-	};
-	_proto._Word1_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 59;
-		t.y = 61;
-		return t;
-	};
-	_proto._Word2_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 69;
-		t.y = 71;
-		return t;
-	};
-	_proto._Word3_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 79;
-		t.y = 81;
-		return t;
-	};
-	_proto._Word4_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 89;
-		t.y = 91;
-		return t;
-	};
-	_proto._Word5_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 99;
-		t.y = 101;
-		return t;
-	};
-	_proto._Word6_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 109;
-		t.y = 111;
-		return t;
-	};
-	_proto._Word7_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 119;
-		t.y = 121;
-		return t;
-	};
-	_proto._Word8_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 129;
-		t.y = 131;
-		return t;
-	};
-	_proto._Word9_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 139;
-		t.y = 141;
-		return t;
-	};
-	_proto._Word10_i = function () {
-		var t = new Word();
-		t.height = 103;
-		t.width = 95;
-		t.x = 149;
-		t.y = 151;
+		t.elementsContent = [this.labelLevel_i()];
 		return t;
 	};
 	_proto.labelLevel_i = function () {
@@ -2406,8 +2320,155 @@ var egret = window.egret;window.skins={};
 		t.textColor = 0x000000;
 		t.verticalAlign = "middle";
 		t.width = 100;
-		t.x = 353;
-		t.y = 248;
+		t.x = 86.32;
+		t.y = 122;
+		return t;
+	};
+	_proto.label_Question_i = function () {
+		var t = new eui.Label();
+		this.label_Question = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.bold = true;
+		t.fontFamily = "SimHei";
+		t.height = 141.33;
+		t.horizontalCenter = 1;
+		t.lineSpacing = 15;
+		t.size = 42;
+		t.text = "泥菩萨过江，_________泥菩萨过江，_________";
+		t.textAlign = "left";
+		t.textColor = 0x060407;
+		t.verticalAlign = "middle";
+		t.width = 488;
+		t.y = 252;
+		return t;
+	};
+	_proto.group_Result_i = function () {
+		var t = new eui.Group();
+		this.group_Result = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 200;
+		t.width = 482;
+		t.x = 119;
+		t.y = 410;
+		t.layout = this._TileLayout1_i();
+		t.elementsContent = [this._AnswerWord1_i(),this._AnswerWord2_i(),this._AnswerWord3_i(),this._AnswerWord4_i(),this._AnswerWord5_i(),this._AnswerWord6_i(),this._AnswerWord7_i()];
+		return t;
+	};
+	_proto._TileLayout1_i = function () {
+		var t = new eui.TileLayout();
+		t.horizontalGap = 34;
+		t.verticalGap = 24;
+		return t;
+	};
+	_proto._AnswerWord1_i = function () {
+		var t = new AnswerWord();
+		t.x = 0;
+		t.y = 37;
+		return t;
+	};
+	_proto._AnswerWord2_i = function () {
+		var t = new AnswerWord();
+		t.x = 40;
+		t.y = 77;
+		return t;
+	};
+	_proto._AnswerWord3_i = function () {
+		var t = new AnswerWord();
+		t.x = 50;
+		t.y = 87;
+		return t;
+	};
+	_proto._AnswerWord4_i = function () {
+		var t = new AnswerWord();
+		t.x = 60;
+		t.y = 97;
+		return t;
+	};
+	_proto._AnswerWord5_i = function () {
+		var t = new AnswerWord();
+		t.x = 70;
+		t.y = 107;
+		return t;
+	};
+	_proto._AnswerWord6_i = function () {
+		var t = new AnswerWord();
+		t.x = 10;
+		t.y = 47;
+		return t;
+	};
+	_proto._AnswerWord7_i = function () {
+		var t = new AnswerWord();
+		t.x = 30;
+		t.y = 67;
+		return t;
+	};
+	_proto.group_Chaotic_i = function () {
+		var t = new eui.Group();
+		this.group_Chaotic = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
+		t.height = 256;
+		t.horizontalCenter = 0;
+		t.width = 555;
+		t.y = 794;
+		t.layout = this._TileLayout2_i();
+		t.elementsContent = [this._Word1_i(),this._Word2_i(),this._Word3_i(),this._Word4_i(),this._Word5_i(),this._Word6_i(),this._Word7_i(),this._Word8_i()];
+		return t;
+	};
+	_proto._TileLayout2_i = function () {
+		var t = new eui.TileLayout();
+		t.horizontalGap = 20;
+		t.verticalGap = 10;
+		return t;
+	};
+	_proto._Word1_i = function () {
+		var t = new Word();
+		t.x = 59;
+		t.y = 61;
+		return t;
+	};
+	_proto._Word2_i = function () {
+		var t = new Word();
+		t.x = 69;
+		t.y = 71;
+		return t;
+	};
+	_proto._Word3_i = function () {
+		var t = new Word();
+		t.x = 79;
+		t.y = 81;
+		return t;
+	};
+	_proto._Word4_i = function () {
+		var t = new Word();
+		t.x = 89;
+		t.y = 91;
+		return t;
+	};
+	_proto._Word5_i = function () {
+		var t = new Word();
+		t.x = 99;
+		t.y = 101;
+		return t;
+	};
+	_proto._Word6_i = function () {
+		var t = new Word();
+		t.x = 109;
+		t.y = 111;
+		return t;
+	};
+	_proto._Word7_i = function () {
+		var t = new Word();
+		t.x = 119;
+		t.y = 121;
+		return t;
+	};
+	_proto._Word8_i = function () {
+		var t = new Word();
+		t.x = 129;
+		t.y = 131;
 		return t;
 	};
 	_proto.caiziBtn_i = function () {
@@ -2421,26 +2482,40 @@ var egret = window.egret;window.skins={};
 		t.y = 580;
 		return t;
 	};
-	_proto.xiaorenBtn_i = function () {
+	_proto.btn_Level_i = function () {
 		var t = new eui.Button();
-		this.xiaorenBtn = t;
-		t.anchorOffsetX = 44;
-		t.anchorOffsetY = 48;
+		this.btn_Level = t;
+		t.anchorOffsetX = 0;
+		t.anchorOffsetY = 0;
 		t.enabled = true;
 		t.label = "";
-		t.x = 656;
-		t.y = 567;
+		t.x = 536;
+		t.y = 696;
 		t.skinName = SceneGameSkin$Skin19;
 		return t;
 	};
-	_proto.dianImg_i = function () {
-		var t = new eui.Image();
-		this.dianImg = t;
-		t.height = 30;
-		t.source = "dian_png";
-		t.width = 30;
-		t.x = 665;
-		t.y = 512;
+	_proto.btn_result_i = function () {
+		var t = new eui.Button();
+		this.btn_result = t;
+		t.anchorOffsetX = 125;
+		t.anchorOffsetY = 38;
+		t.enabled = true;
+		t.horizontalCenter = 0;
+		t.label = "";
+		t.y = 720;
+		t.skinName = SceneGameSkin$Skin20;
+		return t;
+	};
+	_proto.btn_paihang_i = function () {
+		var t = new eui.Button();
+		this.btn_paihang = t;
+		t.enabled = true;
+		t.label = "";
+		t.scaleX = 1;
+		t.scaleY = 1;
+		t.x = 0;
+		t.y = 696;
+		t.skinName = SceneGameSkin$Skin21;
 		return t;
 	};
 	_proto.hongbaoBtn_i = function () {
@@ -2451,7 +2526,7 @@ var egret = window.egret;window.skins={};
 		t.label = "";
 		t.x = 644;
 		t.y = 413.15;
-		t.skinName = SceneGameSkin$Skin20;
+		t.skinName = SceneGameSkin$Skin22;
 		return t;
 	};
 	_proto.xuanyaoBtn_i = function () {
@@ -2460,9 +2535,34 @@ var egret = window.egret;window.skins={};
 		t.label = "";
 		t.scaleX = 1;
 		t.scaleY = 1;
+		t.visible = false;
 		t.x = 16;
 		t.y = 266.15;
-		t.skinName = SceneGameSkin$Skin21;
+		t.skinName = SceneGameSkin$Skin23;
+		return t;
+	};
+	_proto.xiaorenBtn_i = function () {
+		var t = new eui.Button();
+		this.xiaorenBtn = t;
+		t.anchorOffsetX = 44;
+		t.anchorOffsetY = 48;
+		t.enabled = true;
+		t.label = "";
+		t.visible = false;
+		t.x = 656;
+		t.y = 567;
+		t.skinName = SceneGameSkin$Skin24;
+		return t;
+	};
+	_proto.dianImg_i = function () {
+		var t = new eui.Image();
+		this.dianImg = t;
+		t.height = 30;
+		t.source = "dian_png";
+		t.visible = false;
+		t.width = 30;
+		t.x = 665;
+		t.y = 512;
 		return t;
 	};
 	_proto.levelScene_i = function () {
@@ -2523,7 +2623,7 @@ var egret = window.egret;window.skins={};
 		t.width = 80;
 		t.x = 669;
 		t.y = 243;
-		t.skinName = SceneGameSkin$Skin22;
+		t.skinName = SceneGameSkin$Skin25;
 		return t;
 	};
 	return SceneGameSkin;
@@ -2766,8 +2866,8 @@ var egret = window.egret;window.skins={};
 		_super.call(this);
 		this.skinParts = ["label_answer"];
 		
-		this.height = 96;
-		this.width = 89;
+		this.height = 121;
+		this.width = 121;
 		this.elementsContent = [this._Image1_i(),this.label_answer_i()];
 	}
 	var _proto = WordSkin.prototype;
@@ -2776,9 +2876,8 @@ var egret = window.egret;window.skins={};
 		var t = new eui.Image();
 		t.anchorOffsetX = 0;
 		t.fillMode = "scale";
-		t.height = 96;
+		t.height = 121;
 		t.source = "zidi_png";
-		t.width = 89;
 		t.x = 0;
 		t.y = 0;
 		return t;
@@ -2788,13 +2887,13 @@ var egret = window.egret;window.skins={};
 		this.label_answer = t;
 		t.bold = true;
 		t.fontFamily = "SimHei";
-		t.height = 96;
+		t.height = 121;
 		t.size = 50;
 		t.text = "字";
 		t.textAlign = "center";
-		t.textColor = 0x000000;
+		t.textColor = 0x817054;
 		t.verticalAlign = "middle";
-		t.width = 89;
+		t.width = 121;
 		t.x = 0;
 		t.y = 0;
 		return t;

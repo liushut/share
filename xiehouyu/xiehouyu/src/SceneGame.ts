@@ -140,11 +140,13 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		myreult += newstr;
 		return myreult;
 	}
+	private answerWord:AnswerWord;
 	public InitLevel(index: number)//初始化关卡
 	{
 		this.levelIndex = index;
 		this.labelLevel.text = this.levelIndex.toString();
 		let levelData = LevelDataManager.getInstance().GetLevelData(index);//得到关卡数据
+		console.log(levelData.word[0]);
 		//将字段接起来
 		//要展示的数据
 		let showData = this.getSelectWords(index);
@@ -180,21 +182,33 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		for(let i = 0;i < levelData.word[1].length;i++)
 		{
 			resultArray.push(levelData.word[1].charAt(i));
+			console.log(resultArray[i]);
+			
 		}
+
 		for (let i = 0; i < this.group_Result.numChildren; i++) {
 			let answerRect = <AnswerWord>this.group_Result.getChildAt(i);
-			answerRect.visible = true;
 			answerRect.SetSelectWord(resultArray[i]);
-			answerRect.selectWord = resultArray[i];
+
+			if(resultArray[i] == levelData.answer)
+			{
+				answerRect.daanImg.visible = true;
+				this.answerWord = answerRect;
+			}
+			else 
+			{
+				answerRect.daanImg.visible = false;
+			}
 		}
 		//显示问题
-		this.label_Question.text = this.chatAtQuestion(levelData.word[0]);
+		this.label_Question.text = this.chatAtQuestion(levelData.word[0]) + "，_________";
+		
 		this.hongbao20();
 	}
 	/**将原字符串改为自己想要的样子 */
 	private chatAtQuestion(str:string):string
 	{
-		let strArr = "    ";
+		let strArr = "";
 		for(let i = 0;i < str.length;i++)
 		{
 			if(i == str.length - 1)
@@ -219,7 +233,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			}
 			if(LevelDataManager.curMoneyNum <= 5)
 			{
-				if (max == 3 || max == 6 || max == 12 || max == 18 || max == 25) {
+				if (max == 3 || max == 7 || max == 12 || max == 17 || max == 22) {
 					//领红包逻辑
 					if (LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
 					{
@@ -239,7 +253,7 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			}
 			else {
 				//领红包逻辑
-				if (max % 20 == 5 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
+				if (max % 10 == 2 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
 				{
 					let layer = SceneGame.getInstance().bingoLayer;
 					if (LevelDataManager.curMoney <= 19.5) {
@@ -254,7 +268,6 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 				}
 				LevelDataManager.SaveHongbaoNum();
 			}
-
 		} 
 	}
 	private changeWord() {
@@ -280,10 +293,10 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 			}
 			this.group_Chaotic.removeChildren();
 			//加布局类。   eui正确设置一次就可以不变了。除非想改变布局才改。
-			let tLayout: eui.TileLayout = new eui.TileLayout();
-			tLayout.horizontalGap = 20;
-			tLayout.verticalGap = 10;
-			this.group_Chaotic.layout = tLayout;
+			// let tLayout: eui.TileLayout = new eui.TileLayout();
+			// tLayout.horizontalGap = 20;
+			// tLayout.verticalGap = 10;
+			// this.group_Chaotic.layout = tLayout;
 			for (let i = 0; i < 15; i++) {
 				let word = new Word();
 				word.width = 89;//要设置  不然group中布局以子元素中最大的做基础。默认为20
@@ -309,36 +322,54 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		
 	
 	}
+	private resultStr:string = "";
+	private tiStr:string = "";
+	private isWin()//得到随机的答案
+	{
+		let str  = LevelDataManager.getInstance().GetLevelData(this.levelIndex).word[1];
+		 if(str.length >= 6)
+		 { 
+			 for(let i = 0;i < 2;i++)
+			 {
+				 let random = Math.random() * 50;
+				this.resultStr += str.charAt(random);
+			 }
+		 }
+
+		 //判断点击后的答案是否与此答案相同
+
+	}
 	//点击字块发生逻辑  由当前字自己抛出
 	public onclick_Word(word: Word) {
 		//找到一个合适的位置
-		let rect: AnswerWord = null;
-		for (let i = 0; i < this.group_Result.numChildren; i++) {
-			let temp = <AnswerWord>this.group_Result.getChildAt(i);//找到空位置
-			if (temp.selectWord == null) {
-				rect = temp;//此时赋值后rect代表空的那个答案字块
-				break;
-			}
-		}
-
+		// let rect: AnswerWord = null;
+		// for (let i = 0; i < this.group_Result.numChildren; i++) {
+		// 	let temp = <AnswerWord>this.group_Result.getChildAt(i);//找到空位置
+		// 	if (temp.selectWord == null) {
+		// 		rect = temp;//此时赋值后rect代表空的那个答案字块
+		// 		break;
+		// 	}
+		// }
+		let str = word.label_answer.text;
 		//找到位置后填充
-		if (rect != null) {
-			rect.SetSelectWord(word);//显示问题字
-			//判断是否胜利   点击一次判断一次
-			let str: string = "";//每点击一次把答案都加上来判断一次。
-			for (let i = 0; i < this.group_Result.numChildren; i++) {//答案数组
-				let answer = <AnswerWord>this.group_Result.getChildAt(i);
-				str += answer.GetWordText();
-			}
-			if (str == LevelDataManager.getInstance().GetLevelData(this.levelIndex).word[1]) {
+		if (str != null) {
+			// rect.SetSelectWord(word);//显示问题字
+			// //判断是否胜利   点击一次判断一次
+			// let str: string = "";//每点击一次把答案都加上来判断一次。
+			// for (let i = 0; i < this.group_Result.numChildren; i++) {//答案数组
+			// 	let answer = <AnswerWord>this.group_Result.getChildAt(i);
+			// 	str += answer.GetWordText();
+			// }
+			if ( str == LevelDataManager.getInstance().GetLevelData(this.levelIndex).answer) {
 				console.log("你赢了");
 				this.bingoLayer.visible = true;
 				this.bingoLayer.bingoGroup.visible = true;
 				this.hintBg(false);
 				SoundManager.getInstance().trueSoundChanel = SoundManager.getInstance().trueSound.play(0, 1);
 				SoundManager.getInstance().trueSoundChanel.volume = 1;
+				this.answerWord.daanImg.visible = false;
 			}
-			else if (str.length == this.group_Result.numChildren) {
+			else if ( str != LevelDataManager.getInstance().GetLevelData(this.levelIndex).answer) {
 				console.log("you lose")
 				this.bingoLayer.visible = true;
 				this.hintBg(false);

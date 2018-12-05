@@ -1,6 +1,6 @@
 class Word extends eui.Component implements  eui.UIComponent {
 	
-	protected  label_answer:eui.Label;
+	public  label_answer:eui.Label;
 	
 	
 	public constructor() {

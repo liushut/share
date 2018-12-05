@@ -5,60 +5,50 @@
 		<e:Group scaleX="1" scaleY="1" width="720" height="1280" horizontalCenter="0" verticalCenter="0">
 			<e:Image id="gameBg" source="gameBg_jpg" width="720" height="1280" horizontalCenter="0" y="0"/>
 			<e:Group id="group_Help" width="720" height="180" y="0" horizontalCenter="0" anchorOffsetX="0" anchorOffsetY="0">
-			<e:Button id="btn_Level" label="" x="22" y="138" enabled="true" anchorOffsetX="0" anchorOffsetY="0">
-				<e:skinName>
-					<e:Skin states="up,down,disabled">
-					<e:Image width="100%" height="100%" source="guanka_png"/>
-					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-					</e:Skin>
-				</e:skinName>
-			</e:Button>
-			<e:Button id="btn_result" label="" y="578" enabled="true" width="207" height="76" anchorOffsetX="103" anchorOffsetY="38" x="360">
-				<e:skinName>
-					<e:Skin states="up,down,disabled">
-					<e:Image width="100%" height="100%" source="daan_png"/>
-					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-					</e:Skin>
-				</e:skinName>
 
-			</e:Button>
-				<e:Button id="btn_paihang" label="" x="20" y="25" scaleX="1" scaleY="1" enabled="true">
-					<e:skinName>
-						<e:Skin states="up,down,disabled">
-						<e:Image width="100%" height="100%" source="paihangbang_png"/>
-						<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-						</e:Skin>
-					</e:skinName>
-				</e:Button>
-			</e:Group>
-			<e:Label id="label_Question" text="小明上班时间吃红豆汤圆，经理看见后生气的说，太闲了是不是，小明回答了什么话把经理气的差点晕倒??" y="280" anchorOffsetY="0" height="256.3" anchorOffsetX="0" width="472.67" fontFamily="Microsoft YaHei" size="35" verticalAlign="top" textAlign="left" textColor="0xf7f7f7" horizontalCenter="11.5" lineSpacing="15"/>
-			<e:Group id="group_Result" width="620" height="85.75" y="633" anchorOffsetX="0" anchorOffsetY="0" x="53">
-			<ns1:AnswerWord width="75" height="75" x="0" y="37"/>
-				<ns1:AnswerWord width="75" height="75" x="10" y="47"/>
-				<ns1:AnswerWord width="75" height="75" x="20" y="57"/>
-				<ns1:AnswerWord width="75" height="75" x="30" y="67"/>
-				<ns1:AnswerWord width="75" height="75" x="40" y="77"/>
-				<ns1:AnswerWord width="75" height="75" x="50" y="87"/>
-				<ns1:AnswerWord width="75" height="75" x="60" y="97"/>
+				<e:Label id="labelLevel" text="999" y="122" width="100" height="100" verticalAlign="middle" size="32" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="86.32" bold="true"/>
 
-			<e:layout>
-				<e:HorizontalLayout horizontalAlign="center" gap="9"/>
-			</e:layout>
 			</e:Group>
-			<e:Group id="group_Chaotic" width="555" height="400" y="725" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0">
+			<e:Label id="label_Question" text="泥菩萨过江，_________泥菩萨过江，_________" anchorOffsetY="0" height="141.33" anchorOffsetX="0" fontFamily="SimHei" size="42" verticalAlign="middle" textAlign="left" horizontalCenter="1" lineSpacing="15" bold="true" y="252" width="488" textColor="0x060407"/>
+			<e:Group id="group_Result" width="482" height="200" y="410" anchorOffsetX="0" anchorOffsetY="0" x="119">
+			<ns1:AnswerWord x="0" y="37"/>
+				<ns1:AnswerWord x="40" y="77"/>
+				<ns1:AnswerWord x="50" y="87"/>
+				<ns1:AnswerWord x="60" y="97"/>
+				<ns1:AnswerWord x="70" y="107"/>
+				<ns1:AnswerWord x="10" y="47"/>
+				<ns1:AnswerWord x="30" y="67"/>
+
+
+
+
+				<e:layout>
+					<e:TileLayout horizontalGap="34" verticalGap="24"/>
+				</e:layout>
+
+
+			</e:Group>
+			<e:Group id="group_Chaotic" width="555" height="256" y="794" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0">
 				<e:layout>
 					<e:TileLayout verticalGap="10" horizontalGap="20"/>
 				</e:layout>
-				<ns1:Word width="95" height="103" x="59" y="61"/>
-				<ns1:Word width="95" height="103" x="69" y="71"/>
-				<ns1:Word width="95" height="103" x="79" y="81"/>
-				<ns1:Word width="95" height="103" x="89" y="91"/>
-				<ns1:Word width="95" height="103" x="99" y="101"/>
-				<ns1:Word width="95" height="103" x="109" y="111"/>
-				<ns1:Word width="95" height="103" x="119" y="121"/>
-				<ns1:Word width="95" height="103" x="129" y="131"/>
-				<ns1:Word width="95" height="103" x="139" y="141"/>
-				<ns1:Word width="95" height="103" x="149" y="151"/>
+				<ns1:Word x="59" y="61"/>
+				<ns1:Word x="69" y="71"/>
+				<ns1:Word x="79" y="81"/>
+				<ns1:Word x="89" y="91"/>
+				<ns1:Word x="99" y="101"/>
+				<ns1:Word x="109" y="111"/>
+				<ns1:Word x="119" y="121"/>
+				<ns1:Word x="129" y="131"/>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -86,26 +76,41 @@
 
 
 			</e:Group>
-			<e:Label id="labelLevel" text="999" y="248" width="100" height="100" verticalAlign="middle" size="32" fontFamily="Microsoft YaHei" textColor="0x000000" anchorOffsetY="50" textAlign="center" anchorOffsetX="50" x="353" bold="true"/>
+
 			<e:Image id="caiziBtn" x="72" width="100" anchorOffsetX="60" anchorOffsetY="60" y="580" height="100" />
-			<e:Button id="xiaorenBtn" label="" x="656" y="567" enabled="true" anchorOffsetX="44" anchorOffsetY="48">
+			<e:Button id="btn_Level" label="" x="536" y="696" enabled="true" anchorOffsetX="0" anchorOffsetY="0">
 				<e:skinName>
 				<e:Skin states="up,down,disabled">
-					<e:Image width="100%" height="100%" source="xiaoren_png"/>
+					<e:Image width="100%" height="100%" source="guanka_png"/>
 					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
 				</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Image id="dianImg" width="30" height="30" x="665" y="512" source="dian_png"/>
-			<e:Button id="hongbaoBtn" label="" x="644" y="413.15" anchorOffsetX="36" anchorOffsetY="40">
+			<e:Button id="btn_result" label="" y="720" enabled="true" anchorOffsetX="125" anchorOffsetY="38" horizontalCenter="0">
 				<e:skinName>
-					<e:Skin states="up,down,disabled">
-					<e:Image width="100%" height="100%" source="hongbaoicon_png"/>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="daan_png"/>
 					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
-					</e:Skin>
+				</e:Skin>
 				</e:skinName>
 			</e:Button>
-			<e:Button id="xuanyaoBtn" label="" x="16" y="266.15" scaleX="1" scaleY="1">
+			<e:Button id="btn_paihang" label="" x="0" y="696" scaleX="1" scaleY="1" enabled="true">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="paihangbang_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Button id="hongbaoBtn" label="" x="644" y="413.15" anchorOffsetX="36" anchorOffsetY="40">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="hongbaoicon_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Button id="xuanyaoBtn" label="" x="16" y="266.15" scaleX="1" scaleY="1" visible="false">
 				<e:skinName>
 				<e:Skin states="up,down,disabled">
 					<e:Image width="100%" height="100%" source="xuanyao_png"/>
@@ -113,6 +118,17 @@
 				</e:Skin>
 				</e:skinName>
 			</e:Button>
+			<e:Button id="xiaorenBtn" label="" x="656" y="567" enabled="true" anchorOffsetX="44" anchorOffsetY="48" visible="false">
+				<e:skinName>
+				<e:Skin states="up,down,disabled">
+					<e:Image width="100%" height="100%" source="xiaoren_png"/>
+					<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+				</e:Skin>
+				</e:skinName>
+			</e:Button>
+			<e:Image id="dianImg" width="30" height="30" x="665" y="512" source="dian_png" visible="false"/>
+
+
 			<ns1:LevelScene id="levelScene" width="720" height="1280" x="0" y="0" enabled="true" visible="false"/>
 			<ns1:Bingo id="bingoLayer" width="720" height="1280" x="0" y="0" alpha="1" enabled="true" visible="false"/>
 
@@ -127,6 +143,9 @@
 				</e:Skin>
 				</e:skinName>
 			</e:Button>
+
+
+
 
 		</e:Group>
 	</e:Group>
