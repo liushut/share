@@ -169,6 +169,8 @@ class LevelScene extends eui.Component implements  eui.UIComponent {
 		let chenghuNum = Math.floor((this.pageIndex - 1) / 3);
 		let num = (this.pageIndex - 1) % 3;
 		// xxx.text = this.gradeStringArray[num];
+		this.ImgName.width = 180;
+		this.ImgName.height = 40;
 		this.ImgName.source = this. chenghuImgArray[chenghuNum];
 		// xingxing1.group.getchildat(num).visible = true;
 		// else false;

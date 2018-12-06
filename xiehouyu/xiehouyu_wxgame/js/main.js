@@ -530,10 +530,15 @@ var Bingo = (function (_super) {
         _super.prototype.childrenCreated.call(this);
         this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onNext, this);
         this.btn_share.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onShare, this);
+        this.kaihongbaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onKaiHongbao, this);
         this.lingquBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLingqu, this);
         this.Btntiaozhan.addEventListener(egret.TouchEvent.TOUCH_TAP, this.tiaozhan, this);
         this.chachaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onchacha, this);
         this.tixianBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTixian, this);
+        this.cunruBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onCunRu, this);
+        this.cunruChaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onCunRuCha, this);
+        this.querenChaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onqueRencha, this);
+        this.querenTixianBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onquerenTixian, this);
         //重玩和继续的按钮方法
         this.chongwanBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onreStart, this);
         this.jixuBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onResume, this);
@@ -542,6 +547,27 @@ var Bingo = (function (_super) {
         //主界面红包
         this.chaHongbao.addEventListener(egret.TouchEvent.TOUCH_TAP, this.guanZhuHongbao, this);
         this.btnTixian.addEventListener(egret.TouchEvent.TOUCH_TAP, this.tixian, this);
+    };
+    Bingo.prototype.onquerenTixian = function () {
+        LevelDataManager.onshowNum = 6;
+        platform.randomShare();
+    };
+    Bingo.prototype.onCunRuCha = function () {
+        this.visible = false;
+        this.cunruGroup.visible = false;
+    };
+    Bingo.prototype.onqueRencha = function () {
+        this.visible = false;
+        this.querentixianGroup.visible = false;
+    };
+    Bingo.prototype.onCunRu = function () {
+        LevelDataManager.onshowNum == 7;
+        platform.randomShare();
+    };
+    Bingo.prototype.onKaiHongbao = function () {
+        this.cunruLabel.text = SceneGame.getInstance().getHongBaoMoney();
+        this.tixianGroup.visible = false;
+        this.cunruGroup.visible = true;
     };
     Bingo.prototype.guanhongbao = function () {
         this.visible = false;
@@ -1043,7 +1069,7 @@ var LevelIcon = (function (_super) {
         var index = parseInt(this.levelLabel.text);
         if (index <= LevelDataManager.getInstance().GetCurIndex()) {
             index--;
-            var icon = index * 10 + 1;
+            var icon = index * 5 + 1;
             LevelDataManager.getInstance().curIcon = icon;
             SceneGame.getInstance().InitLevel(icon); //进入对应关卡游戏
             //界面消失
@@ -1202,6 +1228,8 @@ var LevelScene = (function (_super) {
         var chenghuNum = Math.floor((this.pageIndex - 1) / 3);
         var num = (this.pageIndex - 1) % 3;
         // xxx.text = this.gradeStringArray[num];
+        this.ImgName.width = 180;
+        this.ImgName.height = 40;
         this.ImgName.source = this.chenghuImgArray[chenghuNum];
         // xingxing1.group.getchildat(num).visible = true;
         // else false;
@@ -1395,6 +1423,13 @@ var Main = (function (_super) {
                                 else if (LevelDataManager.onshowNum == 5) {
                                     _this.xuaoyao();
                                 }
+                                else if (LevelDataManager.onshowNum == 6) {
+                                    _this.tixian();
+                                }
+                                else if (LevelDataManager.onshowNum == 7) {
+                                    _this.cunru();
+                                }
+                                //6 体现 7 存入  
                                 console.log("LevelDataManager.isShareTime" + LevelDataManager.isShareTime);
                             }
                         });
@@ -1408,6 +1443,67 @@ var Main = (function (_super) {
                 }
             });
         });
+    };
+    Main.prototype.cunru = function () {
+        if (!LevelDataManager.isShareTime) {
+            if (LevelDataManager.shareNum % 3 == 1) {
+                SceneGame.getInstance().bingoLayer.visible = false;
+                SceneGame.getInstance().bingoLayer.cunruGroup.visible = false;
+                LevelDataManager.shareNum++;
+                LevelDataManager.onshowNum = 0;
+                LevelDataManager.curMoney += SceneGame.getInstance().randomMoney;
+                SceneGame.getInstance().zhuhongbaoLabel.text = LevelDataManager.curMoney.toString();
+                LevelDataManager.SaveHongbaoNum();
+            }
+            else {
+                wx.showModal({
+                    title: "提示",
+                    content: "别总骚扰这个群的朋友啦，换个群分享吧~",
+                    showCancel: false,
+                    success: function (res) {
+                        if (res.confirm == true) {
+                            platform.shareMyAppMessage();
+                            LevelDataManager.onshowNum = 7;
+                            LevelDataManager.shareNum++;
+                        }
+                    }
+                });
+            }
+        }
+        else {
+            wx.showModal({
+                title: "提示",
+                content: "分享失败",
+                showCancel: false,
+                success: function (res) {
+                    if (res.confirm == true) {
+                        platform.randomShare();
+                        LevelDataManager.onshowNum = 7;
+                    }
+                }
+            });
+        }
+    };
+    Main.prototype.tixian = function () {
+        if (!LevelDataManager.isShareTime) {
+            SceneGame.getInstance().bingoLayer.zanqianImg.visible = true;
+            setTimeout(function () {
+                SceneGame.getInstance().bingoLayer.zanqianImg.visible = false;
+            }, 2000);
+        }
+        else {
+            wx.showModal({
+                title: "提示",
+                content: "分享失败",
+                showCancel: false,
+                success: function (res) {
+                    if (res.confirm == true) {
+                        platform.randomShare();
+                        LevelDataManager.onshowNum = 6;
+                    }
+                }
+            });
+        }
     };
     Main.prototype.dian = function () {
         if (LevelDataManager.isShareTime == false) {
@@ -1423,10 +1519,6 @@ var Main = (function (_super) {
                 showCancel: false,
                 success: function (res) {
                     if (res.confirm == true) {
-                        wx.shareAppMessage({
-                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                            imageUrl: "resource/assets/common/title11.png"
-                        });
                         platform.randomShare();
                         LevelDataManager.onshowNum = 3;
                     }
@@ -1442,10 +1534,6 @@ var Main = (function (_super) {
                 showCancel: false,
                 success: function (res) {
                     if (res.confirm == true) {
-                        wx.shareAppMessage({
-                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                            imageUrl: "resource/assets/common/title11.png"
-                        });
                         platform.randomShare();
                         LevelDataManager.onshowNum = 5;
                     }
@@ -1786,8 +1874,8 @@ __reflect(AssetAdapter.prototype, "AssetAdapter", ["eui.IAssetAdapter"]);
 var R = (function () {
     function R() {
     }
-    R.webPath = "https://huanle.hn.shqi7.net/njjzw/";
-    R.apiPath = "https://huanle.hn.shqi7.net:8082/njjzw/";
+    R.webPath = "https://huanle.hn.shqi7.net/xhy/";
+    R.apiPath = "https://huanle.hn.shqi7.net:8084/xhy/";
     R.url_code = R.apiPath + "code";
     return R;
 }());
@@ -1798,6 +1886,8 @@ var SceneGame = (function (_super) {
         var _this = _super.call(this) || this;
         _this.isdisplay = false;
         _this.isFirst = false;
+        /**随机金额 */
+        _this.randomMoney = 0;
         _this.resultStr = "";
         _this.tiStr = "";
         _this.jumpToAppDict = {
@@ -1840,9 +1930,9 @@ var SceneGame = (function (_super) {
         this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
         this.hongbaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onHongbao, this);
         this.xuanyaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onxuanyao, this);
+        this.zhuTiXianBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onzhuTianxian, this);
         this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
             _this.openGroup.visible = false;
-            _this.closeBtn.visible = false;
             _this.bitmap.parent && _this.bitmap.parent.removeChild(_this.bitmap);
             _this.isdisplay = false;
             _this.rankingListMask.parent && _this.rankingListMask.parent.removeChild(_this.rankingListMask);
@@ -1861,6 +1951,12 @@ var SceneGame = (function (_super) {
         this.tickid = setInterval(function () {
             _this.updatePanel();
         }, 1000);
+    };
+    SceneGame.prototype.onzhuTianxian = function () {
+      console.log("aaaaa");
+        this.zhuhongbaoLabel.text = LevelDataManager.curMoney.toString();
+        this.bingoLayer.visible = true;
+        this.bingoLayer.querentixianGroup.visible = true;
     };
     SceneGame.prototype.onxuanyao = function () {
         LevelDataManager.onshowNum = 5;
@@ -1969,48 +2065,87 @@ var SceneGame = (function (_super) {
         }
         return strArr;
     };
+    /**红包出现概率 */
+    SceneGame.prototype.checkMoney = function () {
+        var canShow = false;
+        var random = Math.random();
+        var curMoney = LevelDataManager.curMoney;
+        console.log("随机数", random, "当前触发概率", .2 - curMoney / 97.5);
+        if (random <= 0.2 - curMoney / 97.5) {
+            canShow = true;
+        }
+        //如果已分享，则红包可显示2
+        if (canShow) {
+            var layer = SceneGame.getInstance().bingoLayer;
+            if (LevelDataManager.curMoney <= 19.5) {
+                //出现红包弹窗
+                this.bingoLayer.visible = true;
+                layer.tixianGroup.visible = true;
+                // 出现红包
+                // LevelDataManager.showMoney = this.getHongBaoMoney();
+                layer.yueLabel.text = LevelDataManager.curMoney.toString();
+                layer.moneyLabel.text = this.getHongBaoMoney();
+            }
+        }
+    };
+    /**出现的红包金额 */
+    SceneGame.prototype.getHongBaoMoney = function () {
+        var max = Math.max;
+        var curMoney = LevelDataManager.curMoney;
+        var c = max(0.01, 0.5 - curMoney / 39);
+        var d = max(0.01, 1.3 - curMoney / 15);
+        var e = Math.random() * (d - c) + c;
+        var x = parseFloat(e.toFixed(2)).toString();
+        this.randomMoney = parseInt(x);
+        return x;
+    };
     SceneGame.prototype.hongbao20 = function () {
         if (LevelDataManager.enableHongBao) {
-            var max = LevelDataManager.getInstance().GetMileStone();
-            if (max % 5 == 0 || max % 7 == 0) {
-                LevelDataManager.curMoneyNum = LevelDataManager.unlockMoneyNum;
-                LevelDataManager.beforeUnlockMoneyNum = LevelDataManager.unlockMoneyNum;
-                console.log("重新来");
-            }
-            if (LevelDataManager.curMoneyNum <= 5) {
-                if (max == 3 || max == 6 || max == 12 || max == 18 || max == 25) {
-                    //领红包逻辑
-                    if (LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum) {
-                        var layer = SceneGame.getInstance().bingoLayer;
-                        if (LevelDataManager.curMoney <= 19.5) {
-                            //出现红包弹窗
-                            this.bingoLayer.visible = true;
-                            layer.hongbaoGroup.visible = true;
-                            //出现红包
-                            LevelDataManager.showMoney = 0.5;
-                            layer.yueLabel.text = LevelDataManager.curMoney.toString();
-                            layer.moneyLabel.text = LevelDataManager.showMoney.toString();
-                        }
-                    }
-                    LevelDataManager.SaveHongbaoNum();
-                }
-            }
-            else {
-                //领红包逻辑
-                if (max % 20 == 5 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum) {
-                    var layer = SceneGame.getInstance().bingoLayer;
-                    if (LevelDataManager.curMoney <= 19.5) {
-                        //出现红包弹窗
-                        this.bingoLayer.visible = true;
-                        layer.hongbaoGroup.visible = true;
-                        //出现红包
-                        LevelDataManager.showMoney = 0.5;
-                        layer.yueLabel.text = LevelDataManager.curMoney.toString();
-                        layer.moneyLabel.text = LevelDataManager.showMoney.toString();
-                    }
-                }
-                LevelDataManager.SaveHongbaoNum();
-            }
+            this.checkMoney();
+            // let max = LevelDataManager.getInstance().GetMileStone();
+            // if (max % 5 == 0 || max % 7 == 0)//恢复
+            // {
+            // 	LevelDataManager.curMoneyNum = LevelDataManager.unlockMoneyNum;
+            // 	LevelDataManager.beforeUnlockMoneyNum = LevelDataManager.unlockMoneyNum;
+            // 	console.log("重新来");
+            // }
+            // if(LevelDataManager.curMoneyNum <= 5)
+            // {
+            // 	if (max == 3 || max == 7 || max == 12 || max == 17 || max == 22) {
+            // 		//领红包逻辑
+            // 		if (LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
+            // 		{
+            // 			let layer = SceneGame.getInstance().bingoLayer;
+            // 			if (LevelDataManager.curMoney <= 19.5) {
+            // 				//出现红包弹窗
+            // 				this.bingoLayer.visible = true;
+            // 				layer.hongbaoGroup.visible = true;
+            // 				//出现红包
+            // 				LevelDataManager.showMoney = 0.5;
+            // 				layer.yueLabel.text = LevelDataManager.curMoney.toString();
+            // 				layer.moneyLabel.text = LevelDataManager.showMoney.toString();
+            // 			}
+            // 		}
+            // 		LevelDataManager.SaveHongbaoNum();
+            // 	}
+            // }
+            // else {
+            // 	//领红包逻辑
+            // 	if (max % 10 == 2 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
+            // 	{
+            // 		let layer = SceneGame.getInstance().bingoLayer;
+            // 		if (LevelDataManager.curMoney <= 19.5) {
+            // 			//出现红包弹窗
+            // 			this.bingoLayer.visible = true;
+            // 			layer.hongbaoGroup.visible = true;
+            // 			//出现红包
+            // 			LevelDataManager.showMoney = 0.5;
+            // 			layer.yueLabel.text = LevelDataManager.curMoney.toString();
+            // 			layer.moneyLabel.text = LevelDataManager.showMoney.toString();
+            // 		}
+            // 	}
+            // 	LevelDataManager.SaveHongbaoNum();
+            // }
         }
     };
     SceneGame.prototype.changeWord = function () {
@@ -2199,11 +2334,9 @@ var SceneGame = (function (_super) {
         // this.bitmap.width = this.stage.stageWidth;//节点的大小  也就是sharedCavas作为bitmapdata的这个bitmap的大小。
         // this.bitmap.height = this.stage.stageHeight;
         this.openGroup.visible = true;
-        this.closeBtn.visible = true;
         this.addChild(this.rankingListMask);
         this.addChild(this.openGroup);
         this.addChild(this.bitmap);
-        this.addChild(this.closeBtn);
         //隐藏广告
         LevelDataManager.getInstance().getAd().hide();
         console.log("点击了排行榜");

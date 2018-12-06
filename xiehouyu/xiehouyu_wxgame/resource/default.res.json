@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "description_json,test_json,number_fnt,number_png,word_mp3,window_wav,answer1_mp3,gameBg_jpg,guanka_png,zidi_png,daandi_png,close_png,guankadi_png,hengfu_png,huihengfu_png,jiantou_png,levelBg_png,tanchuandaandi_png,daduidi_png,daduile_png,next_png,share_png,surebtn_png,title11_png,erroSound_mp3,trueSound_mp3,paihangbang_png,dibang_png,cha_png,caizi_png,dian_png,xiaoren_png,daan_png,ten_png,xuangxiangdi_png,chacha_png,tiaozhan_png,touxiangkuang_png,ditu_png,suo_png,1_png,2_png,3_png,4_png,5_png,6_png,7_png,8_png,9_png,10_png,cuoledi_png,jixu_png,chongwan_png,hongbaocha_png,hongbaodi_png,hongbaodi1_png,hongbaoicon_png,hongbaotixian_png,hongbaoyue_png,lingqu_png,qutixian_png,tanchuang_png,yilingqu_png,yuan_png,meitixian_png,xuanyao_png,xietiku_json,hongbaoicon2_png,gengduoyouxi_png,kongge_png,huixing_png,hongxing_png,11_png,12_png,13_png,14_png,15_png,16_png,17_png,18_png,19_png,xing1_png,xing2_png,jiesuoditu_png",
+			"keys": "description_json,test_json,number_fnt,number_png,word_mp3,window_wav,answer1_mp3,gameBg_jpg,guanka_png,zidi_png,daandi_png,close_png,guankadi_png,hengfu_png,huihengfu_png,jiantou_png,levelBg_png,tanchuandaandi_png,daduidi_png,daduile_png,next_png,share_png,surebtn_png,title11_png,erroSound_mp3,trueSound_mp3,paihangbang_png,dibang_png,cha_png,caizi_png,dian_png,xiaoren_png,daan_png,ten_png,xuangxiangdi_png,chacha_png,tiaozhan_png,touxiangkuang_png,ditu_png,suo_png,1_png,2_png,3_png,4_png,5_png,6_png,7_png,8_png,9_png,10_png,cuoledi_png,jixu_png,chongwan_png,hongbaocha_png,hongbaodi_png,hongbaodi1_png,hongbaoicon_png,hongbaotixian_png,hongbaoyue_png,lingqu_png,qutixian_png,tanchuang_png,yilingqu_png,yuan_png,meitixian_png,xuanyao_png,xietiku_json,hongbaoicon2_png,gengduoyouxi_png,kongge_png,huixing_png,hongxing_png,11_png,12_png,13_png,14_png,15_png,16_png,17_png,18_png,19_png,xing1_png,xing2_png,jiesuoditu_png,qunpaiming_png,rmb_png,tixian_png,xiaohongbao_png,huisedi_png,huangkuang_png,man20_png,querentixian_png,tixianhongbao2_png,tixianhongbaodi_png,tixianhongbaotixian_png,x1_png,x2_png,zanqian_png,cunruyue_png,fuhao_png,zhengban_png,xiehouyu_png,kai_png",
 			"name": "preload"
 		}
 	],
@@ -425,6 +425,101 @@
 			"name": "jiesuoditu_png",
 			"type": "image",
 			"url": "assets/common/jiesuoditu.png"
+		},
+		{
+			"name": "qunpaiming_png",
+			"type": "image",
+			"url": "assets/opendata/qunpaiming.png"
+		},
+		{
+			"name": "rmb_png",
+			"type": "image",
+			"url": "assets/hongbao/rmb.png"
+		},
+		{
+			"name": "tixian_png",
+			"type": "image",
+			"url": "assets/hongbao/tixian.png"
+		},
+		{
+			"name": "xiaohongbao_png",
+			"type": "image",
+			"url": "assets/hongbao/xiaohongbao.png"
+		},
+		{
+			"name": "huisedi_png",
+			"type": "image",
+			"url": "assets/hongbao/huisedi.png"
+		},
+		{
+			"name": "huangkuang_png",
+			"type": "image",
+			"url": "assets/hongbao/huangkuang.png"
+		},
+		{
+			"name": "man20_png",
+			"type": "image",
+			"url": "assets/hongbao/man20.png"
+		},
+		{
+			"name": "querentixian_png",
+			"type": "image",
+			"url": "assets/hongbao/querentixian.png"
+		},
+		{
+			"name": "tixianhongbao2_png",
+			"type": "image",
+			"url": "assets/hongbao/tixianhongbao2.png"
+		},
+		{
+			"name": "tixianhongbaodi_png",
+			"type": "image",
+			"url": "assets/hongbao/tixianhongbaodi.png"
+		},
+		{
+			"name": "tixianhongbaotixian_png",
+			"type": "image",
+			"url": "assets/hongbao/tixianhongbaotixian.png"
+		},
+		{
+			"name": "x1_png",
+			"type": "image",
+			"url": "assets/hongbao/x1.png"
+		},
+		{
+			"name": "x2_png",
+			"type": "image",
+			"url": "assets/hongbao/x2.png"
+		},
+		{
+			"name": "zanqian_png",
+			"type": "image",
+			"url": "assets/hongbao/zanqian.png"
+		},
+		{
+			"name": "cunruyue_png",
+			"type": "image",
+			"url": "assets/hongbao/cunruyue.png"
+		},
+		{
+			"name": "fuhao_png",
+			"type": "image",
+			"url": "assets/hongbao/fuhao.png"
+		},
+		{
+			"name": "zhengban_png",
+			"type": "image",
+			"url": "assets/hongbao/zhengban.png"
+		},
+		{
+			"name": "xiehouyu_png",
+			"type": "image",
+			"url": "assets/hongbao/xiehouyu.png"
+		},
+		{
+			"name": "kai_png",
+			"type": "image",
+			"url": "assets/hongbao/kai.png"
 		}
 	]
 }

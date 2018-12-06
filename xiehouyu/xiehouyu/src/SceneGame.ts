@@ -16,6 +16,9 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 	protected partAdded(partName: string, instance: any): void {
 		super.partAdded(partName, instance);
 	}
+	public zhuTiXianBtn:eui.Button;
+	public zhuhongbaoLabel:eui.Label;
+
 	public hongbaoBtn:eui.Button;
 	public xuanyaoBtn:eui.Button;
 	private isdisplay = false;
@@ -66,9 +69,9 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		this.btn_paihang.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onpaihang, this);
 		this.hongbaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onHongbao, this);
 		this.xuanyaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onxuanyao,this);
+		this.zhuTiXianBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onzhuTianxian,this);
 		this.closeBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
 			this.openGroup.visible = false;
-			this.closeBtn.visible = false;
 			this.bitmap.parent && this.bitmap.parent.removeChild(this.bitmap);
 			this.isdisplay = false;
 			this.rankingListMask.parent && this.rankingListMask.parent.removeChild(this.rankingListMask);
@@ -88,6 +91,13 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		this.tickid = setInterval(() => {
 			this.updatePanel();
 		}, 1000);
+	}
+	private onzhuTianxian()
+	{
+		console.log("aaaaa");
+		this.zhuhongbaoLabel.text = LevelDataManager.curMoney.toString();
+		this.bingoLayer.visible = true;
+		this.bingoLayer.querentixianGroup.visible = true;
 	}
 	private onxuanyao()
 	{
@@ -221,53 +231,93 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 		}
 		return strArr;
 	}
+	
+    /**红包出现概率 */
+    checkMoney()
+    {
+		let canShow = false;
+		let random = Math.random();
+		let curMoney = LevelDataManager.curMoney;
+		console.log("随机数", random, "当前触发概率", .2 - curMoney / 97.5);
+		if (random <= 0.2 - curMoney / 97.5) {
+			canShow = true;
+		}
+		//如果已分享，则红包可显示2
+		if (canShow) {
+			let layer = SceneGame.getInstance().bingoLayer;
+			if (LevelDataManager.curMoney <= 19.5) {
+				//出现红包弹窗
+				this.bingoLayer.visible = true;
+				layer.tixianGroup.visible = true;
+				// 出现红包
+				// LevelDataManager.showMoney = this.getHongBaoMoney();
+				layer.yueLabel.text = LevelDataManager.curMoney.toString();
+				layer.moneyLabel.text =  this.getHongBaoMoney();
+			}
+		}
+	}
+	/**随机金额 */
+	public randomMoney = 0;
+    /**出现的红包金额 */
+    getHongBaoMoney():string
+    {
+        let max = Math.max;
+        let curMoney = LevelDataManager.curMoney;
+        let c = max(0.01,0.5 - curMoney / 39);
+        let d = max(0.01,1.3 - curMoney / 15);
+        let e = Math.random()*(d - c) + c;
+        let x = parseFloat(e.toFixed(2)).toString();
+		this.randomMoney = parseInt(x);
+        return x;
+    }
 	private hongbao20()
 	{
 		if (LevelDataManager.enableHongBao){
-			let max = LevelDataManager.getInstance().GetMileStone();
-			if (max % 5 == 0 || max % 7 == 0)//恢复
-			{
-				LevelDataManager.curMoneyNum = LevelDataManager.unlockMoneyNum;
-				LevelDataManager.beforeUnlockMoneyNum = LevelDataManager.unlockMoneyNum;
-				console.log("重新来");
-			}
-			if(LevelDataManager.curMoneyNum <= 5)
-			{
-				if (max == 3 || max == 7 || max == 12 || max == 17 || max == 22) {
-					//领红包逻辑
-					if (LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
-					{
-						let layer = SceneGame.getInstance().bingoLayer;
-						if (LevelDataManager.curMoney <= 19.5) {
-							//出现红包弹窗
-							this.bingoLayer.visible = true;
-							layer.hongbaoGroup.visible = true;
-							//出现红包
-							LevelDataManager.showMoney = 0.5;
-							layer.yueLabel.text = LevelDataManager.curMoney.toString();
-							layer.moneyLabel.text = LevelDataManager.showMoney.toString();
-						}
-					}
-					LevelDataManager.SaveHongbaoNum();
-				}
-			}
-			else {
-				//领红包逻辑
-				if (max % 10 == 2 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
-				{
-					let layer = SceneGame.getInstance().bingoLayer;
-					if (LevelDataManager.curMoney <= 19.5) {
-						//出现红包弹窗
-						this.bingoLayer.visible = true;
-						layer.hongbaoGroup.visible = true;
-						//出现红包
-						LevelDataManager.showMoney = 0.5;
-						layer.yueLabel.text = LevelDataManager.curMoney.toString();
-						layer.moneyLabel.text = LevelDataManager.showMoney.toString();
-					}
-				}
-				LevelDataManager.SaveHongbaoNum();
-			}
+			this.checkMoney();
+			// let max = LevelDataManager.getInstance().GetMileStone();
+			// if (max % 5 == 0 || max % 7 == 0)//恢复
+			// {
+			// 	LevelDataManager.curMoneyNum = LevelDataManager.unlockMoneyNum;
+			// 	LevelDataManager.beforeUnlockMoneyNum = LevelDataManager.unlockMoneyNum;
+			// 	console.log("重新来");
+			// }
+			// if(LevelDataManager.curMoneyNum <= 5)
+			// {
+			// 	if (max == 3 || max == 7 || max == 12 || max == 17 || max == 22) {
+			// 		//领红包逻辑
+			// 		if (LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
+			// 		{
+			// 			let layer = SceneGame.getInstance().bingoLayer;
+			// 			if (LevelDataManager.curMoney <= 19.5) {
+			// 				//出现红包弹窗
+			// 				this.bingoLayer.visible = true;
+			// 				layer.hongbaoGroup.visible = true;
+			// 				//出现红包
+			// 				LevelDataManager.showMoney = 0.5;
+			// 				layer.yueLabel.text = LevelDataManager.curMoney.toString();
+			// 				layer.moneyLabel.text = LevelDataManager.showMoney.toString();
+			// 			}
+			// 		}
+			// 		LevelDataManager.SaveHongbaoNum();
+			// 	}
+			// }
+			// else {
+			// 	//领红包逻辑
+			// 	if (max % 10 == 2 && LevelDataManager.unlockMoneyNum == LevelDataManager.curMoneyNum && LevelDataManager.unlockMoneyNum == LevelDataManager.beforeUnlockMoneyNum)//35 65 95
+			// 	{
+			// 		let layer = SceneGame.getInstance().bingoLayer;
+			// 		if (LevelDataManager.curMoney <= 19.5) {
+			// 			//出现红包弹窗
+			// 			this.bingoLayer.visible = true;
+			// 			layer.hongbaoGroup.visible = true;
+			// 			//出现红包
+			// 			LevelDataManager.showMoney = 0.5;
+			// 			layer.yueLabel.text = LevelDataManager.curMoney.toString();
+			// 			layer.moneyLabel.text = LevelDataManager.showMoney.toString();
+			// 		}
+			// 	}
+			// 	LevelDataManager.SaveHongbaoNum();
+			// }
 		} 
 	}
 	private changeWord() {
@@ -477,11 +527,11 @@ class SceneGame extends eui.Component implements eui.UIComponent {
 
 
 		this.openGroup.visible = true;
-		this.closeBtn.visible = true;
+	
 		this.addChild(this.rankingListMask);
 		this.addChild(this.openGroup);
 		this.addChild(this.bitmap);
-		this.addChild(this.closeBtn);
+	
 
 		//隐藏广告
 		LevelDataManager.getInstance().getAd().hide();

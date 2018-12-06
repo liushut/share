@@ -55,6 +55,30 @@ class Bingo extends eui.Component implements eui.UIComponent {
 	public tanImg:eui.Image;
 	public chaHongbao:eui.Button;
 	public showYUELabel:eui.Label;
+	public kaihongbaoBtn:eui.Button;
+	public tixianGroup:eui.Group;
+
+
+
+	//存入
+	public cunruLabel:eui.Label;
+	public cunruBtn:eui.Button;
+	public cunruChaBtn:eui.Button;
+
+
+	//确认体现
+	public querentixianGroup: eui.Group;
+	public querenChaBtn: eui.Button;
+	public querenLabel: eui.Label;
+	public querenTixianBtn: eui.Button;
+	public zanqianImg:eui.Image;
+
+	
+
+public cunruGroup:eui.Group;
+
+
+
 	protected partAdded(partName: string, instance: any): void {
 		super.partAdded(partName, instance);
 	}
@@ -62,11 +86,15 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		super.childrenCreated();
 		this.btn_next.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onNext, this);
 		this.btn_share.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onShare, this);
-		
+		this.kaihongbaoBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onKaiHongbao, this);
 		this.lingquBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onLingqu, this);
 		this.Btntiaozhan.addEventListener(egret.TouchEvent.TOUCH_TAP, this.tiaozhan, this);
 		this.chachaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onchacha, this);
 		this.tixianBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTixian, this);
+		this.cunruBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onCunRu, this);
+		this.cunruChaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP,this.onCunRuCha,this);
+		this.querenChaBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onqueRencha, this);
+		this.querenTixianBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onquerenTixian, this);
 		//重玩和继续的按钮方法
 		this.chongwanBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onreStart, this);
 		this.jixuBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onResume, this);
@@ -75,6 +103,35 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		//主界面红包
 		this.chaHongbao.addEventListener(egret.TouchEvent.TOUCH_TAP, this.guanZhuHongbao, this);
 		this.btnTixian.addEventListener(egret.TouchEvent.TOUCH_TAP,this.tixian,this);
+	}
+	private onquerenTixian()
+	{
+		LevelDataManager.onshowNum = 6;
+		platform.randomShare()
+
+	}
+	private onCunRuCha()
+	{
+		this.visible = false;
+		this.cunruGroup.visible = false;
+	}
+	private onqueRencha()
+	{
+		this.visible = false;
+		this.querentixianGroup.visible = false;
+	}
+	private onCunRu()
+	{
+		LevelDataManager.onshowNum == 7;
+		platform.randomShare();
+	}
+	private onKaiHongbao()
+	{
+		
+		this.cunruLabel.text = SceneGame.getInstance().getHongBaoMoney();
+		this.tixianGroup.visible = false;
+		this.cunruGroup.visible = true;
+
 	}
 	private guanhongbao()
 	{
@@ -95,7 +152,6 @@ class Bingo extends eui.Component implements eui.UIComponent {
 		}
 		else 
 		{
-		
 			platform.restShare();
 		}
 		
@@ -242,7 +298,7 @@ class Bingo extends eui.Component implements eui.UIComponent {
 			let img: eui.Image = element.imgLock;
 			let imgGuankadi: eui.Image = element.imgGuankadi;
 			//解锁关卡的标签动画   关卡界面消失后弹出发起挑战界面
-			egret.Tween.get(img).to({ alpha: 0 }, 1000).call(() => {
+			egret.Tween.get(img).to({ alpha: 0 }, 1000).call(() => {//y 170
 				egret.Tween.get(imgGuankadi).to({ alpha: 1 }, 1000).call(() => {
 				})
 			}).wait(1000).call(() => {

@@ -26,7 +26,7 @@
     "parentPath": ""
   },
   "global": {
-    "globalAutoLayerMarkEnable": true
+    "globalAutoLayerMarkEnable": false
   },
   "165d0e18a6d": {
     "path": "LevelIcon.ts",

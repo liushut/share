@@ -88,11 +88,9 @@ class Main extends eui.UILayer {
                 let beforeTime = parseInt((wx.getStorageSync("nextshareTime") || "1") as string);
                 if (time > beforeTime) {
                     LevelDataManager.isShareTime = false;
-
                 }
                 else {
                     LevelDataManager.isShareTime = true;
-
                 }
                 if (LevelDataManager.onshowNum == 1) {
                     this.showViedeoOrShare();
@@ -110,6 +108,15 @@ class Main extends eui.UILayer {
                 {
                     this.xuaoyao();
                 }
+                else if(LevelDataManager.onshowNum == 6)
+                {
+                    this.tixian();
+                }
+                else if(LevelDataManager.onshowNum == 7)
+                {
+                    this.cunru();
+                }
+                //6 体现 7 存入  
                 console.log("LevelDataManager.isShareTime" + LevelDataManager.isShareTime);
             }
 
@@ -119,6 +126,75 @@ class Main extends eui.UILayer {
         console.log("游戏初始化");
         console.log("用户信息没得了");
 
+    }
+    private cunru()//7
+    {
+        if(!LevelDataManager.isShareTime)
+        {
+            if (LevelDataManager.shareNum % 3 == 1) {
+                SceneGame.getInstance().bingoLayer.visible = false;
+                SceneGame.getInstance().bingoLayer.cunruGroup.visible = false;
+                LevelDataManager.shareNum++;
+                LevelDataManager.onshowNum = 0;
+                LevelDataManager.curMoney += SceneGame.getInstance().randomMoney;
+                SceneGame.getInstance().zhuhongbaoLabel.text = LevelDataManager.curMoney.toString();
+                LevelDataManager.SaveHongbaoNum();
+            }
+            else 
+            {
+                        (wx as any).showModal({
+                        title: "提示",
+                        content: "别总骚扰这个群的朋友啦，换个群分享吧~",
+                        showCancel: false,
+                        success: function (res) {
+                            if (res.confirm == true) {
+                                platform.shareMyAppMessage();
+                                 LevelDataManager.onshowNum = 7;
+                                 LevelDataManager.shareNum++;
+                            }
+                        }
+                    });
+            }
+
+        }
+        else
+        {
+            (wx as any).showModal({
+                title: "提示",
+                content: "分享失败",
+                showCancel: false,
+                success: function (res) {
+                    if (res.confirm == true) {
+                        platform.randomShare();
+                        LevelDataManager.onshowNum = 7;
+                    }
+                }
+            });
+        }
+    }
+    private tixian()//6
+    {
+        if(!LevelDataManager.isShareTime)
+        {
+            SceneGame.getInstance().bingoLayer.zanqianImg.visible = true;
+            setTimeout(()=>{
+                 SceneGame.getInstance().bingoLayer.zanqianImg.visible = false;
+            },2000)
+        }
+        else
+        {
+                 (wx as any).showModal({
+                            title: "提示",
+                            content: "分享失败",
+                            showCancel: false,
+                            success: function (res) {
+                                if (res.confirm == true) {
+                                    platform.randomShare();
+                                    LevelDataManager.onshowNum = 6;
+                                }
+                            }
+                        });
+        }
     }
     private dian()
     {
@@ -135,10 +211,7 @@ class Main extends eui.UILayer {
                             showCancel: false,
                             success: function (res) {
                                 if (res.confirm == true) {
-                                    (wx as any).shareAppMessage({
-                                        title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                                        imageUrl: "resource/assets/common/title11.png"
-                                    });
+                              
                                     platform.randomShare();
                                     LevelDataManager.onshowNum = 3;
                                 }
@@ -157,10 +230,7 @@ class Main extends eui.UILayer {
                 showCancel: false,
                 success: function (res) {
                     if (res.confirm == true) {
-                        (wx as any).shareAppMessage({
-                            title: "小学生都能答出的脑筋急转弯，看看你能答对多少？",
-                            imageUrl: "resource/assets/common/title11.png"
-                        });
+                    
                         platform.randomShare();
                         LevelDataManager.onshowNum = 5;
                     }
